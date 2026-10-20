@@ -1,144 +1,295 @@
 ---
 import { getCollection } from "astro:content";
+import { Image, getImage } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import ShockMotif from "@/components/ShockMotif.astro";
-import ProjectCard from "@/components/ProjectCard.astro";
-import Readouts from "@/components/Readouts.astro";
+import ProjTile from "@/components/BentoProject.astro";
+import { site } from "@/data/site";
 import { skillStrip } from "@/data/skills";
+import tsunamiPoster from "@/assets/projects/tsunami/tsunami_poster.png";
+import entryFig from "@/assets/coursework/entry_trajectory.png";
 
 const all = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
-const featured = all.filter((p) => p.data.featured);
+const bySlug = Object.fromEntries(all.map((p) => [p.data.slug, p.data]));
 const dev = import.meta.env.DEV;
+const poster = await getImage({ src: tsunamiPoster, width: 1280, format: "webp" });
+
+// Featured tiles. Short titles/blurbs condense each project's own hook.
+const tiles = [
+  {
+    slug: "hypersonic-solver",
+    title: "Hypersonic heating & transition solver",
+    blurb: "Similarity boundary layer, marching and PANT transition on a Mach-6 cylinder.",
+    size: "w2 h2",
+    pos: "center",
+  },
+  {
+    slug: "debrisolver",
+    title: "DebriSolver",
+    blurb: "Conjunction messages in, verified avoidance burns out.",
+    size: "w2 h2",
+    pos: "center",
+  },
+  {
+    slug: "sim6dof",
+    title: "Sim6DOF",
+    blurb: "Script-built Simulink 6-DOF, verified on a 747.",
+    size: "h2",
+    pos: "center",
+  },
+  {
+    slug: "aircraft-design-toolbox",
+    title: "Capstone UAV",
+    blurb: "Weight model, flaps and design sweeps.",
+    size: "h2",
+    pos: "center",
+  },
+].map((t) => ({ ...t, d: bySlug[t.slug] }));
+const [hyper, debri, sixdof, capstone] = tiles;
+const others = all.filter((p) => !p.data.featured).map((p) => p.data.title.split(/[:(]/)[0].trim());
+
+const metrics = [
+  {
+    label: "Fay–Riddell check · heating solver",
+    value: "−1.45",
+    unit: "%",
+    href: "/projects/hypersonic-solver/#technical",
+    accent: true,
+  },
+  { label: "Max Pc error vs NASA CARA", value: "8.9e−8", href: "/projects/debrisolver/#results" },
+  {
+    label: "Maneuvers meeting the Pc target",
+    value: "567",
+    unit: "/567",
+    href: "/projects/debrisolver/#results",
+    accent: true,
+  },
+  { label: "747 mode ω_n error · Sim6DOF", value: "≤0.09", unit: "%", href: "/projects/sim6dof/#results" },
+];
 ---
 
 <BaseLayout>
-  <!-- DRAFT: Home copy. TODO(Lilo): rewrite the intro in your own voice. -->
-  <section class="relative overflow-hidden border-b border-line">
-    <div class="wrap grid items-center gap-10 py-14 md:py-20 lg:grid-cols-[1.05fr_1fr] lg:gap-12 lg:py-24">
-      <div>
-        <p class="eyebrow">Aerospace engineering · CU Boulder</p>
-        <h1 class="mt-4 text-[clamp(2.4rem,6vw,4.25rem)] leading-[1.02] tracking-[-0.025em]">
-          Simulation tools for <span class="text-accent">hypersonic</span> flight.
-        </h1>
-        <p class="mt-6 max-w-[56ch] text-lg text-muted">
-          I'm Khalil Sidani (Lilo), an aerospace engineering student at CU Boulder. I write solvers for boundary layers,
-          heating and transition, and I check them against exact solutions and published data. I'm applying to MS/PhD
-          programs in CFD and hypersonics for Fall 2027, and I'm open to internships and industry roles.
-          {dev && <span class="draft-badge ml-1">draft</span>}
-        </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a class="btn btn-primary" href="/projects/">
-            View projects <span aria-hidden="true">→</span>
-          </a>
-          <a class="btn" href="/cv/">
-            CV
-          </a>
-          <a class="btn" href="/contact/">
-            Contact
+  <div class="wrap pt-2 pb-4">
+    <div class="bento">
+      <!-- DRAFT: Home copy. TODO(Lilo): rewrite the intro in your own voice. -->
+      <section class="tile tile-glow w2 h2 flex flex-col justify-between gap-8" aria-labelledby="intro">
+        <p class="mono-label">Aerospace Engineering Sciences · CU Boulder · 2027</p>
+        <div>
+          <h1 id="intro" class="text-[clamp(2.25rem,1.2rem+3vw,3.5rem)] leading-[1.02] tracking-[-0.035em]">
+            Simulation tools for <span class="text-accent">hypersonic</span> flight.
+          </h1>
+          <p class="mt-4 max-w-[46ch] text-muted">
+            I'm Khalil (Lilo) Sidani. I write solvers for boundary layers, heating and transition, and check them
+            against exact solutions and published data. Applying to MS/PhD programs for Fall 2027, and open to
+            internships.
+            {dev && <span class="draft-badge ml-1">draft</span>}
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <a class="btn btn-primary" href="/projects/">
+              See the work
+            </a>
+            <a class="btn" href="/research/">
+              Research interests
+            </a>
+            <a class="btn" href="/cv/">
+              CV
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="tile tile-media w2 h2" aria-labelledby="t-tsunami" data-tile-video>
+        <video
+          class="reink"
+          src="/media/tsunami.mp4"
+          poster={poster.src}
+          muted
+          loop
+          playsinline
+          preload="none"
+          aria-label="Simulated wave pulse crossing a basin and bending over a shoal"
+        ></video>
+        <div class="tile-cap flex items-end justify-between gap-3">
+          <div>
+            <h2 id="t-tsunami" class="text-[0.9375rem] font-semibold tracking-[-0.01em]">
+              <a class="stretched no-underline" href="/projects/tsunami-simulation/">
+                Tsunami over a shoal
+              </a>
+            </h2>
+            <p class="mono-label">Finite-difference shallow-water solver · APPM 3050</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="js-only absolute top-3.5 right-3.5 z-[3] rounded-full border border-line bg-surface-2 px-3 py-1 font-mono text-xs text-ink hover:border-accent"
+          data-video-toggle
+          aria-label="Play animation"
+        >
+          Play
+        </button>
+      </section>
+
+      {metrics.slice(0, 2).map((m) => (
+        <a class="tile tile-metric" href={m.href}>
+          <span class="mono-label">{m.label}</span>
+          <b class:list={[m.accent && "text-accent"]}>
+            {m.value}
+            {m.unit && <small>{m.unit}</small>}
+          </b>
+        </a>
+      ))}
+
+      <ProjTile t={hyper} eager />
+
+      {metrics.slice(2).map((m) => (
+        <a class="tile tile-metric" href={m.href}>
+          <span class="mono-label">{m.label}</span>
+          <b class:list={[m.accent && "text-accent"]}>
+            {m.value}
+            {m.unit && <small>{m.unit}</small>}
+          </b>
+        </a>
+      ))}
+
+      <ProjTile t={debri} />
+      <ProjTile t={sixdof} />
+      <ProjTile t={capstone} />
+
+      <section class="tile h2" aria-labelledby="now">
+        <h2 id="now" class="mono-label !font-normal !tracking-[0.04em]">
+          Now
+        </h2>
+        <ul class="mt-3 text-sm">
+          <li class="border-b border-line py-2">
+            Senior design, ASEN 4018
+            <span class="block text-xs text-muted">Weight model, trade studies, 6-DOF simulator</span>
+          </li>
+          <li class="border-b border-line py-2">
+            Hypersonic aerodynamics<span class="block text-xs text-muted">ASEN 5131 (graduate)</span>
+          </li>
+          <li class="border-b border-line py-2">
+            Flow visualization<span class="block text-xs text-muted">ATLS 5151 (graduate)</span>
+          </li>
+          <li class="py-2">
+            Grad applications<span class="block text-xs text-muted">Fall 2027 · CFD &amp; hypersonics</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="tile w2" aria-labelledby="tools">
+        <div class="flex items-baseline justify-between gap-3">
+          <h2 id="tools" class="mono-label !font-normal !tracking-[0.04em]">
+            Tools
+          </h2>
+          <a href="/about/#skills" class="text-xs text-flow underline underline-offset-2">
+            Skills matrix →
           </a>
         </div>
-      </div>
-      <div class="relative">
-        <ShockMotif class="mx-auto max-w-[560px]" />
-        <Readouts
-          class="mt-4"
-          items={[
-            {
-              value: "−1.45 %",
-              label: "Fay–Riddell check, hypersonic solver",
-              href: "/projects/hypersonic-solver/#technical",
-            },
-            { value: "8.9e−8", label: "Pc error vs NASA CARA, DebriSolver", href: "/projects/debrisolver/#results" },
-            { value: "0.09 %", label: "747 short-period ω_n, Sim6DOF", href: "/projects/sim6dof/#results" },
-          ]}
-        />
-      </div>
-    </div>
-  </section>
+        <ul class="mt-3 flex flex-wrap gap-1.5">
+          {skillStrip.map((s) => (
+            <li class="chip !px-2.5 !py-1 !font-sans !text-[0.8125rem] !text-ink">{s}</li>
+          ))}
+        </ul>
+      </section>
 
-  <section class="wrap py-16 md:py-20" aria-labelledby="featured">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-      <h2 id="featured" class="flex items-baseline gap-3 text-2xl md:text-3xl">
-        <span class="font-mono text-sm text-faint">01</span> Featured work
-      </h2>
-      <a href="/projects/" class="text-sm text-flow underline underline-offset-4">
-        All {all.length} projects →
+      <a class="tile tile-glow-tr flex flex-col justify-end" href="/flow-vis/">
+        <span class="mono-label">Flow Vis · ATLS 5151</span>
+        <span class="mt-1.5 text-lg leading-snug font-semibold tracking-[-0.02em]">Marangoni, Chladni, clouds →</span>
       </a>
-    </div>
-    <ul class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {featured.map((p, i) => (
-        <li>
-          <ProjectCard project={p} eager={i < 2} />
-        </li>
-      ))}
-    </ul>
-  </section>
 
-  <section class="border-y border-line bg-bg-raised" aria-labelledby="now">
-    <div class="wrap grid gap-8 py-14 md:grid-cols-3">
-      <div>
-        <h2 id="now" class="flex items-baseline gap-3 text-2xl">
-          <span class="font-mono text-sm text-faint">02</span> Now
-        </h2>
-      </div>
-      <ul class="grid gap-5 sm:grid-cols-2 md:col-span-2">
-        <li>
-          <p class="mono-label">Senior design · ASEN 4018</p>
-          <p class="mt-1">Weight model, trade studies and the 6-DOF simulator for our 55 lb electric capstone UAV.</p>
-        </li>
-        <li>
-          <p class="mono-label">Graduate courses</p>
-          <p class="mt-1">ASEN 5131 Hypersonic Aerodynamics and ATLS 5151 Flow Visualization.</p>
-        </li>
-        <li>
-          <p class="mono-label">Applications</p>
-          <p class="mt-1">MS/PhD, Fall 2027, with an emphasis on CFD and hypersonics simulation.</p>
-        </li>
-        <li>
-          <p class="mono-label">Long term</p>
-          <p class="mt-1">
-            A company building commercial supersonic and hypersonic aircraft.{" "}
-            <a href="/about/" class="text-flow underline underline-offset-2">
-              More about the long-term goal
+      <section class="tile tile-media w2" aria-labelledby="t-entry">
+        <div class="figure-ground absolute inset-0">
+          <Image
+            src={entryFig}
+            alt=""
+            widths={[480, 800, 1200]}
+            sizes="(min-width: 1024px) 620px, 100vw"
+            class="reink"
+            loading="lazy"
+          />
+        </div>
+        <div class="tile-cap">
+          <h2 id="t-entry" class="text-[0.9375rem] font-semibold tracking-[-0.01em]">
+            <a class="stretched no-underline" href="/coursework/#hypersonics">
+              Ballistic entry heating
             </a>
-          </p>
-        </li>
-      </ul>
-    </div>
-  </section>
+          </h2>
+          <p class="mono-label">ASEN 5131 coursework</p>
+        </div>
+      </section>
 
-  <section class="wrap py-16" aria-labelledby="tools">
-    <h2 id="tools" class="flex items-baseline gap-3 text-2xl">
-      <span class="font-mono text-sm text-faint">03</span> Tools I use
-    </h2>
-    <ul class="mt-6 flex flex-wrap gap-2">
-      {skillStrip.map((s) => (
-        <li class="chip !px-3 !py-1 !text-[0.8125rem]">{s}</li>
-      ))}
-    </ul>
-    <p class="mt-4 text-sm text-muted">
-      Every entry in the{" "}
-      <a href="/about/#skills" class="text-flow underline underline-offset-2">
-        skills matrix
-      </a>{" "}
-      links to the project where I used it.
-    </p>
-  </section>
+      <a class="tile flex flex-col justify-between gap-4" href="/research/">
+        <span class="mono-label">For admissions</span>
+        <span class="text-lg leading-snug font-semibold tracking-[-0.02em]">
+          Where I'm headed: CFD for hypersonic boundary layers →
+        </span>
+      </a>
 
-  <section class="wrap" aria-labelledby="research-teaser">
-    <div class="card grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center md:p-8">
-      <div>
-        <p class="eyebrow">For admissions committees</p>
-        <h2 id="research-teaser" class="mt-2 text-xl md:text-2xl">
-          Where I'm headed: CFD for hypersonic boundary layers and heating
+      <section class="tile tile-contact w2 flex flex-col justify-between gap-4" aria-labelledby="contact">
+        <h2 id="contact" class="font-mono text-xs !font-normal tracking-[0.04em]">
+          Contact
         </h2>
-        <p class="mt-2 max-w-[62ch] text-muted">
-          The questions I want to work on, and how each project builds toward them.
+        <a
+          href={`mailto:${site.email}`}
+          class="text-[clamp(1.25rem,0.9rem+1.4vw,1.625rem)] leading-tight font-semibold tracking-[-0.02em] break-all underline-offset-4 hover:underline"
+        >
+          {site.email}
+        </a>
+        <p class="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
+          <a href={site.github} rel="me" class="underline underline-offset-2">
+            GitHub
+          </a>
+          <a href="/cv/" class="underline underline-offset-2">
+            CV
+          </a>
+          <a href="/contact/" class="underline underline-offset-2">
+            All contact options →
+          </a>
         </p>
-      </div>
-      <a class="btn btn-primary justify-self-start" href="/research/">
-        Research interests →
+      </section>
+
+      <a class="tile w2 flex flex-col justify-between gap-4" href="/projects/">
+        <span class="mono-label">More work</span>
+        <span>
+          <span class="block text-[clamp(1.25rem,0.9rem+1.4vw,1.625rem)] leading-tight font-semibold tracking-[-0.02em]">
+            All {all.length} projects →
+          </span>
+          <span class="mt-1.5 block text-sm text-muted">{others.join(" · ")}</span>
+        </span>
       </a>
     </div>
-  </section>
+  </div>
 </BaseLayout>
+
+<script>
+  // Tsunami tile: play while on screen (never under reduced motion), with a
+  // visible Play/Pause control (WCAG 2.2.2).
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll<HTMLElement>("[data-tile-video]").forEach((box) => {
+    const v = box.querySelector("video")!;
+    const b = box.querySelector<HTMLButtonElement>("[data-video-toggle]")!;
+    let userPaused = reduce;
+    const sync = () => {
+      b.textContent = v.paused ? "Play" : "Pause";
+      b.setAttribute("aria-label", v.paused ? "Play animation" : "Pause animation");
+    };
+    v.addEventListener("play", sync);
+    v.addEventListener("pause", sync);
+    b.addEventListener("click", () => {
+      userPaused = !v.paused;
+      if (v.paused) v.play().catch(() => {});
+      else v.pause();
+    });
+    const start = () =>
+      new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting && !userPaused) v.play().catch(() => {});
+          else if (!e.isIntersecting) v.pause();
+        },
+        { threshold: 0.3 },
+      ).observe(v);
+    // Wait for the page to finish loading so the video never competes with it.
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    sync();
+  });
+</script>

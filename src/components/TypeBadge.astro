@@ -1,20 +1,21 @@
 ---
+// Project type as a pill. Sits on figures too, so it always has its own ground.
 interface Props {
   type: "Personal" | "Course" | "Team" | "Competition";
   class?: string;
 }
 const { type, class: cls } = Astro.props;
 const tone = {
-  Personal: "text-flow border-flow/40",
-  Competition: "text-accent border-accent/40",
-  Team: "text-muted border-line-strong",
-  Course: "text-faint border-line",
+  Personal: "text-flow border-flow/45",
+  Competition: "text-accent border-accent/45",
+  Team: "text-ink border-line-strong",
+  Course: "text-muted border-line-strong",
 }[type];
 ---
 
 <span
   class:list={[
-    "inline-block rounded border px-1.5 py-px font-mono text-[0.6875rem] tracking-[0.08em] uppercase",
+    "inline-block rounded-full border bg-surface-2 px-2 py-0.5 font-mono text-[0.6875rem] leading-tight tracking-[0.02em]",
     tone,
     cls,
   ]}

@@ -22,7 +22,7 @@ if (!widths.length) widths.push(src.width);
 <figure class:list={["figure my-8", wide && "wide"]} id={id} style={maxWidth ? `max-width:${maxWidth}px` : undefined}>
   <button
     type="button"
-    class="paper block w-full cursor-zoom-in overflow-hidden rounded-[var(--radius-lg)] border border-line p-2 sm:p-3"
+    class="figure-ground block w-full cursor-zoom-in overflow-hidden rounded-[var(--radius-lg)] border border-line p-2 transition-colors hover:border-accent sm:p-4"
     data-lightbox={full.src}
     data-lightbox-alt={alt}
     aria-label={`Enlarge figure: ${alt}`}
@@ -32,13 +32,13 @@ if (!widths.length) widths.push(src.width);
       alt={alt}
       widths={widths}
       sizes={wide ? "(min-width: 1200px) 1100px, 100vw" : "(min-width: 900px) 760px, 100vw"}
-      class="mx-auto h-auto w-full"
+      class="reink mx-auto h-auto w-full"
       loading="lazy"
       decoding="async"
     />
   </button>
   <figcaption class="mt-3 text-sm leading-relaxed text-muted">
-    <span class="fig-num font-mono text-xs tracking-wide text-ink"></span>
+    <span class="fig-num font-mono text-xs tracking-wide text-accent"></span>
     <slot />
     {source && <span class="mono-label mt-1 block break-all">Source: {source}</span>}
   </figcaption>

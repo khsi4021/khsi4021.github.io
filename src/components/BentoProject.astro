@@ -1,0 +1,38 @@
+---
+// A featured-project tile for the home Bento grid: re-inked figure, type pill,
+// short title and blurb. The whole tile links to the project page.
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  t: {
+    d: CollectionEntry<"projects">["data"];
+    title: string;
+    blurb: string;
+    size: string;
+    pos: string;
+  };
+  eager?: boolean;
+}
+const { t, eager = false } = Astro.props;
+const wide = t.size.includes("w2");
+---
+
+<a class:list={["tile tile-proj", t.size]} href={`/projects/${t.d.slug}/`}>
+  <span class="tile-pill">
+    {t.d.type} · {t.d.dates}
+  </span>
+  <div class="tile-fig figure-ground">
+    <Image
+      src={t.d.thumbnail}
+      alt=""
+      widths={wide ? [480, 800, 1200] : [400, 640]}
+      sizes={wide ? "(min-width: 1024px) 600px, 100vw" : "(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw"}
+      loading={eager ? "eager" : "lazy"}
+      class="reink"
+      style={`object-position: ${t.pos}`}
+    />
+  </div>
+  <h2 class="text-xl leading-tight tracking-[-0.02em]">{t.title}</h2>
+  <p class="mt-1 text-sm text-muted">{t.blurb}</p>
+</a>

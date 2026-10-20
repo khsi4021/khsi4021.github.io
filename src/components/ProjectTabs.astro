@@ -12,8 +12,13 @@ const { tabs } = Astro.props;
 ---
 
 <div data-tabs>
-  <div class="js-only no-print sticky top-16 z-30 -mx-4 border-b border-line bg-bg/90 px-4 backdrop-blur-md md:mx-0 md:px-0">
-    <div role="tablist" aria-label="Project sections" class="flex gap-1 overflow-x-auto overflow-y-hidden" data-tablist>
+  <div class="js-only no-print sticky top-[4.5rem] z-30 -mx-4 bg-bg/85 px-4 py-2 backdrop-blur-md md:mx-0 md:px-0">
+    <div
+      role="tablist"
+      aria-label="Project sections"
+      class="flex w-max max-w-full gap-1 overflow-x-auto overflow-y-hidden rounded-full border border-line bg-surface p-[5px]"
+      data-tablist
+    >
       {tabs.map((t, i) => (
         <button
           type="button"
@@ -30,7 +35,7 @@ const { tabs } = Astro.props;
       ))}
     </div>
   </div>
-  <div class="pt-8">
+  <div class="pt-6">
     <slot />
   </div>
 </div>
@@ -43,35 +48,29 @@ const { tabs } = Astro.props;
     display: none;
   }
   .tab-btn {
-    position: relative;
-    padding: 0.85rem 0.9rem 0.8rem;
-    font-size: 0.9375rem;
+    padding: 0.45rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    font-size: 0.875rem;
     font-weight: 500;
     color: var(--text-muted);
     white-space: nowrap;
-    background: none;
-    border: 0;
     cursor: pointer;
-    transition: color 150ms;
+    transition:
+      color 150ms,
+      background-color 150ms;
   }
   .tab-btn:hover {
     color: var(--text);
+    background: var(--surface-2);
   }
   .tab-btn[aria-selected="true"] {
-    color: var(--text);
-  }
-  .tab-btn[aria-selected="true"]::after {
-    content: "";
-    position: absolute;
-    left: 0.6rem;
-    right: 0.6rem;
-    bottom: 0;
-    height: 2px;
+    color: var(--accent-ink);
     background: var(--accent);
-    border-radius: 2px;
   }
   .tab-btn:focus-visible {
-    outline-offset: -4px;
+    outline-offset: 1px;
   }
 </style>
 
@@ -101,7 +100,7 @@ const { tabs } = Astro.props;
       if (opts.focus) tabs[idx].focus();
       if (opts.updateHash) history.replaceState(null, "", `#${id}`);
       if (opts.scroll) {
-        const top = root.getBoundingClientRect().top + window.scrollY - 64;
+        const top = root.getBoundingClientRect().top + window.scrollY - 72;
         if (window.scrollY > top) window.scrollTo({ top });
       }
       tabs[idx].scrollIntoView({ block: "nearest", inline: "nearest" });
@@ -114,7 +113,7 @@ const { tabs } = Astro.props;
       if (tabs.some((t) => t.dataset.tab === h)) {
         select(h, { scroll: false });
         requestAnimationFrame(() => {
-          const top = root.getBoundingClientRect().top + window.scrollY - 64;
+          const top = root.getBoundingClientRect().top + window.scrollY - 72;
           window.scrollTo({ top });
         });
         return true;

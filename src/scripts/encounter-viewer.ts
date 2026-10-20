@@ -139,8 +139,8 @@ export function boot(root: HTMLElement, cases: Encounter[]) {
   let needsRender = true;
 
   const colors = () => ({
-    primary: cssColor("--flow", "#6ccbff"),
-    secondary: cssColor("--accent", "#ff8a4c"),
+    primary: cssColor("--accent", "#4c8dff"),
+    secondary: cssColor("--viz-2", "#ffb547"),
     ok: cssColor("--ok", "#4ade9c"),
     line: cssColor("--border-strong", "#354055"),
     faint: cssColor("--text-faint", "#7c879a"),

@@ -6,8 +6,8 @@ import { getImage } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import defaultOg from "@/assets/og-default.png";
 // Preload the two fonts visible above the fold to limit font-swap layout shift.
-import interWoff2 from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
-import groteskWoff2 from "@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url";
+import geistWoff2 from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
+import geistMonoWoff2 from "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url";
 
 interface Props {
   title?: string;
@@ -43,14 +43,14 @@ const isActive = (href: string) => path.startsWith(href);
     <link rel="canonical" href={canonical} />
     <meta name="author" content={site.name} />
     <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" content="#0a0d13" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#070b14" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4f7fc" media="(prefers-color-scheme: light)" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="preload" href={interWoff2} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={groteskWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={geistWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={geistMonoWoff2} as="font" type="font/woff2" crossorigin />
 
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
@@ -90,24 +90,21 @@ const isActive = (href: string) => path.startsWith(href);
       Skip to content
     </a>
 
-    <header class="site-header sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
-      <div class="wrap flex h-16 items-center justify-between gap-4">
-        <a href="/" class="group flex items-baseline gap-2 no-underline">
-          <span class="font-display text-[1.05rem] font-semibold tracking-tight">{site.name}</span>
-          <span class="text-accent" aria-hidden="true">
-            /
-          </span>
+    <header class="site-header sticky top-0 z-40 bg-bg/80 backdrop-blur-md">
+      <div class="wrap flex h-[4.5rem] items-center justify-between gap-4">
+        <a href="/" class="flex items-baseline gap-2 no-underline">
+          <span class="text-[1.05rem] font-semibold tracking-[-0.01em]">{site.name}</span>
           <span class="font-mono text-xs text-faint">Lilo</span>
         </a>
         <nav aria-label="Main" class="hidden lg:block">
-          <ul class="flex items-center gap-1">
+          <ul class="flex items-center gap-1 rounded-full border border-line bg-surface p-[5px]">
             {nav.map((n) => (
               <li>
                 <a
                   href={n.href}
                   class:list={[
-                    "rounded-md px-3 py-2 text-sm no-underline transition-colors hover:text-ink",
-                    isActive(n.href) ? "text-ink" : "text-muted",
+                    "block rounded-full px-3.5 py-1.5 text-sm no-underline transition-colors hover:bg-surface-2 hover:text-ink",
+                    isActive(n.href) ? "bg-surface-2 text-ink" : "text-muted",
                   ]}
                   aria-current={isActive(n.href) ? "page" : undefined}
                 >
@@ -117,11 +114,11 @@ const isActive = (href: string) => path.startsWith(href);
             ))}
           </ul>
         </nav>
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-2">
           <ThemeToggle />
           <button
             type="button"
-            class="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted hover:text-ink lg:hidden"
+            class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-muted hover:text-ink lg:hidden"
             aria-controls="mobile-nav"
             aria-expanded="false"
             data-menu-button
@@ -133,15 +130,15 @@ const isActive = (href: string) => path.startsWith(href);
           </button>
         </div>
       </div>
-      <nav id="mobile-nav" aria-label="Main" class="hidden border-t border-line lg:hidden" data-menu>
-        <ul class="wrap grid grid-cols-2 gap-1 py-3">
+      <nav id="mobile-nav" aria-label="Main" class="hidden lg:hidden" data-menu>
+        <ul class="wrap grid grid-cols-2 gap-1.5 pb-4">
           {nav.map((n) => (
             <li>
               <a
                 href={n.href}
                 class:list={[
-                  "block rounded-md px-3 py-2.5 no-underline",
-                  isActive(n.href) ? "bg-surface text-ink" : "text-muted",
+                  "block rounded-full border px-4 py-2.5 no-underline",
+                  isActive(n.href) ? "border-accent bg-surface-2 text-ink" : "border-line bg-surface text-muted",
                 ]}
                 aria-current={isActive(n.href) ? "page" : undefined}
               >
@@ -157,10 +154,10 @@ const isActive = (href: string) => path.startsWith(href);
       <slot />
     </main>
 
-    <footer class="site-footer mt-24 border-t border-line bg-bg-raised">
-      <div class="wrap flex flex-col gap-6 py-10 text-sm text-muted md:flex-row md:items-end md:justify-between">
+    <footer class="site-footer wrap mt-24 pb-6">
+      <div class="flex flex-col gap-6 rounded-[var(--radius-lg)] border border-line bg-surface p-6 text-sm text-muted md:flex-row md:items-end md:justify-between md:p-8">
         <div>
-          <p class="font-display text-base font-semibold text-ink">{site.name}</p>
+          <p class="text-base font-semibold text-ink">{site.name}</p>
           <p class="mt-1">{site.positioning}</p>
           <p class="mono-label mt-3">{site.location}</p>
         </div>

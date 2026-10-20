@@ -1,32 +1,23 @@
 @import "tailwindcss";
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/space-grotesk";
-@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 
-/* Metric-matched fallbacks (computed from @capsizecss/metrics) so the swap to
-   the web fonts doesn't re-wrap text and shift the layout. */
+/* Metric-matched fallbacks (computed from the Geist font files with
+   @capsizecss/unpack) so the swap to the web fonts doesn't shift the layout. */
 @font-face {
-  font-family: "Inter Fallback";
+  font-family: "Geist Fallback";
   src: local("Arial");
-  size-adjust: 107.12%;
-  ascent-override: 90.44%;
-  descent-override: 22.52%;
+  size-adjust: 104.76%;
+  ascent-override: 95.94%;
+  descent-override: 28.16%;
   line-gap-override: 0%;
 }
 @font-face {
-  font-family: "Space Grotesk Fallback";
-  src: local("Arial");
-  size-adjust: 109.69%;
-  ascent-override: 89.71%;
-  descent-override: 26.62%;
-  line-gap-override: 0%;
-}
-@font-face {
-  font-family: "JetBrains Mono Fallback";
+  font-family: "Geist Mono Fallback";
   src: local("Courier New");
   size-adjust: 99.98%;
-  ascent-override: 102.02%;
-  descent-override: 30%;
+  ascent-override: 100.52%;
+  descent-override: 29.5%;
   line-gap-override: 0%;
 }
 
@@ -34,51 +25,58 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* ------------------------------------------------------------------ */
-/* Design tokens (DESIGN_SPEC.md). Dark is the default theme.          */
+/* Design tokens (DESIGN_SPEC.md): "Bento, navy + electric blue".      */
+/* Dark is the default theme. Every text pair checked ≥ 4.5:1.         */
 /* ------------------------------------------------------------------ */
 :root,
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0a0d13;
-  --bg-raised: #10151e;
-  --surface: #151b26;
-  --surface-2: #1b2230;
-  --border: #252e3e;
-  --border-strong: #354055;
-  --text: #e8ecf3;
-  --text-muted: #a3adbd;
-  --text-faint: #8290a3;
-  --accent: #ff8a4c;
-  --accent-ink: #160b04;
-  --flow: #6ccbff;
+  --bg: #070b14;
+  --bg-raised: #0a1020;
+  --surface: #0d1424; /* tile */
+  --surface-2: #131c30; /* tile 2, chips, code */
+  --border: #1e2a42;
+  --border-strong: #2e3d5c;
+  --text: #eaf0fb;
+  --text-muted: #93a0b8;
+  --text-faint: #8a98b2;
+  --accent: #4c8dff; /* electric blue */
+  --accent-ink: #050a14;
+  --flow: #8fb5ff; /* links, eyebrows */
+  --viz-2: #ffb547; /* second data-viz series */
+  --viz-3: #4ade9c;
+  --viz-4: #c4a5ff;
   --ok: #4ade9c;
   --warn: #f5c451;
   --fail: #ff6b6b;
   --paper: #fafaf8;
   --paper-ink: #1a1a1a;
   --shadow-card: none;
-  --glow: rgb(255 138 76 / 0.35);
+  --glow: #16295a;
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #f6f5f1;
+  --bg: #f4f7fc;
   --bg-raised: #ffffff;
   --surface: #ffffff;
-  --surface-2: #efede7;
-  --border: #ddd9cf;
-  --border-strong: #c3bdb0;
-  --text: #10141c;
-  --text-muted: #4b5464;
-  --text-faint: #646c7a;
-  --accent: #b93c0b;
+  --surface-2: #eef2f9;
+  --border: #dbe3f0;
+  --border-strong: #c3cfe2;
+  --text: #0b1324;
+  --text-muted: #4a5873;
+  --text-faint: #5b6880;
+  --accent: #1f5fe0;
   --accent-ink: #ffffff;
-  --flow: #0369a1;
-  --ok: #15803d;
-  --warn: #a16207;
+  --flow: #1a55c4;
+  --viz-2: #c2410c;
+  --viz-3: #12804a;
+  --viz-4: #7b4fc4;
+  --ok: #126c33;
+  --warn: #8a5508;
   --fail: #b91c1c;
-  --shadow-card: 0 1px 2px rgb(16 20 28 / 0.06), 0 4px 16px rgb(16 20 28 / 0.05);
-  --glow: rgb(194 65 12 / 0.18);
+  --shadow-card: 0 1px 2px rgb(11 19 36 / 0.05), 0 8px 24px rgb(11 19 36 / 0.06);
+  --glow: #dce8ff;
 }
 
 @theme inline {
@@ -94,6 +92,7 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --color-flow: var(--flow);
+  --color-viz-2: var(--viz-2);
   --color-ok: var(--ok);
   --color-warn: var(--warn);
   --color-fail: var(--fail);
@@ -101,9 +100,9 @@
 }
 
 @theme {
-  --font-sans: "Inter Variable", "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk Variable", "Space Grotesk Fallback", ui-sans-serif, sans-serif;
-  --font-mono: "JetBrains Mono Variable", "JetBrains Mono Fallback", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: "Geist Variable", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Geist Variable", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", "Geist Mono Fallback", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -113,13 +112,13 @@
   --text-2xl: 1.953rem;
   --text-3xl: 2.441rem;
 
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
 
   --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
   --container-prose: 72ch;
-  --container-page: 1200px;
+  --container-page: 1280px;
 }
 
 /* ------------------------------------------------------------------ */
@@ -132,8 +131,12 @@
     font-family: var(--font-sans);
     font-size: 100%;
     -webkit-text-size-adjust: 100%;
-    scroll-padding-top: 5rem;
+    scroll-padding-top: 5.5rem;
     text-rendering: optimizeLegibility;
+  }
+  /* Project pages: header + sticky tab bar */
+  html:has([data-tabs]) {
+    scroll-padding-top: 8.5rem;
   }
   body {
     background: var(--bg);
@@ -147,7 +150,7 @@
   h4 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.03em;
     line-height: 1.15;
     text-wrap: balance;
   }
@@ -190,8 +193,7 @@
   .eyebrow {
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
     color: var(--flow);
   }
 
@@ -206,10 +208,10 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    padding: 0.6rem 1rem;
-    font-weight: 500;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.6rem 1.1rem;
+    font-weight: 600;
     font-size: 0.9375rem;
     text-decoration: none;
     color: var(--text);
@@ -219,8 +221,8 @@
       transform 150ms var(--ease-out-soft);
   }
   .btn:hover {
-    border-color: var(--text-muted);
-    background: var(--surface);
+    border-color: var(--border-strong);
+    background: var(--surface-2);
   }
   .btn-primary {
     background: var(--accent);
@@ -237,7 +239,8 @@
     align-items: center;
     border: 1px solid var(--border);
     border-radius: 999px;
-    padding: 0.1rem 0.6rem;
+    padding: 0.15rem 0.65rem;
+    background: var(--surface-2);
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--text-muted);
@@ -250,10 +253,217 @@
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
   }
+  a.card {
+    transition:
+      border-color 200ms var(--ease-out-soft),
+      transform 200ms var(--ease-out-soft);
+  }
+  a.card:hover {
+    border-color: var(--accent);
+  }
+
+  /* Figures re-inked for dark mode: invert lightness, keep hue, then screen-blend
+     so the plot ground takes the tile colour. The lightbox shows the original. */
+  .figure-ground {
+    background: var(--paper);
+    isolation: isolate;
+  }
+  [data-theme="dark"] .figure-ground {
+    background: var(--surface);
+  }
+  [data-theme="dark"] .reink {
+    filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(1.06);
+    mix-blend-mode: screen;
+  }
 
   .paper {
     background: var(--paper);
     color: var(--paper-ink);
+  }
+
+  /* Bento grid (home). Mobile: two columns, metrics side by side, everything
+     else full width. ≥640px: 2 columns of fixed-height rows; ≥1024px: 4. */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .bento > * {
+    grid-column: span 2;
+  }
+  .bento > .tile-metric {
+    grid-column: span 1;
+  }
+  @media (min-width: 640px) {
+    .bento {
+      gap: 0.875rem;
+      grid-auto-rows: minmax(190px, auto);
+      grid-auto-flow: row dense;
+    }
+    .bento > *,
+    .bento > .tile-metric {
+      grid-column: auto;
+    }
+    .bento > .w2 {
+      grid-column: span 2;
+    }
+    .bento > .h2 {
+      grid-row: span 2;
+    }
+  }
+  @media (min-width: 1024px) {
+    .bento {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .tile {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 1.125rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  @media (min-width: 640px) {
+    .tile {
+      padding: 1.375rem;
+    }
+  }
+  a.tile,
+  .tile:has(.stretched) {
+    transition:
+      border-color 250ms var(--ease-out-soft),
+      transform 250ms var(--ease-out-soft);
+  }
+  a.tile:hover,
+  .tile:has(.stretched:hover) {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .stretched::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+  .tile-pill {
+    position: absolute;
+    top: 0.875rem;
+    right: 0.875rem;
+    z-index: 3;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-2);
+    padding: 0.2rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--text);
+  }
+  .tile-glow {
+    background: radial-gradient(120% 90% at 0% 0%, var(--glow) 0%, var(--surface) 62%);
+  }
+  .tile-glow-tr {
+    background: radial-gradient(100% 100% at 100% 0%, var(--glow), var(--surface) 70%);
+  }
+
+  /* Media tile: picture or video fills the tile, caption over a fade. */
+  .tile-media {
+    padding: 0;
+    min-height: 16rem;
+  }
+  @media (min-width: 640px) {
+    .tile-media {
+      padding: 0;
+      min-height: 0;
+    }
+  }
+  .tile-media :where(video, img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .tile-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, transparent 50%, var(--surface) 97%);
+    pointer-events: none;
+  }
+  .tile-cap {
+    position: absolute;
+    inset: auto 1.125rem 0.875rem;
+    z-index: 2;
+  }
+
+  .tile-metric {
+    display: flex;
+    min-height: 8.5rem;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .tile-metric b {
+    font-size: clamp(2rem, 1.4rem + 2vw, 2.875rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .tile-metric b small {
+    font-size: 0.5em;
+    color: var(--text-muted);
+    letter-spacing: -0.01em;
+  }
+
+  .tile-proj {
+    display: flex;
+    flex-direction: column;
+  }
+  .tile-proj .tile-fig {
+    aspect-ratio: 16 / 10;
+    margin: -0.375rem -0.375rem 0.875rem;
+    overflow: hidden;
+    border-radius: 0.75rem;
+  }
+  @media (min-width: 640px) {
+    .tile-proj .tile-fig {
+      aspect-ratio: auto;
+      flex: 1;
+      min-height: 0;
+    }
+  }
+  .tile-proj .tile-fig {
+    position: relative;
+  }
+  /* Absolutely placed so the figure never sizes the grid row. */
+  .tile-proj .tile-fig img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tile-contact {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+  .tile-contact a {
+    color: var(--accent-ink);
+    text-decoration-color: color-mix(in srgb, var(--accent-ink) 45%, transparent);
+  }
+  .tile-contact :focus-visible {
+    outline-color: var(--accent-ink);
   }
 
   .draft-badge {
@@ -366,7 +576,7 @@
     font-family: var(--font-mono);
     font-size: 0.75rem;
     letter-spacing: 0.04em;
-    text-transform: uppercase;
+    /* No uppercase: it turns ζ into Z and ω into Ω in symbol headers. */
     color: var(--text-faint);
     font-weight: 500;
   }
@@ -465,6 +675,10 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  a.tile:hover,
+  .tile:has(.stretched:hover) {
+    transform: none;
+  }
 }
 
 /* Print: project pages print every tab, no chrome */
@@ -500,6 +714,13 @@
   }
   .figure {
     break-inside: avoid;
+  }
+  .reink {
+    filter: none !important;
+    mix-blend-mode: normal !important;
+  }
+  .figure-ground {
+    background: #fff !important;
   }
   body {
     font-size: 11pt;

@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import TypeBadge from "./TypeBadge.astro";
+import { nbHyphen } from "@/utils/text";
 
 interface Props {
   project: CollectionEntry<"projects">;
@@ -14,12 +15,12 @@ const H = headingLevel;
 ---
 
 <article
-  class="card group relative flex h-full flex-col overflow-hidden transition-[border-color,transform] duration-200 ease-[var(--ease-out-soft)] hover:-translate-y-0.5 hover:border-line-strong"
+  class="tile group flex h-full flex-col !p-3 transition-[border-color,transform] duration-200 ease-[var(--ease-out-soft)] hover:-translate-y-0.5 hover:border-accent motion-reduce:hover:translate-y-0"
   data-project
   data-tags={d.tags.join("|")}
   data-type={d.type}
 >
-  <div class="paper aspect-[16/10] overflow-hidden border-b border-line">
+  <div class="figure-ground relative aspect-[16/10] overflow-hidden rounded-xl">
     <Image
       src={d.thumbnail}
       alt={d.thumbnailAlt}
@@ -28,17 +29,15 @@ const H = headingLevel;
       fit="cover"
       position="center"
       loading={eager ? "eager" : "lazy"}
-      class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]"
+      class="reink h-full w-full object-cover object-center"
     />
+    <TypeBadge type={d.type} class="absolute top-2.5 left-2.5 z-[3]" />
   </div>
-  <div class="flex flex-1 flex-col p-4 pb-5">
-    <div class="flex items-center justify-between gap-2">
-      <TypeBadge type={d.type} />
-      <span class="mono-label">{d.dates}</span>
-    </div>
-    <H class="mt-2.5 text-lg leading-snug">
-      <a href={`/projects/${d.slug}/`} class="no-underline after:absolute after:inset-0 after:content-['']">
-        {d.title}
+  <div class="flex flex-1 flex-col px-1.5 pt-3.5 pb-2">
+    <span class="mono-label">{d.dates}</span>
+    <H class="mt-1.5 text-lg leading-snug">
+      <a href={`/projects/${d.slug}/`} class="no-underline after:absolute after:inset-0 after:z-[4] after:content-['']">
+        {nbHyphen(d.title)}
       </a>
     </H>
     <p class="mt-1.5 text-sm text-muted">{d.hook}</p>

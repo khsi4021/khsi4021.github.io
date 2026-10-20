@@ -17,7 +17,7 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
       </button>
     ))}
   </div>
-  <div class="paper js-only min-h-[360px] p-3" data-plot aria-hidden="true"></div>
+  <div class="js-only min-h-[360px] p-3" data-plot aria-hidden="true"></div>
   <div class="overflow-x-auto border-t border-line">
     <table class="w-full text-sm">
       <caption class="sr-only">Eigenvalues by mode and source</caption>
@@ -55,6 +55,9 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
 </div>
 
 <style>
+  [data-plot] {
+    --plot-background: var(--surface-2);
+  }
   .seg {
     border: 1px solid var(--border);
     border-radius: 999px;
@@ -69,8 +72,8 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
   }
   .seg[aria-pressed="true"] {
     color: var(--text);
-    border-color: var(--flow);
-    background: color-mix(in srgb, var(--flow) 12%, transparent);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
   }
 </style>
 
@@ -79,12 +82,14 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
   const root = document.querySelector<HTMLElement>("[data-pole-map]");
   if (root) {
     // Without JS all rows stay visible; with JS only the selected mode's rows show.
-    const palette: Record<string, string> = {
-      "Etkin textbook": "#1a1a1a",
-      "Analytic (same data)": "#2B7BD6",
-      "Sim6DOF (frozen atm)": "#E8673A",
-      "Sim6DOF (ISA)": "#16A37B",
-      "Last year's sim": "#7B4FC4",
+    // Series colours come from the theme tokens, so the plot redraws on theme change.
+    const css = (n: string) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const series: Record<string, string> = {
+      "Etkin textbook": "--text",
+      "Analytic (same data)": "--accent",
+      "Sim6DOF (frozen atm)": "--viz-2",
+      "Sim6DOF (ISA)": "--viz-3",
+      "Last year's sim": "--viz-4",
     };
     const symbols: Record<string, string> = {
       "Etkin textbook": "square",
@@ -109,6 +114,8 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
         return [lo - d, hi + d];
       };
       const w = host.clientWidth || 640;
+      const ink = css("--text-muted");
+      const palette = Object.fromEntries(Object.entries(series).map(([k, v]) => [k, css(v)]));
       const chart = Plot.plot({
         width: w,
         height: Math.max(320, Math.min(440, w * 0.55)),
@@ -116,8 +123,8 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
         marginBottom: 44,
         style: {
           background: "transparent",
-          color: "#1a1a1a",
-          fontFamily: "Inter Variable, sans-serif",
+          color: ink,
+          fontFamily: "Geist Variable, sans-serif",
           fontSize: "13px",
         },
         x: { label: "Real (1/s) →", domain: pad(xs), grid: true, tickFormat: (d: number) => d.toPrecision(2) },
@@ -125,8 +132,8 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
         color: { domain: Object.keys(palette), range: Object.values(palette), legend: true },
         symbol: { domain: Object.keys(symbols), range: Object.values(symbols) },
         marks: [
-          Plot.ruleX([0], { stroke: "#888", strokeDasharray: "3,3" }),
-          Plot.ruleY([0], { stroke: "#bbb" }),
+          Plot.ruleX([0], { stroke: css("--border-strong"), strokeDasharray: "3,3" }),
+          Plot.ruleY([0], { stroke: css("--border-strong") }),
           Plot.dot(rows, {
             x: "re",
             y: "im",
@@ -165,5 +172,6 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
       new ResizeObserver(() => draw()).observe(host);
     }).observe(root);
     document.addEventListener("tabshown", () => draw());
+    document.addEventListener("themechange", () => draw());
   }
 </script>
