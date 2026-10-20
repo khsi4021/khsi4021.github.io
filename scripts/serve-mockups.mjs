@@ -18,12 +18,14 @@ const types = {
 };
 
 createServer(async (req, res) => {
-  let path = decodeURIComponent(new URL(req.url ?? "/", "http://x").pathname);
-  if (path === "/") path = "/design-explorations/round-2/index.html";
+  const path = decodeURIComponent(new URL(req.url ?? "/", "http://x").pathname);
+  // Redirect (not rewrite) so relative links in the mockups resolve against their own folder.
+  if (path === "/") return res.writeHead(302, { location: "/design-explorations/round-2/" }).end();
   const file = normalize(join(root, path));
   if (!file.startsWith(root)) return res.writeHead(403).end();
   try {
     const s = await stat(file);
+    if (s.isDirectory() && !path.endsWith("/")) return res.writeHead(301, { location: path + "/" }).end();
     const target = s.isDirectory() ? join(file, "index.html") : file;
     const body = await readFile(target);
     res.writeHead(200, { "content-type": types[extname(target)] ?? "application/octet-stream" }).end(body);
