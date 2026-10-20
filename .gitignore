@@ -1,0 +1,26 @@
+node_modules/
+dist/
+.astro/
+.scratch/
+.env
+.env.*
+.DS_Store
+Thumbs.db
+.claude/settings.local.json
+
+# Local tooling
+.claude/
+
+# Private planning docs and source media. Kept out of the PUBLIC repo by default.
+# Delete a line (and commit) if you decide to publish that file.
+CLAUDE.md
+START_HERE.md
+setup/
+PROGRESS.md
+DECISIONS.md
+TODO_FOR_LILO.md
+PROJECT_INVENTORY.md
+assets-inbox/
+
+# CV PDF: kept out of the public repo until a version without home address and phone exists
+public/cv/*.pdf

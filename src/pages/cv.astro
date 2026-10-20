@@ -1,0 +1,57 @@
+---
+import { existsSync } from "node:fs";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { site } from "@/data/site";
+// The CV goes in public/cv/Khalil-Sidani-CV.pdf (see HOW_TO_UPDATE.md).
+const hasCv = existsSync(new URL("../../public/cv/Khalil-Sidani-CV.pdf", import.meta.url));
+---
+
+<BaseLayout title="CV" description="Curriculum vitae of Khalil Sidani.">
+  <section class="wrap pt-12 md:pt-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow">Curriculum vitae</p>
+        <h1 class="mt-3 text-[clamp(2rem,4.5vw,3rem)]">CV</h1>
+      </div>
+      {hasCv && (
+        <a class="btn btn-primary" href={site.cvPath} download>
+          Download PDF ↓
+        </a>
+      )}
+    </div>
+    {hasCv ? (
+      <object
+        data={site.cvPath}
+        type="application/pdf"
+        class="mt-8 h-[80vh] w-full rounded-[var(--radius-lg)] border border-line bg-paper"
+        aria-label="Embedded CV (PDF)"
+      >
+        <p class="p-6">
+          Your browser can't display the PDF here.{" "}
+          <a href={site.cvPath} class="text-flow underline">
+            Download the CV
+          </a>
+          .
+        </p>
+      </object>
+    ) : (
+      <div class="mt-8 grid min-h-[40vh] place-items-center rounded-[var(--radius-lg)] border border-dashed border-line-strong p-8 text-center">
+        <div>
+          <p class="mono-label text-warn">CV coming soon</p>
+          <p class="mt-3 max-w-md text-muted">
+            The PDF will appear here. In the meantime, the{" "}
+            <a href="/projects/" class="text-flow underline">
+              projects
+            </a>{" "}
+            and{" "}
+            <a href="/about/#skills" class="text-flow underline">
+              skills matrix
+            </a>{" "}
+            cover the details.
+          </p>
+          {/* TODO(Lilo): put your CV in assets-inbox/resume/; it will be copied to public/cv/Khalil-Sidani-CV.pdf */}
+        </div>
+      </div>
+    )}
+  </section>
+</BaseLayout>

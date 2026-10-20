@@ -1,0 +1,27 @@
+---
+import { skillMatrix } from "@/data/skills";
+---
+
+<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+  {skillMatrix.map((g) => (
+    <section class="card p-5" aria-labelledby={`skills-${g.group.replace(/\W+/g, "-")}`}>
+      <h3 id={`skills-${g.group.replace(/\W+/g, "-")}`} class="eyebrow !font-mono !text-xs">
+        {g.group}
+      </h3>
+      <ul class="mt-3 divide-y divide-line">
+        {g.skills.map((s) => (
+          <li class="py-2.5">
+            <p class="font-medium">{s.name}</p>
+            <p class="mt-0.5 flex flex-wrap gap-x-3 gap-y-1 text-sm">
+              {s.where.map((w) => (
+                <a href={w.href} class="text-faint underline decoration-line-strong underline-offset-2 hover:text-flow">
+                  {w.label}
+                </a>
+              ))}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>

@@ -1,0 +1,9 @@
+dist
+node_modules
+.astro
+.scratch
+public
+package-lock.json
+src/snippets
+design-explorations
+*.mdx

@@ -1,0 +1,81 @@
+---
+title: 2-D Tsunami over Variable Bathymetry
+slug: tsunami-simulation
+summary: An explicit finite-difference solution of the linearised shallow-water wave equation over a variable-depth basin, with a moving wave-maker and reflecting and zero-slope boundaries.
+hook: A finite-difference shallow-water wave over a shoal. The wavefront slows and bends where the water gets shallow.
+tldr: I wrote an explicit finite-difference solver for the linearised shallow-water equation u_tt = ∇·(h∇u) over a 6 × 2 basin with variable depth, a wave-maker boundary and ghost-node walls, and animated the result. It runs at a Courant number of 0.56.
+type: Course
+course: APPM 3050 Scientific Computing
+role: Wrote the solver
+dates: Spring 2026
+date: 2026-04-30
+tags: [CFD/Numerical]
+stack: [MATLAB]
+featured: false
+order: 5
+tier: supporting
+heroImage: ../../assets/projects/tsunami/tsunami_poster.png
+heroAlt: 3D render of a wave surface over a sandy seabed; a single crest has crossed most of a long channel and is bending as it passes a shallow shoal, with smaller ripples trailing behind.
+thumbnail: ../../assets/projects/tsunami/tsunami_poster.png
+thumbnailAlt: 3D render of a tsunami wavefront crossing a basin over a variable seabed.
+metrics:
+  - { value: "121 × 41", label: "grid nodes (Δx = Δy = 0.05)" }
+  - { value: "1,000", label: "time steps (Δt = 0.02)" }
+  - { value: "0.56", label: "max Courant number √h·cΔt/Δx" }
+links: {}
+status: complete
+---
+import poster from "../../assets/projects/tsunami/tsunami_poster.png";
+import snaps from "../../assets/projects/tsunami/tsunami_snapshots.png";
+import bathy from "../../assets/projects/tsunami/tsunami_bathymetry.png";
+import stencil from "../../snippets/tsunami_stencil.m?raw";
+
+<TabPanel id="overview">
+
+A tsunami slows down as the water gets shallower, because the long-wave speed scales as √h. This project solves the linearised shallow-water wave equation over a basin whose depth varies, and shows the wavefront bending as it passes a shoal.
+
+<Video src="/media/tsunami.mp4" poster={poster} alt="Animation of a single wave pulse launched from the left edge, crossing a long basin over a variable seabed, bending over a shoal and reflecting from the far wall." source="re-run of projects/tsunami-simulation (same scheme, vectorised) in .scratch/">
+The wave-maker on the left launches one pulse. The front refracts over the shoal near x = 2 and reflects from the walls. I re-ran my scheme in vectorised form to render this video; the stencil, boundaries and depth function are unchanged.
+</Video>
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+<Equation tex={String.raw`u_{tt} = \nabla\cdot\big(h(x,y)\,\nabla u\big) = h\,\nabla^2 u + h_x u_x + h_y u_y`} />
+
+Second-order central differences in space and time give an explicit update in which each neighbour carries its own weight. For example, the right neighbour has weight λ(h + Δx h<sub>x</sub>/2), with λ = (cΔt/Δx)². The boundary conditions are:
+
+- **Left:** a moving wave-maker, u = 0.3 sin(2πt) for t < 0.5 (one half-sine pulse), then held at zero.
+- **Right:** zero slope, ∂u/∂x = 0, through a phantom node.
+- **Top and bottom:** reflecting walls through mirrored phantom nodes.
+
+The depth field has a beach-like slope and a shoal, h = 1 − 0.04xy + 0.4((x−2)/3)² + 0.4(y−0.75)². With h<sub>max</sub> ≈ 1.86, the Courant number √h<sub>max</sub>·cΔt/Δx = 0.56, which is inside the 1/√2 limit for this 2-D explicit scheme.
+
+</TabPanel>
+
+<TabPanel id="results">
+
+<Figure src={snaps} alt="Three 3D surface snapshots at t = 1.5, 4.6 and 9.0 showing the pulse entering, crossing the shoal with a curved front, and reflecting from the far end." source="re-run, .scratch/job_tsunami.m">
+Snapshots for print and reduced-motion viewing. The front curves as it crosses the shoal, because the slower water there holds that part of the wave back.
+</Figure>
+
+<Figure src={bathy} alt="Filled contour map of depth over the 6 by 2 basin, shallowest near x = 2, y = 0.75 and deepening toward the far corner." source="depth2D.m">
+The depth function the scheme uses.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+The hard Dirichlet cut-off of the wave-maker at t = 0.5 adds high-frequency content, which shows up as grid-scale ripples behind the pulse. A smoother pulse (or a wave-maker with a ramp) would remove it. The linear model has no wave steepening, breaking or run-up. Those need the nonlinear shallow-water equations, a conservative finite-volume scheme and wetting/drying, which is the natural next step toward a real inundation model.
+
+</TabPanel>
+
+<TabPanel id="code">
+
+<CodeSnippet code={stencil} lang="matlab" title="Variable-depth stencil weights and the interior update" source="tsunami-simulation/Tsunami2Dskeleton.m" />
+
+<Callout tone="note">Graded coursework: only a short excerpt is shown. The full source is available on request.</Callout>
+
+</TabPanel>

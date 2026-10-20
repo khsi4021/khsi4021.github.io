@@ -1,0 +1,189 @@
+{
+  "source": "projects/sim6dof-simulator/results/benchmark_summary.csv",
+  "rows": [
+    {
+      "mode": "Short period",
+      "source": "Etkin textbook",
+      "re": -0.3719,
+      "im": 0.8875,
+      "wn": 0.962271198779221,
+      "zeta": 0.386481483049486
+    },
+    {
+      "mode": "Short period",
+      "source": "Analytic (same data)",
+      "re": -0.368086352841218,
+      "im": 0.881620891432441,
+      "wn": 0.955375821003484,
+      "zeta": 0.385279117127537
+    },
+    {
+      "mode": "Short period",
+      "source": "Sim6DOF (frozen atm)",
+      "re": -0.368774422782018,
+      "im": 0.882241014823648,
+      "wn": 0.956213251913647,
+      "zeta": 0.385661275917269
+    },
+    {
+      "mode": "Short period",
+      "source": "Sim6DOF (ISA)",
+      "re": -0.369091202387593,
+      "im": 0.882605586492983,
+      "wn": 0.956671802128892,
+      "zeta": 0.38580754817509
+    },
+    {
+      "mode": "Short period",
+      "source": "Last year's sim",
+      "re": -0.1853,
+      "im": 0.7247,
+      "wn": 0.748014826056275,
+      "zeta": 0.247722362639453
+    },
+    {
+      "mode": "Phugoid",
+      "source": "Etkin textbook",
+      "re": -0.003289,
+      "im": 0.06723,
+      "wn": 0.0673104035123843,
+      "zeta": 0.0488631746115571
+    },
+    {
+      "mode": "Phugoid",
+      "source": "Analytic (same data)",
+      "re": -0.00331932901522603,
+      "im": 0.0704228069471085,
+      "wn": 0.0705009906556003,
+      "zeta": 0.0470820194774435
+    },
+    {
+      "mode": "Phugoid",
+      "source": "Sim6DOF (frozen atm)",
+      "re": -0.00331867100538135,
+      "im": 0.0704114243029146,
+      "wn": 0.0704895896541258,
+      "zeta": 0.0470802996820553
+    },
+    {
+      "mode": "Phugoid",
+      "source": "Sim6DOF (ISA)",
+      "re": -0.00268565727584676,
+      "im": 0.0856924495201596,
+      "wn": 0.0857345243164526,
+      "zeta": 0.0313252717882215
+    },
+    {
+      "mode": "Phugoid",
+      "source": "Last year's sim",
+      "re": -0.001109,
+      "im": 0.06559,
+      "wn": 0.0655993748522042,
+      "zeta": 0.0169056489105054
+    },
+    {
+      "mode": "Dutch roll",
+      "source": "Etkin textbook",
+      "re": -0.033011,
+      "im": 0.94655,
+      "wn": 0.947125455587062,
+      "zeta": 0.034853883194955
+    },
+    {
+      "mode": "Dutch roll",
+      "source": "Analytic (same data)",
+      "re": -0.0440845499511642,
+      "im": 0.940079839564915,
+      "wn": 0.941112932809232,
+      "zeta": 0.0468429966418285
+    },
+    {
+      "mode": "Dutch roll",
+      "source": "Sim6DOF (frozen atm)",
+      "re": -0.0440441979660991,
+      "im": 0.940026292597992,
+      "wn": 0.941057555173967,
+      "zeta": 0.046802873771049
+    },
+    {
+      "mode": "Dutch roll",
+      "source": "Sim6DOF (ISA)",
+      "re": -0.044044197966099,
+      "im": 0.940026292597992,
+      "wn": 0.941057555173966,
+      "zeta": 0.0468028737710488
+    },
+    {
+      "mode": "Dutch roll",
+      "source": "Last year's sim",
+      "re": -0.034719,
+      "im": 0.3287,
+      "wn": 0.330528514595942,
+      "zeta": 0.105040861731529
+    },
+    {
+      "mode": "Roll subsidence",
+      "source": "Etkin textbook",
+      "re": -0.5633,
+      "im": 0,
+      "wn": 0.5633,
+      "zeta": 1
+    },
+    {
+      "mode": "Roll subsidence",
+      "source": "Analytic (same data)",
+      "re": -0.560937985544784,
+      "im": 0,
+      "wn": 0.560937985544784,
+      "zeta": 1
+    },
+    {
+      "mode": "Roll subsidence",
+      "source": "Sim6DOF (frozen atm)",
+      "re": -0.561003651002243,
+      "im": 0,
+      "wn": 0.561003651002243,
+      "zeta": 1
+    },
+    {
+      "mode": "Roll subsidence",
+      "source": "Sim6DOF (ISA)",
+      "re": -0.561003651002243,
+      "im": 0,
+      "wn": 0.561003651002243,
+      "zeta": 1
+    },
+    {
+      "mode": "Spiral",
+      "source": "Etkin textbook",
+      "re": -0.00727,
+      "im": 0,
+      "wn": 0.00727,
+      "zeta": 1
+    },
+    {
+      "mode": "Spiral",
+      "source": "Analytic (same data)",
+      "re": -0.0133977803762224,
+      "im": 0,
+      "wn": 0.0133977803762224,
+      "zeta": 1
+    },
+    {
+      "mode": "Spiral",
+      "source": "Sim6DOF (frozen atm)",
+      "re": -0.0133978243936971,
+      "im": 0,
+      "wn": 0.0133978243936971,
+      "zeta": 1
+    },
+    {
+      "mode": "Spiral",
+      "source": "Sim6DOF (ISA)",
+      "re": -0.0133978243936969,
+      "im": 0,
+      "wn": 0.0133978243936969,
+      "zeta": 1
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProjectGrid from "@/components/ProjectGrid.astro";
+
+const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Hypersonics, CFD and numerical methods, flight dynamics, orbital safety and aircraft design projects by Khalil Sidani."
+>
+  <section class="wrap pt-12 pb-6 md:pt-16">
+    <p class="eyebrow">Projects</p>
+    <h1 class="mt-3 text-[clamp(2rem,4.5vw,3rem)]">Things I've built, and how I checked them</h1>
+    <p class="mt-4 max-w-[64ch] text-lg text-muted">
+      Each project page has the same tabs: <strong class="text-ink">Overview</strong>,{" "}
+      <strong class="text-ink">Technical</strong>, <strong class="text-ink">Results</strong>,{" "}
+      <strong class="text-ink">Reflection</strong> and <strong class="text-ink">Code</strong>. The badge says whether it
+      was personal, course, team or competition work. On team projects I describe my own part.
+    </p>
+  </section>
+  <section class="wrap pb-8">
+    <ProjectGrid projects={projects} />
+  </section>
+</BaseLayout>

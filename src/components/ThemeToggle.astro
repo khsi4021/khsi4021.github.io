@@ -1,0 +1,49 @@
+---
+// Two-state toggle (dark default). The choice is stored in localStorage;
+// the inline script in BaseLayout applies it before first paint.
+---
+
+<button
+  type="button"
+  class="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted transition-colors hover:text-ink"
+  data-theme-toggle
+  aria-label="Switch to light theme"
+>
+  <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"></circle>
+    <path
+      d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+    ></path>
+  </svg>
+  <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" stroke="currentColor" stroke-width="1.6"></path>
+  </svg>
+</button>
+
+<style>
+  :global([data-theme="dark"]) .theme-icon-moon,
+  :global([data-theme="light"]) .theme-icon-sun {
+    display: none;
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const sync = (b: HTMLButtonElement) =>
+    b.setAttribute("aria-label", root.dataset.theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
+  document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((b) => {
+    sync(b);
+    b.addEventListener("click", () => {
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {}
+      sync(b);
+      document.dispatchEvent(new CustomEvent("themechange", { detail: next }));
+    });
+  });
+</script>

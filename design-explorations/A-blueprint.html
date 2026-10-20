@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup A · Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #0f3a66; --paper-2: #123f6f; --line: rgba(205, 228, 255, .85);
+    --faint: rgba(205, 228, 255, .16); --ink: #eaf3ff; --muted: #a9c6e8; --red: #ffb4a2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--ink); font: 15px/1.6 "IBM Plex Sans Condensed", system-ui, sans-serif;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--faint) 1px, transparent 1px),
+      linear-gradient(90deg, var(--faint) 1px, transparent 1px),
+      linear-gradient(rgba(205,228,255,.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(205,228,255,.07) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  }
+  .sheet { max-width: 1120px; margin: 32px auto; padding: 0 16px; }
+  .frame { border: 2px solid var(--line); padding: 28px; position: relative; }
+  .frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--faint); pointer-events: none; }
+  .mono { font-family: "IBM Plex Mono", monospace; letter-spacing: .02em; }
+  header { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; border-bottom: 1px solid var(--line); padding-bottom: 20px; }
+  h1 { font-size: clamp(34px, 6vw, 64px); line-height: 1; margin: 0; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .lede { color: var(--muted); max-width: 52ch; margin: 12px 0 0; font-size: 18px; }
+  nav a { color: var(--ink); text-decoration: none; margin-left: 18px; font-size: 13px; }
+  nav a:hover { text-decoration: underline; }
+  .drawing { margin: 28px 0; display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; }
+  .drawing svg { width: 100%; height: auto; border: 1px solid var(--faint); }
+  .callout { font-size: 13px; color: var(--muted); }
+  .callout b { color: var(--ink); font-weight: 600; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .card { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 18px; }
+  .card h3 { margin: 6px 0 6px; font-size: 18px; text-transform: uppercase; letter-spacing: .03em; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  .tag { display: inline-block; border: 1px solid var(--line); padding: 1px 6px; font-size: 11px; margin: 10px 6px 0 0; }
+  .titleblock { margin-top: 28px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; border: 1px solid var(--line); font-size: 12px; }
+  .titleblock div { padding: 8px 10px; border-right: 1px solid var(--line); }
+  .titleblock div:last-child { border-right: 0; }
+  .titleblock span { display: block; color: var(--muted); font-size: 10px; text-transform: uppercase; }
+  @media (max-width: 720px) {
+    header, .drawing { grid-template-columns: 1fr; }
+    .titleblock { grid-template-columns: 1fr 1fr; }
+    nav a { margin: 0 14px 0 0; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet"><div class="frame">
+  <header>
+    <div>
+      <div class="mono" style="color:var(--muted);font-size:12px">DWG. KS-001 · REV A</div>
+      <h1>Khalil Sidani</h1>
+      <p class="lede">Aerospace engineer building simulation tools for hypersonic flight: boundary layers, heating, transition, and the software that checks itself.</p>
+    </div>
+    <nav class="mono"><a href="#">Projects</a><a href="#">Research</a><a href="#">Flow Vis</a><a href="#">CV</a></nav>
+  </header>
+
+  <section class="drawing">
+    <svg viewBox="0 0 600 340" role="img" aria-label="Line drawing of a blunt cylinder in Mach 6 flow with a bow shock and dimensioned radius">
+      <g fill="none" stroke="#cde4ff" stroke-width="1.4">
+        <circle cx="380" cy="170" r="110"/>
+        <path d="M 250 20 Q 220 170 250 320" stroke-dasharray="6 5"/>
+        <line x1="60" y1="170" x2="250" y2="170" stroke-width=".8"/>
+        <line x1="380" y1="170" x2="458" y2="92" stroke-width=".8"/>
+        <path d="M 270 170 A 110 110 0 0 1 286 113" stroke="#ffb4a2" stroke-width="3"/>
+      </g>
+      <g fill="#cde4ff" font-family="IBM Plex Mono" font-size="12">
+        <text x="60" y="160">M∞ = 5.98 →</text>
+        <text x="420" y="122">R = 76.2 mm</text>
+        <text x="205" y="14">BOW SHOCK</text>
+        <text x="176" y="112" fill="#ffb4a2">Θtr = 15.30°</text>
+      </g>
+    </svg>
+    <div class="callout mono">
+      <p><b>01 · HYPERSONIC SOLVER</b><br>Laminar stagnation heating, similarity boundary layer, roughness-transition onset. Benchmarked against a published Mach-6 DNS table.</p>
+      <p><b>NOTE 1.</b> Fay–Riddell cross-check: −1.45 %.</p>
+      <p><b>NOTE 2.</b> Found a missing pressure-work term in the printed energy equation, then verified the fix against an exact identity.</p>
+    </div>
+  </section>
+
+  <section class="cards">
+    <article class="card"><div class="mono" style="font-size:11px;color:var(--muted)">02 · COMPETITION</div><h3>DebriSolver</h3><p>Conjunction risk pipeline. Pc matches NASA CARA to 8.9e-8.</p><span class="tag mono">ORBITAL/SSA</span><span class="tag mono">ML</span></article>
+    <article class="card"><div class="mono" style="font-size:11px;color:var(--muted)">03 · TEAM</div><h3>Sim6DOF</h3><p>Simulink 6-DOF simulator. B747 modes within 0.09 %.</p><span class="tag mono">FLIGHT DYNAMICS</span></article>
+    <article class="card"><div class="mono" style="font-size:11px;color:var(--muted)">04 · TEAM</div><h3>Aircraft Design</h3><p>Sizing, sweeps and a weight model that passes a blind benchmark.</p><span class="tag mono">AIRCRAFT DESIGN</span></article>
+  </section>
+
+  <div class="titleblock mono">
+    <div><span>Project</span>Engineering portfolio</div>
+    <div><span>Drawn</span>K. Sidani</div>
+    <div><span>Scale</span>1 : 1</div>
+    <div><span>Sheet</span>1 of 1</div>
+  </div>
+</div></div>
+</body>
+</html>

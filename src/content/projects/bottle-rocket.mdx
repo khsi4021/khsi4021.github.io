@@ -1,0 +1,55 @@
+---
+title: Water-Rocket Trajectory Model
+slug: bottle-rocket
+summary: A three-phase thrust and drag model of a 2 L water rocket (water expulsion, air expansion, ballistic) integrated with ode45, with a sweep over launch pressure.
+hook: Water thrust, air-expansion thrust and a ballistic coast in one ODE system with phase switching.
+tldr: I modelled a 2 L bottle rocket through its water-thrust, air-expansion and ballistic phases as one ODE system with state-dependent phase switching. Raising the launch gauge pressure from 40 to 70 psi stretches the range from about 62 m to about 94 m.
+type: Course
+course: ASEN 2012 Experimental & Computational Methods, Project 2
+role: Individual project
+dates: Nov 2024
+date: 2024-11-12
+tags: [Aerodynamics, CFD/Numerical]
+stack: [MATLAB, ode45]
+featured: false
+order: 8
+tier: supporting
+heroImage: ../../assets/projects/rocket/rocket_trajectories.png
+heroAlt: Four trajectory arcs for launch gauge pressures of 40, 50, 60 and 70 psi; apogee rises from about 16 to 28 m and range from about 62 to 94 m.
+thumbnail: ../../assets/projects/rocket/rocket_trajectories.png
+thumbnailAlt: Water-rocket trajectories for four launch pressures.
+metrics:
+  - { value: "3", label: "thrust phases in one ODE system" }
+  - { value: "≈ 62 → 94 m", label: "range, 40 → 70 psi gauge" }
+links: {}
+status: complete
+---
+import traj from "../../assets/projects/rocket/rocket_trajectories.png";
+
+<TabPanel id="overview">
+
+The state vector is [height, downrange position, v<sub>z</sub>, v<sub>x</sub>, rocket mass, air volume, air mass]. The thrust phase switches on the state:
+
+- **Water expulsion.** The air expands isentropically and pushes water through the throat (discharge coefficient 0.78).
+- **Air expansion.** The remaining compressed air exhausts, choked or not depending on the pressure ratio.
+- **Ballistic coast.** Drag only (C<sub>D</sub> = 0.425).
+
+The rocket leaves a 0.5 m launch rail at 40°.
+
+<Figure src={traj} alt="Four water-rocket trajectories for 40 to 70 psi launch gauge pressure." source="re-run of projects/bottle-rocket-trajectory/Proj2Final.m (restyled)">
+Trajectories at four launch gauge pressures, from my original script. I re-ran it and restyled the figure.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="results">
+
+Across 40–70 psi, the range grows almost linearly with launch gauge pressure, by roughly 10 m per 10 psi, and the apogee rises from about 16 m to about 28 m (read from the figure). In the air-expansion phase the model checks whether the throat flow is choked, using the critical pressure ratio, and switches its exit conditions accordingly.
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+Comparing against the static thrust-stand data, and calibrating the discharge and drag coefficients against measured flights, is the obvious next step. The class's verification data set was included for that purpose.
+
+</TabPanel>

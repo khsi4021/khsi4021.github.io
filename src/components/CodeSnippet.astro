@@ -1,0 +1,58 @@
+---
+import { Code } from "astro:components";
+
+interface Props {
+  code: string;
+  lang: "python" | "matlab" | "cpp" | "typescript" | "yaml" | "text";
+  title: string;
+  /** Path in the original project, for provenance. */
+  source?: string;
+}
+const { code, lang, title, source } = Astro.props;
+const trimmed = code.replace(/\r\n/g, "\n").replace(/^\n+|\s+$/g, "");
+const lines = trimmed.split("\n").length;
+---
+
+<div class="code-snippet my-6 max-w-[880px]">
+  <div class="flex flex-wrap items-center justify-between gap-2 rounded-t-[var(--radius)] border border-line bg-surface px-4 py-2">
+    <div class="min-w-0">
+      <p class="text-sm font-medium">{title}</p>
+      {source && <p class="mono-label truncate">{source}</p>}
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="mono-label">
+        {lang} · {lines} lines
+      </span>
+      <button type="button" class="js-only mono-label rounded border border-line px-2 py-0.5 hover:text-ink" data-copy>
+        Copy
+      </button>
+    </div>
+  </div>
+  <Code
+    code={trimmed}
+    lang={lang === "text" ? "plaintext" : lang}
+    themes={{ light: "github-light", dark: "github-dark-dimmed" }}
+    defaultColor={false}
+  />
+  {Astro.slots.has("default") && (
+    <div class="mt-3 text-[0.9375rem] text-muted">
+      <slot />
+    </div>
+  )}
+</div>
+
+<script>
+  document.addEventListener("click", async (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-copy]");
+    if (!b) return;
+    const pre = b.closest(".code-snippet")?.querySelector("pre");
+    if (!pre) return;
+    try {
+      await navigator.clipboard.writeText(pre.innerText);
+      b.textContent = "Copied";
+      setTimeout(() => (b.textContent = "Copy"), 1500);
+    } catch {
+      b.textContent = "Select + copy";
+    }
+  });
+</script>

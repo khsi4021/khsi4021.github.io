@@ -1,0 +1,200 @@
+---
+title: Hypersonic Blunt-Body Heating & Roughness-Transition Solver
+slug: hypersonic-solver
+summary: A Python solver for laminar stagnation heating and roughness-induced transition on a Mach-6 cylinder, built from a published paper's equations and benchmarked against its DNS table.
+hook: Compressible similarity boundary layer, local-similarity marching and PANT transition correlations on a Mach-6 cylinder, each step verified.
+tldr: Laminar heating and transition-onset solver for a Mach-6 blunt body. Matches Fay–Riddell to −1.45 %. I found and verified a pressure-work term missing from the printed energy equation, and I report the benchmark gap instead of tuning it away.
+type: Personal
+role: Sole developer (physics, numerics, tests, figures)
+dates: Aug 2026
+date: 2026-08-10
+tags: [Hypersonics, CFD/Numerical, Aerodynamics]
+stack: [Python, NumPy, SciPy solve_bvp, Matplotlib, pytest]
+featured: true
+order: 1
+tier: flagship
+heroImage: ../../assets/projects/hypersonic/heat_flux_transition.png
+heroAlt: Two-panel plot. Top, laminar wall heat flux along a Mach-6 cylinder from 0 to 45 degrees for two energy-equation forms, with transition onset lines for three roughness heights. Bottom, the PANT-RT parameter rising with angle and crossing the threshold of 434.
+thumbnail: ../../assets/projects/hypersonic/heat_flux_transition.png
+thumbnailAlt: Laminar wall heat flux and transition onset along a Mach-6 cylinder.
+metrics:
+  - { value: "−1.45 %", label: "vs Fay–Riddell at the stagnation line" }
+  - { value: "144", label: "pytest tests (~15 s)" }
+  - { value: "11.02° / 10.06°", label: "PANT-RT onset vs paper, at A_k" }
+  - { value: "< 1e−8", label: "Crocco–Busemann exactness error" }
+links: {}
+status: complete
+---
+{/* TODO(Lilo): add links.repo if github.com/khsi4021/Hypersonic-Solver is public. */}
+import heat from "../../assets/projects/hypersonic/heat_flux_transition.png";
+import geom from "../../assets/projects/hypersonic/geometry_profile.png";
+import rhs from "../../snippets/hyp_rhs.py?raw";
+import pantrt from "../../snippets/hyp_pant_rt.py?raw";
+import testEnth from "../../snippets/hyp_test_enthalpy.py?raw";
+import testFay from "../../snippets/hyp_test_fay.py?raw";
+
+<TabPanel id="overview">
+
+### The problem
+
+Surface roughness can trip a hypersonic boundary layer to turbulence, and turbulence multiplies wall heating. The aim was to predict *where* that happens on a blunt body. That means computing the laminar heating along the surface, then finding the angle Θ<sub>tr</sub> at which a published roughness correlation says the layer trips.
+
+I set the case to the DNS configuration of a published Mach-6 study ("Roughness-Induced Transition on a Blunt Body at Mach 6"), so every number can be checked against its Table 3:
+
+| Quantity | Value |
+|---|---|
+| Body | 2-D cylinder, R = 76.2 mm |
+| Freestream | M<sub>∞</sub> = 5.98, T<sub>∞</sub> = 58.6 K, ρ<sub>∞</sub> = 0.1243 kg/m³ |
+| Wall | T<sub>w</sub> = 300 K, isothermal |
+| Roughness | k<sub>PV50</sub> = 0.0668 mm (the paper's Appendix A input) |
+
+### What I built
+
+A four-stage pipeline in plain Python:
+
+1. Normal shock plus Modified Newtonian theory for the inviscid edge conditions.
+2. A compressible self-similar boundary layer in Illingworth variables, solved as a two-point BVP.
+3. Local-similarity marching downstream.
+4. The PANT family of transition correlations, with PANT-RT as the primary criterion.
+
+Every equation comes from a line-by-line transcription of the paper's appendices (`notes/equations.md`), and the paper's equation tags are carried into the docstrings, so each line of physics traces back to a printed equation. There are two exceptions, both flagged in the code as external: the Fay–Riddell cross-check and the restored pressure-work term described on the Technical tab.
+
+<Figure src={heat} alt="Laminar wall heat flux q_w along the cylinder from 0 to 45 degrees: the printed energy equation stays near 4.1 to 4.4 W/cm², while the corrected form falls to about 2.6 W/cm² at 45 degrees. Vertical dashed lines mark transition onset at 7.29 degrees (k = 0.1336 mm) and 15.30 degrees (k = 0.0668 mm), with the paper's 10.06 degrees dotted. Lower panel: PANT-RT parameter on a log axis crossing the 434 threshold." source="projects/hypersonic-solver/results/heat_flux_transition.png" wide>
+**Hero result.** Top: laminar wall heat flux, with the energy equation as printed and with the pressure-work term restored. The circle is the 2-D Fay–Riddell cross-check. Bottom: the PANT-RT parameter for three roughness heights. Transition is predicted where each curve crosses 434. At the reference height it trips at 15.30°; the paper's Table 3 gives 10.06°.
+</Figure>
+
+### Why it matters to me
+
+This is the problem I want to work on in graduate school: predicting heating and transition on hypersonic bodies, and knowing how far to trust the prediction. The [Research Interests](/research/) page explains how this connects to CFD.
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+### Edge conditions
+
+Normal-shock relations take the freestream to the post-shock state. Total-enthalpy conservation then gives the stagnation-line edge temperature, and isentropic relations give pressure and density. Downstream, Modified Newtonian theory sets the pressure:
+
+<Equation tex={String.raw`P_e(\Theta) = P_{e,\max}\,\sin^2\phi, \qquad \phi = \tfrac{\pi}{2} - \Theta, \qquad U_e = \sqrt{2 c_p\,(T_{e,\max} - T_e)}`} />
+
+### Compressible similarity boundary layer
+
+With the Illingworth transformation ξ = ∫ρ<sub>e</sub>U<sub>e</sub>μ<sub>e</sub> ds, f′ = u/U<sub>e</sub> and g = T/T<sub>e</sub>, momentum and energy become a coupled ODE system:
+
+<Equation label="C 3" tex={String.raw`(C f'')' + f f'' = \beta\,(f'^2 - g)`} />
+<Equation label="C 4" tex={String.raw`(C g')' + \Pr f g' = -\Pr\,C\,(\gamma-1)\,M_e^2\, f''^2`} />
+<Equation label="C 5" tex={String.raw`\beta = \frac{2\xi}{M_e}\frac{dM_e}{d\xi}, \qquad C = \frac{\rho\mu}{\rho_e\mu_e}`} />
+
+I solve it as a five-state system in conservative variables [f, f′, Cf″, g, Cg′] with SciPy's `solve_bvp`. A Crocco–Busemann profile supplies the initial guess, and continuation in (M<sub>e</sub>, g<sub>w</sub>) handles the hard stations. Marching accumulates ξ with a cubic-spline antiderivative, evaluates β at each station, and imposes the analytic limits β → 1 and L<sub>y</sub> → √(μ<sub>e</sub> / (ρ<sub>e</sub> dU<sub>e</sub>/ds)) at Θ = 0.
+
+### A missing term in the printed energy equation
+
+Marched downstream, the heat flux fell only about 6 % over 45°, against about 20 % in the paper's DNS. I decomposed it: the Levy–Lees factor decays correctly, but g′(0) *grows* 94 % and almost cancels it. At Pr = 1, total enthalpy must satisfy (CS′)′ + fS′ = 0 for **any** β. Equation (C 4) as printed satisfies that only when β·M<sub>e</sub> = 0. It omits the pressure-gradient work term. Eliminating (Cf″)′ + ff″ with (C 3) restores it:
+
+<Equation tex={String.raw`(C g')' + \Pr f g' = -\Pr C(\gamma-1)M_e^2 f''^2 \;\underbrace{-\;\Pr\,\beta\,(\gamma-1)\,M_e^2\, f'\,(f'^2 - g)}_{\text{restored}}`} />
+
+| β | M<sub>e</sub> | residual, (C 4) as printed | residual, with pressure work |
+|---|---|---|---|
+| 0 | 2.00 | 6e−6 | 6e−6 |
+| 1.00 | 0.66 | 4.9e−2 | 5.1e−6 |
+| 1.757 | 1.05 | 2.1e−1 | 7.0e−6 |
+
+The papers only apply (C 4) where the term vanishes (the stagnation line, M<sub>e</sub> → 0, and a zero-pressure-gradient flat plate, β = 0), so this isn't an error in the papers' own use of it. My local-similarity marching is what reaches finite β and finite M<sub>e</sub> together. I kept the printed form as the default, so the benchmark stays reproducible, and made the correction opt-in. It is verified by the identity above, not by appeal to another source.
+
+### Transition criterion
+
+PANT-RT (Reshotko & Tumin 2004), the paper's only mechanism-based correlation:
+
+<Equation label="A 3/A 4" tex={String.raw`\mathrm{Re}_\theta\,\frac{k}{\theta}\left(\frac{T_e}{T_w}\right)^{1.27} = 180\cdot 2^{1.27} \approx 434`} />
+
+The momentum thickness cancels algebraically (Re<sub>θ</sub>·k/θ = ρ<sub>e</sub>U<sub>e</sub>k/μ<sub>e</sub>), so PANT-RT depends only on edge conditions and k. Switching the energy equation, which changes q<sub>w</sub> by 37 % at 45°, moves the PANT-RT onset by exactly 0°.
+
+### Verification
+
+| Check | Result |
+|---|---|
+| Fay–Riddell, 2-D coefficient 0.57, stagnation line | −1.45 % |
+| Falkner–Skan f″(0) at β = 0, 0.3, 0.5, 1.0 (C ≡ 1) | 0.46960 / 0.77476 / 0.92768 / 1.23259 to 5 s.f. |
+| Crocco–Busemann exactness of (C 4) at Pr = 1, β = 0 | max error < 1e−8 |
+| Total enthalpy with pressure work, β up to 1.757 | < 1e−4 |
+| Reynolds analogy at Pr = 1 | exactly 1.0 |
+| Chilton–Colburn Pr<sup>−2/3</sup> at Pr = 0.71 | within 2 % |
+| Grid convergence | q<sub>stag</sub> to 1e−4; Re<sub>θ</sub>, δ to 5e−3 |
+
+I chose the 0.57 Fay–Riddell coefficient over the axisymmetric 0.76 because the solver is plane-stagnation (β = 1). A test asserts that 0.76 *fails* the agreement check, so the decision can't silently regress.
+
+</TabPanel>
+
+<TabPanel id="results">
+
+### Headline: transition onset vs the paper's Table 3
+
+At the roughness height Appendix A specifies, k<sub>PV50</sub> = 0.0668 mm:
+
+| Correlation | This solver | Paper Table 3 | Δ |
+|---|---|---|---|
+| PANT-AW | 12.67° | 9.41° | +3.26° (+34.6 %) |
+| PANT-R | 15.15° | 8.98° | +6.17° (+68.7 %) |
+| **PANT-RT** | **15.30°** | **10.06°** | **+5.24° (+52.1 %)** |
+
+<Callout tone="honest" title="The gap is diagnosed, not closed">
+At the DNS grid-displacement amplitude A<sub>k</sub> = 0.09 mm instead, all three correlations land 8–10 % high together (PANT-RT 11.02° vs 10.06°). The three correlations carry different powers of k, so a wrong k scatters them while a wrong edge model shifts them together. The ratio spread is 0.022 at A<sub>k</sub> and 0.341 at k<sub>PV50</sub>. Minimising the spread picks k ≈ 0.093 mm under either viscosity convention, so the choice of roughness height accounts for most of the gap. The solver keeps k<sub>PV50</sub> because that is the input the paper specifies, and a test pins both halves of the discrepancy.
+</Callout>
+
+The remaining common offset of about 9 % points to the edge model (Modified Newtonian here, against the paper's DNS extraction), not to the boundary layer. As shown on the Technical tab, the boundary-layer solution cannot move PANT-RT at all.
+
+### Heat flux with the corrected energy equation
+
+| Θ | (C 4) as printed | + pressure work | Paper fig. 7 |
+|---|---|---|---|
+| 0° | 4.431 W/cm² | 4.431 W/cm² | ≈ 4.5 |
+| 30° | 4.153 W/cm² | **3.545 W/cm²** | **≈ 3.6** |
+
+<Figure src={geom} alt="The 76.2 mm cylinder with the solved arc from minus 45 to plus 45 degrees highlighted, the freestream arrow from the left, and tick marks at the predicted PANT-RT onset (15.30 degrees) and the paper's Table 3 value (10.06 degrees)." source="projects/hypersonic-solver/results/geometry_profile.png" maxWidth={620}>
+The geometry. The solved arc runs to Θ = 45°. The predicted PANT-RT onset (orange) sits downstream of the paper's Table 3 value (grey).
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+### Limitations
+
+- **Laminar only.** "Transition" here means the angle where a published engineering correlation says roughness trips the layer. Nothing downstream of that point is computed.
+- **Calorically perfect air** (γ = 1.4, Pr = 0.71), with no chemistry. The two-temperature nonequilibrium extension is noted but out of scope.
+- **Modified Newtonian edge conditions** are the paper's prescription, not its DNS extraction. This is the most likely source of the common ~9 % offset.
+- **Local similarity** ignores streamwise history. It is exact at the stagnation line and degrades downstream (β reaches about 1.76 by 45°).
+- **The Re<sub>θ</sub> viscosity convention is inferred, not sourced.** Using μ<sub>w</sub> instead of μ<sub>e</sub> moves the PANT-RT onset from 15.30° to 10.64°, so I flagged it rather than tuning it.
+- **Sutherland's law** gives a unit Reynolds number 7.6 % above the paper's at 58.6 K. A power-law option is included.
+
+### Next steps
+
+- Mangler-type weighting so the axisymmetric sphere-cone (already in the geometry code) can be marched. For now `march()` refuses it with an explicit error.
+- The Reda three-regime correlation, which needs properties at the roughness height. That would reproduce the full Table 3 row.
+- Replacing Modified Newtonian with a computed inviscid solution, to test the edge-model explanation directly.
+
+### What I learned
+
+Write down where every equation comes from before coding it. That habit is what made the missing pressure-work term findable: the code was faithful to the paper, so the disagreement with the DNS had to be physics, not a bug. I also learned to turn every judgement call into a test, so that a later change can't quietly undo it.
+
+</TabPanel>
+
+<TabPanel id="code">
+
+Curated excerpts. The full solver has six modules and a test suite of 144 tests.
+
+<CodeSnippet code={rhs} lang="python" title="Five-state right-hand side for (C 3)–(C 4)" source="hypersonic-solver/src/similarity_bl.py">
+Conservative variables keep `solve_bvp` well conditioned when the Chapman–Rubesin parameter C varies strongly through a cold-wall layer. The pressure-work term is switched by `energy_form`. Its coefficient is zero whenever β or M<sub>e</sub> is zero, which is why both forms agree exactly where the papers use (C 4).
+</CodeSnippet>
+
+<CodeSnippet code={pantrt} lang="python" title="PANT-RT transition onset" source="hypersonic-solver/src/transition.py">
+The onset angle is interpolated linearly between the two stations that bracket the threshold.
+</CodeSnippet>
+
+<CodeSnippet code={testEnth} lang="python" title="Tests that pin the energy-equation diagnosis" source="hypersonic-solver/tests/test_similarity_bl.py">
+The first test guards the diagnosis: the printed equation *must* violate the total-enthalpy identity at finite β·M<sub>e</sub>. The second verifies the restored term independently of any outside source.
+</CodeSnippet>
+
+<CodeSnippet code={testFay} lang="python" title="Guarding a modelling decision" source="hypersonic-solver/tests/test_fay_riddell.py" />
+
+</TabPanel>

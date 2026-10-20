@@ -1,0 +1,223 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SkillsMatrix from "@/components/SkillsMatrix.astro";
+import Timeline from "@/components/Timeline.astro";
+import { site } from "@/data/site";
+const dev = import.meta.env.DEV;
+
+// Dates come from the résumé (Oct 2026) and the project files.
+const timeline = [
+  {
+    when: "Jun – Aug 2023",
+    title: "Engineering intern, AGQ Labs (Bahrain)",
+    body: "GIS analysis in ArcGIS of agricultural land conditions for the NEOM region in Saudi Arabia.",
+  },
+  {
+    when: "Aug 2023",
+    title: "Start of the B.S. in Aerospace Engineering Sciences at CU Boulder",
+    body: "First programming projects in C++.",
+    href: "/projects/candy-land/",
+  },
+  {
+    when: "Jan – May 2024",
+    title: "Regenerative-power CubeSat payload",
+    body: "A suborbital payload that reached the Kármán line, testing power generation from in-space temperature gradients.",
+    href: "#beyond",
+  },
+  {
+    when: "Jan 2024 – now",
+    title: "High-power rocketry",
+    body: "Tripoli Level 1 certified; building a fiberglass, dual-deploy rocket for Level 2.",
+    href: "#beyond",
+  },
+  {
+    when: "Fall 2024",
+    title: "Experimental & computational methods",
+    body: "First simulation projects: TCAS closest approach and a water-rocket trajectory.",
+    href: "/projects/bottle-rocket/",
+  },
+  {
+    when: "Jan – May 2025",
+    title: "Project manager, ASEN 2804 glider team",
+    body: "A 9-member team, with a dual-design approach and MATLAB configuration studies.",
+    href: "#beyond",
+  },
+  {
+    when: "Jun – Nov 2025",
+    title: "DebriSolver competition",
+    body: "A conjunction-risk response concept for orbital debris mitigation.",
+    href: "/projects/debrisolver/",
+  },
+  {
+    when: "Aug 2025 – Apr 2026",
+    title: "Team lead, NASA RASC-AL: Project REGENESIS",
+    body: "Led a 16-member team on a lunar ISRU infrastructure concept.",
+    href: "#beyond",
+  },
+  {
+    when: "Spring 2026",
+    title: "Scientific computing, aerodynamics labs",
+    body: "PDE solvers, the vortex panel method, lifting-line theory.",
+    href: "/coursework/",
+  },
+  {
+    when: "Aug 2026",
+    title: "Hypersonic boundary-layer solver",
+    body: "My first research-style project.",
+    href: "/projects/hypersonic-solver/",
+  },
+  {
+    when: "Fall 2026",
+    title: "Senior design, graduate hypersonics, Flow Vis",
+    body: "ASEN 4018, ASEN 5131, ATLS 5151. DebriSolver pipeline and report completed (Oct 2026).",
+    href: "/projects/sim6dof/",
+  },
+  { when: "May 2027", title: "B.S. Aerospace Engineering Sciences (expected)", body: site.minors + "." },
+  { when: "Fall 2027", title: "Graduate school (applying)", body: "MS/PhD in CFD and hypersonics.", todo: true },
+];
+
+const beyond = [
+  {
+    title: "Team lead, NASA RASC-AL: Project REGENESIS",
+    when: "Aug 2025 – Apr 2026",
+    body: "Led a 16-member multidisciplinary team representing CU in NASA's 2025–26 RASC-AL competition, developing a lunar ISRU infrastructure concept with faculty advisors. I ran ANSYS simulations of launchpad durability under lunar-lander plume and landing loads.",
+  },
+  {
+    title: "Regenerative-power CubeSat payload",
+    when: "Jan – May 2024",
+    body: "Designed a suborbital payload that reached the Kármán line to test power generation from Peltier devices and in-space temperature gradients. I ran vacuum-chamber tests with liquid-nitrogen cooling, then compared them with post-flight telemetry.",
+  },
+  {
+    title: "High-power rocketry",
+    when: "Jan 2024 – now",
+    body: "Used OpenRocket simulations and CAD structural models to reach Tripoli Rocketry Association Level 1 certification. I'm now building a fiberglass composite rocket with dual-deploy recovery for Level 2.",
+  },
+  {
+    title: "Project manager, ASEN 2804 glider design",
+    when: "Jan – May 2025",
+    body: "Elected project manager of a 9-member team. I introduced a dual-design approach (3D-printed and balsa airframes) and wrote MATLAB simulation code to compare glider configurations, then checked the results against wind-tunnel data.",
+  },
+  {
+    title: "APPM 4350: heat diffusion in 3-D geometries",
+    when: "Oct – Dec 2025",
+    body: "Derived analytical heat-equation solutions with separation of variables and eigenfunction expansions, then compared them with numerical and experimental temperature measurements.",
+  },
+];
+
+const awards = [
+  "Tripoli Rocketry Association Level 1 high-power rocket certification",
+  "Saudi Aramco CDPNE competition (awarded scholarship)",
+  "UK Mathematics Challenge: Gold (2021), Silver (2020)",
+  "Custodian of the Two Holy Mosques Scholarship Program: full scholarship",
+];
+---
+
+<BaseLayout
+  title="About"
+  description="About Khalil (Lilo) Sidani: B.S. Aerospace Engineering Sciences at CU Boulder, working toward CFD and hypersonics research."
+>
+  <!-- DRAFT: About copy. TODO(Lilo): rewrite the bio in your own voice. -->
+  <article class="wrap pt-12 md:pt-16">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <div class="max-w-3xl">
+        <p class="eyebrow">About {dev && <span class="draft-badge ml-2">draft</span>}</p>
+        <h1 class="mt-3 text-[clamp(2rem,4.5vw,3rem)]">
+          Khalil Sidani <span class="text-faint">(Lilo)</span>
+        </h1>
+        <div class="prose mt-6 text-[1.0625rem]">
+          <p>
+            I came to the University of Colorado Boulder from Bahrain to study aerospace engineering. I'm finishing a
+            B.S. in Aerospace Engineering Sciences (expected May 2027) with a dual minor in Applied Mathematics and
+            Engineering Management, and I'm taking graduate courses in hypersonic aerodynamics and flow visualisation
+            alongside senior design.
+          </p>
+          <p>
+            Most of my work outside class is hands-on and team-based. I led a 16-person NASA RASC-AL team, flew a
+            CubeSat-style payload to the edge of space, and certified in high-power rocketry. I also competed in the
+            Saudi Space Agency's DebriSolver competition on debris mitigation and collision avoidance.
+          </p>
+          <p>
+            What pulls everything together is high-speed flight. I'm drawn to the problems that decide whether a
+            hypersonic vehicle survives: heating, transition and thermal protection, and to building the simulation
+            tools that predict them. I'm applying to MS/PhD programs for Fall 2027 with an emphasis on CFD and
+            hypersonics.
+          </p>
+          <h2>The long game</h2>
+          <p>
+            I want to found a company that builds commercial supersonic and hypersonic aircraft. That's a long way off.
+            The first step is learning to predict and design for the aerothermal environment properly, which is why my
+            research interests look the way they do.
+          </p>
+        </div>
+      </div>
+      <aside class="lg:pt-16">
+        <div class="card overflow-hidden">
+          <div
+            class="grid aspect-[4/5] place-items-center bg-surface-2 text-center"
+            role="img"
+            aria-label="Headshot placeholder"
+          >
+            <div>
+              <p class="mono-label">Headshot coming soon</p>
+              <p class="mt-2 font-display text-4xl text-faint">KS</p>
+            </div>
+          </div>
+          <div class="p-4 text-sm">
+            <p class="font-medium">{site.degree}</p>
+            <p class="mt-1 text-muted">{site.minors}</p>
+            <p class="mono-label mt-2">{site.location}</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <a href="/cv/" class="btn !px-3 !py-1.5 text-sm">
+                CV
+              </a>
+              <a href="/contact/" class="btn !px-3 !py-1.5 text-sm">
+                Contact
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <section id="beyond" class="mt-16 scroll-mt-24" aria-labelledby="beyond-h">
+      <h2 id="beyond-h" class="text-2xl">
+        Beyond the code
+      </h2>
+      <p class="mt-2 max-w-[64ch] text-muted">Leadership, hardware and team projects from my CV.</p>
+      <ul class="mt-6 grid gap-4 md:grid-cols-2">
+        {beyond.map((b) => (
+          <li class="card p-5">
+            <p class="mono-label">{b.when}</p>
+            <h3 class="mt-1 text-lg">{b.title}</h3>
+            <p class="mt-2 text-sm text-muted">{b.body}</p>
+          </li>
+        ))}
+      </ul>
+      <h3 class="mt-10 text-lg">Awards</h3>
+      <ul class="mt-3 grid gap-2 text-muted sm:grid-cols-2">
+        {awards.map((a) => (
+          <li class="card px-4 py-3 text-sm">{a}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="skills" class="mt-16 scroll-mt-24" aria-labelledby="skills-h">
+      <h2 id="skills-h" class="text-2xl">
+        Skills matrix
+      </h2>
+      <p class="mt-2 max-w-[64ch] text-muted">Every skill links to where I used it, so you can check.</p>
+      <div class="mt-6">
+        <SkillsMatrix />
+      </div>
+    </section>
+
+    <section class="mt-16" aria-labelledby="timeline-h">
+      <h2 id="timeline-h" class="text-2xl">
+        Timeline
+      </h2>
+      <div class="mt-6 max-w-2xl">
+        <Timeline items={timeline} />
+      </div>
+    </section>
+  </article>
+</BaseLayout>

@@ -1,0 +1,23 @@
+---
+interface Props {
+  type: "Personal" | "Course" | "Team" | "Competition";
+  class?: string;
+}
+const { type, class: cls } = Astro.props;
+const tone = {
+  Personal: "text-flow border-flow/40",
+  Competition: "text-accent border-accent/40",
+  Team: "text-muted border-line-strong",
+  Course: "text-faint border-line",
+}[type];
+---
+
+<span
+  class:list={[
+    "inline-block rounded border px-1.5 py-px font-mono text-[0.6875rem] tracking-[0.08em] uppercase",
+    tone,
+    cls,
+  ]}
+>
+  {type}
+</span>

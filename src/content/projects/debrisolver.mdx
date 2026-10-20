@@ -1,0 +1,192 @@
+---
+title: "DebriSolver: Autonomous Conjunction-Risk Response"
+slug: debrisolver
+summary: An end-to-end pipeline that turns satellite conjunction data messages into a decision (no action, monitor, human review or a verified avoidance maneuver), with every stage validated against an independent reference.
+hook: From raw conjunction messages to a verified avoidance burn. Pc matches NASA CARA to 8.9e-8, and the ML model's tie with its baseline is reported as-is.
+tldr: A four-stage pipeline for LEO collision risk covering parsing and credibility scoring, a 114-feature dataset, an XGBoost risk forecast and MATLAB minimum-ΔV maneuvers. Pc matches NASA CARA to 8.9e-8, and all 567 propagated maneuvers meet the 3.2e-6 target.
+type: Competition
+course: DebriSolver competition, Phase III (Saudi Space Agency)
+role: Sole developer, from proposal to pipeline, validation and report
+dates: 2025 – Oct 2026
+date: 2026-10-18
+tags: [Orbital/SSA, Machine Learning]
+stack: [Python, pandas, XGBoost, SHAP, MATLAB, fmincon / MultiStart, Plotly, pytest]
+featured: true
+order: 2
+tier: flagship
+heroImage: ../../assets/projects/debrisolver/V12_bplane_showcase.png
+heroAlt: Three encounter-plane panels showing nested probability-of-collision contours and covariance ellipses. In each, an arrow moves the miss point from inside the danger region to outside the 3.2e-6 contour after a tangential burn one day before closest approach.
+thumbnail: ../../assets/projects/debrisolver/V12_bplane_showcase.png
+thumbnailAlt: Encounter-plane plot of a collision-avoidance maneuver moving the miss point outside the danger contour.
+metrics:
+  - { value: "8.9e−8", label: "max rel. error vs NASA CARA Pc (977 cases)" }
+  - { value: "567 / 567", label: "propagated maneuvers meet Pc ≤ 3.2e−6" }
+  - { value: "21.8 → 7.3 mm/s", label: "median ΔV at 1 → 3 days lead" }
+  - { value: "99.7 %", label: "ESA test events resolved without an operator" }
+links: {}
+status: complete
+---
+{/* TODO(Lilo): competition placing/outcome; confirm the project may be described publicly; link report/slides if allowed. */}
+import V1 from "../../assets/projects/debrisolver/V1_pc_vs_cara.png";
+import V4 from "../../assets/projects/debrisolver/V4_pc_scaling_dilution.png";
+import V7 from "../../assets/projects/debrisolver/V7_ml_vs_baselines.png";
+import V9 from "../../assets/projects/debrisolver/V9a_shap_summary.png";
+import V11 from "../../assets/projects/debrisolver/V11_credibility.png";
+import V12 from "../../assets/projects/debrisolver/V12_bplane_showcase.png";
+import V13 from "../../assets/projects/debrisolver/V13_dv_vs_lead_time.png";
+import V14 from "../../assets/projects/debrisolver/V14_pre_post_pc.png";
+import V15 from "../../assets/projects/debrisolver/V15_cw_vs_kepler.png";
+import V16 from "../../assets/projects/debrisolver/V16_pipeline_sankey.png";
+import pcSnip from "../../snippets/deb_pc_integrand.py?raw";
+import mvSnip from "../../snippets/deb_maneuver.m?raw";
+
+<TabPanel id="overview">
+
+### The problem
+
+Conjunction assessment still relies heavily on human analysts. They judge tracking-data quality, interpret the probability of collision (Pc), and design avoidance maneuvers, and the workload grows with every new constellation. My Phase III proposal for the DebriSolver competition aimed to automate the routine cases and send only the ambiguous ones to a human.
+
+Two technical problems shaped the design:
+
+- **Dilution.** A small Pc can mean the encounter is safe, or that the tracking data are too poor to tell. I needed to check what Pc *could* be (the maximum Pc) and how credible the orbit determination is.
+- **Heterogeneous data.** Public sources such as CelesTrak SOCRATES carry no covariance at all, so the system has to know which inputs it can trust.
+
+### What I built
+
+1. **Data filtration.** Parses CCSDS conjunction data messages (KVN and XML, including TraCSS fields), the ESA challenge CSV, SOCRATES and Space-Track `cdm_public`. It de-duplicates messages and scores credibility on six sub-scores anchored on NASA CARA's orbit-determination quality checks.
+2. **Dataset.** One 114-feature learning-table schema, asserted on both training and live inference.
+3. **ML risk model.** An XGBoost classifier and value regressor, anchored on the latest risk, aware of the ESA test set's class-prior shift, and explained with SHAP.
+4. **Maneuver.** A minimum-ΔV impulse from MATLAB `fmincon` with an analytic warm start, verified by two-body + J2 propagation and Monte Carlo.
+
+A decision layer combines these into **NO_ACTION · MONITOR · REVIEW · MANEUVER** and writes one JSON operator-log line per event, with its reasons.
+
+<Figure src={V12} alt="Three encounter-plane panels for events #1, #583 and #633. Each shows 1-3 sigma covariance ellipses, iso-Pc contours and a dashed 3.2e-6 target contour. Arrows move the miss point from inside to outside the target contour; tangential burns of 15.2, 62.1 and 61.1 mm/s one day before TCA." source="debrisolver-conjunction-risk/results/figures/V12_bplane_showcase.png" wide>
+**Hero result.** The tangential burn moves the miss point outside the 3.2 × 10⁻⁶ contour in all three showcase events, including one in the dilution region (middle). Each panel is shown in the principal frame of the combined covariance, and the axes are not to scale.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+### Probability of collision
+
+In the encounter plane (ẑ along the relative velocity, x̂ along the miss), Pc is the integral of the combined position uncertainty over the hard-body disk:
+
+<Equation tex={String.raw`P_c = \frac{1}{2\pi\sqrt{|C|}}\iint_{\|\mathbf{r}\| \le R} \exp\!\left[-\tfrac12(\mathbf{r}-\boldsymbol{\mu})^{\mathsf T} C^{-1}(\mathbf{r}-\boldsymbol{\mu})\right] dA`} />
+
+I reduce it exactly to one dimension in the covariance's principal frame. The major axis is integrated analytically as a difference of normal CDFs, evaluated on the tail side for accuracy. The minor axis is integrated with the substitution x = R sin θ, using break points where the chord changes regime and composite Gauss–Legendre quadrature. The same algorithm runs in Python (pipeline) and MATLAB (maneuvers); the two agree to 2.2 × 10⁻¹³.
+
+**Dilution.** Scaling the covariance by k² and maximising Pc(k) gives the worst case. An event with k* < 1 is in the dilution region. I don't auto-clear it if its maximum Pc reaches the action threshold. Instead it goes to REVIEW with the reason "request better tracking data". That is a deliberate departure from NASA CARA's published stance, explained in the report.
+
+### Maneuver design
+
+An impulse Δv in the primary's RTN frame at time τ before TCA moves the miss vector by MΔv, where M = −PΦ<sub>rv</sub>(τ)Q. Φ is the Clohessy–Wiltshire map for near-circular orbits, or a two-body + J2 variational STM otherwise. The optimisation is
+
+<Equation tex={String.raw`\min_{\Delta\mathbf v}\ \|\Delta\mathbf v\| \quad\text{s.t.}\quad P_c(\boldsymbol\mu + M\,\Delta\mathbf v,\ C_{2D},\ R) \le 3.2\times10^{-6}`} />
+
+solved with `fmincon` (SQP) in mm/s for conditioning. The warm start is the eigenvector of MᵀC<sub>2D</sub>⁻¹M with the largest eigenvalue, which is the direction of maximum Mahalanobis displacement per unit Δv. `MultiStart` confirmed the optimum in 15 of 15 checked cases. Every plan is then **propagated** with both objects (two-body + J2, `ode113`, RelTol 10⁻¹²), the TCA is re-found, and Pc is recomputed. For 11 of 567 large burns the linear map fell short, so I re-optimised them with the propagated Pc as the constraint.
+
+### ML protocol
+
+I follow the ESA Collision Avoidance Challenge protocol exactly: 8,293 training and 2,167 test events, scored by L = MSE<sub>HR</sub>/F2. I reproduced the latest-risk baseline (LRP) first, to L = 0.6940 against the paper's 0.694. The test set is deliberately label-shifted, so the deployment prior is estimated from the *unlabelled* test inputs by EM. Hyper-parameters were chosen by grouped cross-validation on the training set only, and the model was evaluated once on test.
+
+</TabPanel>
+
+<TabPanel id="results">
+
+### Validation scoreboard
+
+| Test | Measured | Result |
+|---|---|---|
+| Foster Pc vs NASA CARA `Pc2D_Foster` | max rel. error 8.9e−8 (Pc ≥ 1e−10); 977/977 within tolerance | <span class="pass">PASS</span> |
+| Foster Pc vs reference Pc, 2,170 Armellin cases | median \|Δlog₁₀\| 0.0005 | <span class="pass">PASS</span> |
+| Isotropic Pc<sub>max</sub> = HBR²/(e d²) | max error 2.4e−7 | <span class="pass">PASS</span> |
+| SOCRATES max-Pc reproduction (158 rows) | median 0.021 dex (HBR 2 m inferred) | <span class="pass">PASS</span> |
+| ESA latest-risk baseline | L = 0.6940 (paper 0.694) | <span class="pass">PASS</span> |
+| **ML model on the ESA test set** | **L = 0.697 vs 0.694; F2 0.753 vs 0.739** | <span class="fail">FAIL</span> |
+| Post-maneuver Pc (propagated) + Monte Carlo | 100 % of 567 ≤ 3.2e−6; MC 36/36 within 95 % CI | <span class="pass">PASS</span> |
+| Python ↔ MATLAB Pc | 2.2e−13 (20 cases) | <span class="pass">PASS</span> |
+
+<Figure src={V1} alt="Log-log scatter of this project's Foster Pc against NASA CARA's Pc2D_Foster for 977 cases spanning 1e-29 to 1, all on the identity line, with an inset histogram of relative errors mostly below 1e-12." source="debrisolver-conjunction-risk/results/figures/V1_pc_vs_cara.png" maxWidth={680}>
+The Pc implementation against NASA CARA across 28 orders of magnitude. Inset: relative errors for Pc ≥ 10⁻¹⁰.
+</Figure>
+
+### The 3D encounters
+
+<EncounterViewer />
+
+### Maneuvers
+
+<Figure src={V14} alt="Scatter of collision probability before versus after each maneuver: all 567 post-maneuver points lie at or below the 3.2e-6 line, with Monte Carlo 95 percent intervals overlapping." source="debrisolver-conjunction-risk/results/figures/V14_pre_post_pc.png">
+Every one of 567 maneuvers meets the target after full propagation. The error bars are Monte Carlo 95 % Clopper–Pearson intervals with 2 × 10⁷ samples per case.
+</Figure>
+
+<Figure src={V13} alt="Median and interquartile range of minimum delta-V versus lead time for tangential, free-direction and dual-spacecraft maneuvers, falling roughly as one over lead time, with published values for comparison." source="debrisolver-conjunction-risk/results/figures/V13_dv_vs_lead_time.png">
+The minimum ΔV falls roughly as 1/τ. The median tangential ΔV is 21.8, 10.1 and 7.3 mm/s at 1, 2 and 3 days. Published values on the same data are 12–43 mm/s with about one revolution of lead; my 1-day lead is about 15 revolutions. A tangential burn is within 0.02 % of the free-direction optimum at these leads.
+</Figure>
+
+<Figure src={V15} alt="Relative error of Clohessy-Wiltshire and Keplerian state-transition maps against propagation as a function of lead time; CW stays near 0.25-0.5 percent, Keplerian near 5e-6." source="debrisolver-conjunction-risk/results/figures/V15_cw_vs_kepler.png">
+When the linear map is safe: the Clohessy–Wiltshire B-plane displacement stays within 0.25–0.5 % (median) of propagation out to 3 days, and the Keplerian STM within 5 × 10⁻⁶.
+</Figure>
+
+### Machine learning, reported honestly
+
+<Figure src={V7} alt="Bar charts of the challenge metric L, F2 and MSE for the constant baseline, latest-risk baseline, this model and the ESA winner, on cross-validation and on the test set." source="debrisolver-conjunction-risk/results/figures/V7_ml_vs_baselines.png">
+On the test set the model **ties** the latest-risk baseline: L = 0.697 against 0.694, with a paired-bootstrap 95 % interval on the difference of [−0.06, +0.06]. It catches 6 more high-risk events (F2 0.753 vs 0.739), but the value regressor, trained on only 66 high-risk events, did not transfer.
+</Figure>
+
+<Callout tone="honest">
+A classifier-only variant would have scored L = 0.681 and "beaten" the baseline. I only found that after looking at the test set, so I don't claim it. With 150 positives, the benchmark's own 95 % interval is about [0.48, 0.96], so most published improvements over the baseline are within noise. The credibility check (V11) also **failed** among decision-relevant events: the ESA backlog is uniformly well tracked, so it can't validate the review threshold.
+</Callout>
+
+<Figure src={V9} alt="SHAP beeswarm plot for the high-risk classifier: the recomputed Pc feature has the largest impact, followed by history mean, latest risk and risk delta." source="debrisolver-conjunction-risk/results/figures/V9a_shap_summary.png">
+Exact TreeSHAP values. The recomputed physics Pc is the top reason, and the top three reasons for every event are written to the operator log.
+</Figure>
+
+### At scale
+
+<Figure src={V16} alt="Sankey diagram of 2,167 ESA test events flowing through GREEN, YELLOW, AMBER and RED tiers to NO_ACTION, MONITOR, REVIEW and MANEUVER." source="debrisolver-conjunction-risk/results/figures/V16_pipeline_sankey.png">
+Of 2,167 ESA test events, 99.7 % are resolved without an operator: 23 receive an automatic, verified maneuver (median 16 mm/s) and 7 go to human review.
+</Figure>
+
+<Figure src={V4} alt="Pc versus covariance scale factor for six events, with each curve's peak marked and the dilution side shaded." source="debrisolver-conjunction-risk/results/figures/V4_pc_scaling_dilution.png">
+The dilution problem: past the peak, more uncertainty *lowers* Pc. The dashed isotropic closed form matches to 2.4 × 10⁻⁷.
+</Figure>
+
+<Figure src={V11} alt="Left, histogram of credibility scores for ESA events. Right, mean forecast error per credibility quintile for all events and for decision-relevant events, which shows no monotone trend." source="debrisolver-conjunction-risk/results/figures/V11_credibility.png">
+The credibility check that failed: across all events, low credibility does mean larger forecast error (0.55 vs 0.18 decades), but not among the decision-relevant events.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+### Limitations
+
+- **The ML model doesn't beat the baseline.** It's tied within noise, and reported as a FAIL.
+- **Rectilinear 2D Pc.** I check the short-encounter assumption with Hall–Baars–Casali usage indicators. Flagged events go to REVIEW rather than being computed with a 3D method.
+- **ESA covariance-frame approximation.** ESA rows have no absolute states, so the chaser covariance is rotated with an approximate circular target state. The agreement is a median 0.0025 decades, but single events can be offset.
+- **Public data are demonstration only.** SOCRATES and Space-Track `cdm_public` carry no covariance, and public TLEs are not adequate for operational conjunction assessment.
+- **Secondary conjunctions are only checked within the input set.** Operationally, the maneuvered ephemeris must be screened against the full catalogue.
+
+### Next steps
+
+Screen maneuvered ephemerides against the full catalogue, call `Pc3D_Hall` or Monte Carlo automatically for usage-violation events, re-split the ESA data by mission to retest the regressor honestly, and calibrate the credibility weights against operator-labelled data.
+
+### What I learned
+
+**Validate every stage against something independent before trusting the next one.** The Pc code had to match CARA before any ML touched it, and the baseline had to reproduce L = 0.694 before I trained a model. **Pre-register** what counts as success. Without that, I would have "won" with a variant chosen after seeing the test set.
+
+</TabPanel>
+
+<TabPanel id="code">
+
+<CodeSnippet code={pcSnip} lang="python" title="Foster Pc: the 1-D integrand after the exact reduction" source="debrisolver-conjunction-risk/src/crr/physics/pc.py">
+The major-axis integral becomes a band probability of a standard normal, computed on the upper tail through symmetry, so tiny probabilities don't lose precision to cancellation. The vectorised Gauss–Legendre sum over this integrand matches CARA to 8.9 × 10⁻⁸.
+</CodeSnippet>
+
+<CodeSnippet code={mvSnip} lang="matlab" title="Minimum-ΔV maneuver: analytic warm start, then fmincon" source="debrisolver-conjunction-risk/matlab/+crr/maneuver_single.m">
+The eigenvector warm start is already near-optimal, and the code refuses any `fmincon` answer worse than it. Working in mm/s keeps the SQP iteration well scaled.
+</CodeSnippet>
+
+</TabPanel>

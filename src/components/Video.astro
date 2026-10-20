@@ -1,0 +1,57 @@
+---
+// Looping simulation video. Plays when scrolled into view (never with
+// prefers-reduced-motion), pauses when hidden. Controls are always available.
+import { getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  src: string; // file in /public, e.g. "/media/tsunami.mp4"
+  poster: ImageMetadata;
+  alt: string;
+  source?: string;
+  id?: string;
+}
+const { src, poster, alt, source, id } = Astro.props;
+const p = await getImage({ src: poster, width: Math.min(poster.width, 1280), format: "webp" });
+---
+
+<figure class="figure wide my-8" id={id}>
+  <div class="paper overflow-hidden rounded-[var(--radius-lg)] border border-line">
+    <video
+      class="block h-auto w-full"
+      src={src}
+      poster={p.src}
+      controls
+      muted
+      loop
+      playsinline
+      preload="none"
+      aria-label={alt}
+      data-autoplay-in-view
+    >
+      <p>{alt}</p>
+    </video>
+  </div>
+  <figcaption class="mt-3 text-sm leading-relaxed text-muted">
+    <span class="fig-num font-mono text-xs tracking-wide text-ink"></span>
+    <slot />
+    {source && <span class="mono-label mt-1 block">Source: {source}</span>}
+  </figcaption>
+</figure>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const v = e.target as HTMLVideoElement;
+          if (e.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    document.querySelectorAll<HTMLVideoElement>("video[data-autoplay-in-view]").forEach((v) => io.observe(v));
+  }
+</script>

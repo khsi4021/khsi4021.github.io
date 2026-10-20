@@ -1,0 +1,171 @@
+---
+title: "Capstone UAV: Sizing, Weight Model & Design Trades"
+slug: aircraft-design-toolbox
+summary: My extensions to the course-provided aircraft design toolbox for the ASEN 4018 electric UAV, including a blind-validated empty-weight model, a flap model, design-space sweeps, and mission-envelope and sensitivity studies.
+hook: An empty-weight model that passes a blind benchmark (+1.7 %) where the textbook regression misses by +29 %, plus the sweeps and studies it feeds.
+tldr: The professors gave us a MATLAB sizing toolbox to modify for our 55 lb electric UAV. I added a survey-based empty-weight model (blind benchmark +1.7 %, Raymer +29 %), a flap model, design-space sweeps, and mission-envelope and sensitivity studies.
+type: Team
+course: ASEN 4018 Senior Design
+team: Capstone team. The base toolbox was provided by the course professors.
+role: Modified and extended the course toolbox (weight model, flap model, design mission, sweeps, mission-envelope and sensitivity studies)
+dates: Fall 2026
+date: 2026-10-18
+tags: [Aircraft Design, Aerodynamics]
+stack: [MATLAB, Excel I/O]
+featured: true
+order: 4
+tier: flagship
+heroImage: ../../assets/projects/aircraft/geometry_trade.png
+heroAlt: Heat map of sized gross takeoff weight over wing area (3 to 12 square feet) and aspect ratio (4 to 12); check marks show six feasible designs at 8 to 9 square feet, and hatched cells mark designs whose sizing did not converge.
+thumbnail: ../../assets/projects/aircraft/geometry_trade.png
+thumbnailAlt: Design-space heat map of gross weight against wing area and aspect ratio.
+metrics:
+  - { value: "+1.7 %", label: "blind Penguin BE benchmark (Raymer: +29.4 %)" }
+  - { value: "6 / 54", label: "geometries fully feasible at the design mission" }
+  - { value: "−3.09", label: "range elasticity to empty-weight fraction" }
+  - { value: "11,340", label: "designs in the first sweep" }
+links: {}
+status: in progress
+---
+import trade from "../../assets/projects/aircraft/geometry_trade.png";
+import wreg from "../../assets/projects/aircraft/weight_regression.png";
+import env from "../../assets/projects/aircraft/mission_envelope.png";
+import fitSnip from "../../snippets/adt_survey_fit.m?raw";
+
+<TabPanel id="overview">
+
+### The problem
+
+The capstone RFP calls for a fixed-wing electric UAV with a 55 lb MTOW. It must carry two 1U CubeSats (8.8 lb) at 125 mph for an hour, with takeoff, landing and stall evaluated at 8,000 ft density altitude. At a fixed MTOW, **battery is whatever weight is left over**, so the empty-weight estimate decides whether the mission closes at all. The two models available to us disagreed badly. The toolbox's Raymer statistical fit gave W<sub>e</sub>/W<sub>0</sub> = 0.59 (infeasible), while an uncalibrated component buildup gave 0.35 (comfortably feasible).
+
+### What I did
+
+The course professors gave us the AES Aircraft Design Toolbox, a MATLAB sizing code, and our job was to modify and extend it for our aircraft. My changes:
+
+- **Empty-weight model.** I graded published sources, built a survey dataset of electric fixed-wing UAVs, fit a new regression, and benchmarked it **blind** against an aircraft held out of the fit.
+- **Flap model.** I added single-slotted flap increments (Raymer Ch. 12) and wired them into the requirement and mission tables, so CL<sub>max</sub> comes from geometry instead of hand-typed values.
+- **Design-space sweeps.** I wrote a sweep over wing area, aspect ratio, motor power, cruise speed and endurance (11,340 designs), then a geometry trade at the design mission.
+- **Design mission, mission envelope and sensitivity.** I set up the design mission (125 mph for 36 min, then loiter to 60 min), wrote a tool that maps every cruise/loiter split the battery allows at MTOW, and ranked which assumptions drive range.
+
+<Figure src={trade} alt="Heat map of sized gross takeoff weight over wing area and aspect ratio; six check-marked feasible designs at 8 to 9 square feet; hatched cells did not converge." source="aircraft-design-toolbox/MAIN/Output Excel Sheets/Geometry tradeFinal.png" wide>
+**Hero result.** The geometry trade at the design mission. 49 of 54 geometries close the energy budget, but only 6 meet every constraint and MTOW, all at S = 8–9 ft². The 45 mph stall at 8,000 ft rules out S ≤ 7, and the lightest feasible design (S 8 / AR 8) weighs 51.9 lb.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+### Where the empty-weight model enters
+
+The toolbox converges gross weight from the fixed payload, the battery mass fraction (BMF) and the empty-weight fraction:
+
+<Equation tex={String.raw`W_0 = \frac{W_\text{pay}}{1 - \text{BMF} - W_e/W_0}`} />
+
+At a fixed MTOW, every bit of empty-weight error comes straight out of the battery. My sensitivity study put the elasticity of range to W<sub>e</sub>/W<sub>0</sub> at **−3.09**, the largest of any parameter.
+
+### A survey-based empty-weight model
+
+Datasheets for electric UAVs give MTOW and payload but not battery mass, so only (W<sub>e</sub> + W<sub>batt</sub>)/W<sub>0</sub> is known. The selected model (Fit B) estimates each aircraft's battery from what it actually flies. Cruise power is drag times speed, so
+
+<Equation tex={String.raw`E_i = k\,W_i V_i t_i, \qquad k = \frac{640\ \text{Wh}}{17.7\ \text{kg}\times 22\ \text{m/s}\times 1.83\ \text{h}}`} />
+
+with k anchored on the Penguin BE's published figures and pack energy density chosen by endurance class (145 / 200 / 250 Wh/kg). Then
+
+<Equation tex={String.raw`\log\frac{W_e}{W_0} = \log a + c_1 \log W_0`} />
+
+is fit by least squares to 10 battery-electric UAVs of 9–45 kg. That gives a = 0.9890 and c₁ = −0.1787, with a leave-one-out error of 14.5 %. The Penguin BE is **kept out of the fit** as the validation point. With only 10 aircraft (R² = 0.28) the slope is poorly determined, so the model is used for its value at our weight, 0.483, carried as 0.50 ± 0.05.
+
+Each source got a reliability grade (from A, measured hardware, to D, a marketing figure) and a fit grade (relevance to a 9–36 kg battery-electric fixed-wing aircraft). Calibration and validation data were kept separate.
+
+### High-lift
+
+With single-slotted flaps over 60 % of the wing area (cf/c 0.25, 15° takeoff / 40° landing), the model gives CL<sub>max</sub> = 1.03 clean, 1.29 for takeoff and 1.72 for landing. That replaced the CL<sub>max</sub> of 2.0–2.2 assumed in earlier work, and the allowable stall wing loading dropped from 8.95 to 6.99 psf, a 22 % tightening.
+
+Solving for the flapped-area fraction needed to reach CL<sub>max</sub> 2.2 with single-slotted flaps gives S<sub>wf</sub>/S<sub>ref</sub> = 1.018, more than the whole wing. Even at a generous 70 % flapped-area fraction, single-slotted flaps reach 1.83. Reaching 2.2 needs a double-slotted Fowler system, which is likely outside the budget.
+
+</TabPanel>
+
+<TabPanel id="results">
+
+### Weight-model benchmark (blind)
+
+Each model predicts the Penguin BE's empty weight at its 21.5 kg MTOW, against a target of 10.49 kg. The proposed pass band is ±15 %.
+
+| Model | Predicted W<sub>e</sub> | Error | Pass |
+|---|---|---|---|
+| Raymer `UAV_Prop` | 13.58 kg | +29.4 % | <span class="fail">no</span> |
+| Raymer `Homebuilt_Composite_Prop` | 15.80 kg | +50.6 % | <span class="fail">no</span> |
+| Survey Fit A (flat battery share) | 12.72 kg | +21.2 % | <span class="fail">no</span> |
+| **Survey Fit B (selected)** | **10.67 kg** | **+1.7 %** | <span class="pass">yes</span> |
+| Component buildup, uncalibrated | 8.25 kg | −21.3 % | <span class="fail">no</span> |
+
+<Figure src={wreg} alt="Empty-weight fraction against takeoff weight on a log axis: survey aircraft scattered between 0.38 and 0.65, the Raymer UAV-Prop line at 0.60 at 55 lb, the team model line at 0.48, and the Penguin BE validation point near the team line." source="aircraft-design-toolbox/MAIN/Output Excel Sheets/weight_regression_DR1.png" maxWidth={700}>
+The design-review figure. At MTOW the survey model gives 0.48, against Raymer's 0.60. The Penguin BE (blue) was not used in the fit.
+</Figure>
+
+With the survey model and the provisional battery assumption, the design mission closes at W<sub>0</sub> = 49.6 lb, leaving 5.4 lb of margin to MTOW.
+
+### What the sweeps found
+
+The first sweep covered 11,340 designs (S 3–12 ft², AR 4–12, 4–6 hp, 70–160 mph, 0.15–1.5 h), run before the flap model and the design mission existed. Energy closure was the main filter:
+
+| Filter | Survivors | Removed |
+|---|---|---|
+| Energy closure | 2,265 / 11,340 | 9,075 |
+| Stall | 1,549 | 716 |
+| Landing (μ = 0.4) | 1,549 | 0 |
+| Ceiling | 1,537 | 12 |
+| MTOW 55 lb | 1,134 | 403 |
+
+One constraint turned out to be artificial. Raymer's landing friction coefficient of 0.2 is the *wet*-surface value, while dry pavement with working brakes is 0.4–0.5. Correcting it took landing from removing 148 designs to removing none.
+
+<Figure src={env} alt="Loiter time against cruise time at 125 mph for a 55 lb aircraft with two battery assumptions; dashed lines mark 60 and 90 minute total endurance." source="aircraft-design-toolbox/MAIN/Output Excel Sheets/mission_envelope_Team_1A_Survey.png" maxWidth={700}>
+Mission envelope at MTOW: every cruise/loiter split the leftover battery can fly. With the configuration's (provisional) battery assumption, a 60-minute flight closes with up to about 44 minutes at 125 mph. With the design-matrix baseline battery, it's about 15 minutes.
+</Figure>
+
+### Sensitivity ranking
+
+Selected entries: elasticity of range at MTOW, from ±10 % central differences at 125 mph.
+
+| Parameter | Elasticity |
+|---|---|
+| Empty-weight fraction | **−3.09** |
+| MTOW limit | +1.64 |
+| Prop efficiency | +1.40 |
+| Battery specific energy | +1.24 |
+| Cruise speed | −1.11 |
+| Parasite drag | −0.86 |
+| Motor power | **0.00** |
+
+Prop efficiency outranks battery specific energy because it appears twice: in the Breguet term and in climb power.
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+### Limitations
+
+- **The regression rests on 10 aircraft,** with a datasheet-derived battery estimate that assumes every aircraft is as efficient as the Penguin.
+- **The sensitivity ranking is local** (one point, ±10 %) and was run before the flap and survey models existed. It needs re-running on the current setup before it's quoted for the final design. A Latin-hypercube study would give global sensitivity.
+- **Batteries are the hard limit.** Flying the whole threshold hour at 125 mph (125 mi) would need ~530 Wh/kg cells, and the 225 mi objective ~1000 Wh/kg. Today's best silicon-anode cells are about 450 Wh/kg.
+- **The 15° takeoff flap deflection is unoptimised.** CL<sub>max</sub> appears in the denominator of the takeoff constraint while drag grows with deflection, so there is an interior optimum still to find.
+
+### Next steps
+
+Calibrate the component buildup against weighed-hardware data and re-run the blind benchmark, sweep the takeoff flap deflection, and re-run the sensitivity study on the current configuration.
+
+### What I learned
+
+When two models disagree by a factor of 1.7 on the number that decides feasibility, the fix is evidence, not averaging. Grading every source, keeping a held-out benchmark and refusing to tune to it turned an argument into a decision the team could defend at the design review.
+
+</TabPanel>
+
+<TabPanel id="code">
+
+<CodeSnippet code={fitSnip} lang="matlab" title="Fit B: estimating each aircraft's battery, then the log-log fit" source="aircraft-design-toolbox/MAIN/Main Model Functions/Weight Analysis/fit_WeightModel_Survey.m">
+The comments carry the physical reasoning, so a teammate can audit the key assumption (every aircraft as efficient as the Penguin) without opening the decision log.
+</CodeSnippet>
+
+<Callout tone="note">The base toolbox is the course professors' code. Only code I wrote is shown here.</Callout>
+
+</TabPanel>

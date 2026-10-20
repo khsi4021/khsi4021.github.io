@@ -1,0 +1,69 @@
+---
+# Copy this file to src/content/projects/<slug>.mdx and fill in every field.
+# Rules: every number must come from your code, results or report. TL;DR <= 40 words.
+title: Project Title
+slug: project-slug # URL: /projects/project-slug/
+summary: One sentence for search results and link previews.
+hook: One line shown on the project card.
+tldr: 40 words or fewer. What it is, what you did, the headline result.
+type: Personal # Personal | Course | Team | Competition
+course: ASEN 0000 Course Name # optional
+team: Team of 4 # optional
+role: What YOU did, specifically
+dates: Spring 2027
+date: 2027-05-01 # used for sorting
+tags: [CFD/Numerical] # Hypersonics, CFD/Numerical, Aerodynamics, Flight Dynamics & Control, Orbital/SSA, Aircraft Design, Machine Learning, Experimental, Software
+stack: [Python, NumPy]
+featured: false # true = shown on the home page
+order: 20 # lower = earlier in lists
+tier: supporting # flagship | supporting | fundamentals
+heroImage: ../../assets/projects/<slug>/hero.png
+heroAlt: Describe what the figure shows (axes, trend, result), not just its title.
+thumbnail: ../../assets/projects/<slug>/hero.png
+thumbnailAlt: Short description of the thumbnail.
+metrics:
+  - { value: "1.2 %", label: "what the number means" }
+links: {} # { repo: "https://github.com/...", report: "/files/report.pdf" }
+status: complete # complete | in progress | archived
+# tabs: [overview, technical, results, reflection, code] # omit tabs you don't need
+---
+import hero from "../../assets/projects/<slug>/hero.png";
+{/* import snippet from "../../snippets/<file>.py?raw"; */}
+
+<TabPanel id="overview">
+
+### The problem
+
+### What I built
+
+<Figure src={hero} alt="What the figure shows." source="path/to/original/figure.png">
+**Hero result.** One or two sentences that interpret the figure.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+<Equation tex={String.raw`\nabla \cdot \mathbf{u} = 0`} label="1" />
+
+</TabPanel>
+
+<TabPanel id="results">
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+### Limitations
+
+### Next steps
+
+### What I learned
+
+</TabPanel>
+
+<TabPanel id="code">
+
+{/* <CodeSnippet code={snippet} lang="python" title="What this excerpt shows" source="repo/path/file.py">Why it's interesting.</CodeSnippet> */}
+
+</TabPanel>

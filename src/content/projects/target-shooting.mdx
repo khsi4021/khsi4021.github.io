@@ -1,0 +1,62 @@
+---
+title: Shooting Method with Event Detection
+slug: target-shooting
+summary: Finding the launch angle that hits a target through drag and two inverse-square force fields, using ode45 event detection and a robust bisection on a signed miss distance.
+hook: Bisection on launch angle, where every function evaluation is a full ODE solve with event detection.
+tldr: A projectile at 1500 m/s with quadratic drag and two inverse-square fields must hit (800, 800) m. Bisection on a signed miss distance, bracketed from the drag-free solution, converges to 46.149° in 72 iterations with a miss of 2.8 × 10⁻⁵ m.
+type: Course
+course: APPM 3050 Scientific Computing, Project 1
+team: Team project. A teammate wrote the report.
+role: Wrote all of the code
+dates: Feb 2026
+date: 2026-02-25
+tags: [CFD/Numerical]
+stack: [MATLAB, ode45]
+featured: false
+order: 6
+tier: supporting
+heroImage: ../../assets/projects/target/target_trajectory.png
+heroAlt: Trajectories from the origin; the drag-free guess is deflected by a repelling field near (400, 375), while the bisection solution passes just above it, climbs steeply and curves down onto the target at (800, 800). Grey trajectories show nearby launch angles.
+thumbnail: ../../assets/projects/target/target_trajectory.png
+thumbnailAlt: Projectile trajectories bending around force fields toward a target.
+metrics:
+  - { value: "46.149°", label: "launch angle found" }
+  - { value: "72", label: "bisection iterations" }
+  - { value: "2.8e−5 m", label: "final miss distance" }
+links: {}
+status: complete
+---
+import traj from "../../assets/projects/target/target_trajectory.png";
+import eom from "../../snippets/target_eom.m?raw";
+
+<TabPanel id="overview">
+
+I wrote all of the code for this team project; a teammate wrote the report. The state is [x, y, v, θ]. Drag is quadratic (C<sub>D</sub>/m = 0.002 m⁻¹) and two point fields add inverse-square accelerations, one repelling and one attracting. `ode45` integrates each shot, with **event functions** that stop it when it reaches the target's x, when the horizontal velocity reverses, or when it hits the ground.
+
+<Figure src={traj} alt="Trajectories from the origin bending around a repelling field toward the target at (800, 800) m; the drag-free guess fails, the bisection solution hits." source="re-run of projects/target-shooting-sim (my code, unchanged)">
+The drag-free angle (45.10°, from `fzero` on the vacuum trajectory) is the starting bracket, and flown through the full model it misses. Bisection on the **signed** miss distance converges to 46.149°.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+<Equation tex={String.raw`\dot v = -\frac{C_D}{m}v^2 - g\sin\theta + \sum_i \frac{\alpha_i}{d_i^3}\,(\Delta x_i\cos\theta + \Delta y_i\sin\theta), \qquad \dot\theta = -\frac{g\cos\theta}{v} + \frac{1}{v}\sum_i \frac{\alpha_i}{d_i^3}(-\Delta x_i\sin\theta + \Delta y_i\cos\theta)`} />
+
+The miss distance is signed by whether the shot passes above or below the target, which turns "hit the target" into a root-finding problem. The bracketing loop widens the interval until the sign changes, and the bisection keeps the best root seen so far, which makes it robust when the field makes the miss-distance function non-monotone.
+
+</TabPanel>
+
+<TabPanel id="results">
+
+From the run used for this page: 72 iterations, a final miss of 2.8 × 10⁻⁵ m, and 8–17 s wall time on a laptop, since each iteration is a full ODE solve.
+
+</TabPanel>
+
+<TabPanel id="code">
+
+<CodeSnippet code={eom} lang="matlab" title="Point-mass equations of motion (before the field terms)" source="target-shooting-sim/MySystem.m" />
+
+<Callout tone="note">Graded coursework: only a short excerpt is shown.</Callout>
+
+</TabPanel>

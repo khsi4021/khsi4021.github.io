@@ -1,0 +1,33 @@
+---
+title: Candy Land Board Game (C++)
+slug: candy-land
+summary: A Candy Land-style terminal board game in C++ with a coloured ANSI board, multiple players and riddle mini-games.
+hook: My first multi-file C++ program, with a coloured terminal board, players and mini-games.
+tldr: A Candy Land-inspired board game for CSCI 1300. Players race to the castle across an ANSI-coloured board, collecting candies and gold and facing riddles and mini-games. It was built from Board, Player and Games classes reading their content from text files.
+type: Course
+course: CSCI 1300 Computer Science 1, Project 2
+role: Individual project
+dates: Fall 2023
+date: 2023-12-07
+tags: [Software]
+stack: [C++]
+featured: false
+order: 11
+tier: fundamentals
+heroImage: ../../assets/projects/cpp/candy.png
+heroAlt: Schematic of a terminal window showing the compile command, a row of coloured board tiles and a riddle from the game's riddles file.
+thumbnail: ../../assets/projects/cpp/candy.png
+thumbnailAlt: Terminal-style schematic of the Candy Land game.
+metrics: []
+tabs: [overview]
+links: {}
+status: archived
+---
+
+<TabPanel id="overview">
+
+Each tile is a struct with a colour and a type. `Board` renders the track with ANSI colour codes, `Player` tracks gold, stamina and candies, and `games` holds the mini-games and riddles loaded from `riddles.txt`. The goal is to reach the castle first while holding the most gold, stamina and candies.
+
+It was my first project split across several classes and files, and my first practice reading game content from data files.
+
+</TabPanel>

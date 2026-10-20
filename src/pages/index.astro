@@ -1,0 +1,144 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ShockMotif from "@/components/ShockMotif.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import Readouts from "@/components/Readouts.astro";
+import { skillStrip } from "@/data/skills";
+
+const all = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+const featured = all.filter((p) => p.data.featured);
+const dev = import.meta.env.DEV;
+---
+
+<BaseLayout>
+  <!-- DRAFT: Home copy. TODO(Lilo): rewrite the intro in your own voice. -->
+  <section class="relative overflow-hidden border-b border-line">
+    <div class="wrap grid items-center gap-10 py-14 md:py-20 lg:grid-cols-[1.05fr_1fr] lg:gap-12 lg:py-24">
+      <div>
+        <p class="eyebrow">Aerospace engineering · CU Boulder</p>
+        <h1 class="mt-4 text-[clamp(2.4rem,6vw,4.25rem)] leading-[1.02] tracking-[-0.025em]">
+          Simulation tools for <span class="text-accent">hypersonic</span> flight.
+        </h1>
+        <p class="mt-6 max-w-[56ch] text-lg text-muted">
+          I'm Khalil Sidani (Lilo), an aerospace engineering student at CU Boulder. I write solvers for boundary layers,
+          heating and transition, and I check them against exact solutions and published data. I'm applying to MS/PhD
+          programs in CFD and hypersonics for Fall 2027, and I'm open to internships and industry roles.
+          {dev && <span class="draft-badge ml-1">draft</span>}
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a class="btn btn-primary" href="/projects/">
+            View projects <span aria-hidden="true">→</span>
+          </a>
+          <a class="btn" href="/cv/">
+            CV
+          </a>
+          <a class="btn" href="/contact/">
+            Contact
+          </a>
+        </div>
+      </div>
+      <div class="relative">
+        <ShockMotif class="mx-auto max-w-[560px]" />
+        <Readouts
+          class="mt-4"
+          items={[
+            {
+              value: "−1.45 %",
+              label: "Fay–Riddell check, hypersonic solver",
+              href: "/projects/hypersonic-solver/#technical",
+            },
+            { value: "8.9e−8", label: "Pc error vs NASA CARA, DebriSolver", href: "/projects/debrisolver/#results" },
+            { value: "0.09 %", label: "747 short-period ω_n, Sim6DOF", href: "/projects/sim6dof/#results" },
+          ]}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap py-16 md:py-20" aria-labelledby="featured">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 id="featured" class="flex items-baseline gap-3 text-2xl md:text-3xl">
+        <span class="font-mono text-sm text-faint">01</span> Featured work
+      </h2>
+      <a href="/projects/" class="text-sm text-flow underline underline-offset-4">
+        All {all.length} projects →
+      </a>
+    </div>
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {featured.map((p, i) => (
+        <li>
+          <ProjectCard project={p} eager={i < 2} />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="border-y border-line bg-bg-raised" aria-labelledby="now">
+    <div class="wrap grid gap-8 py-14 md:grid-cols-3">
+      <div>
+        <h2 id="now" class="flex items-baseline gap-3 text-2xl">
+          <span class="font-mono text-sm text-faint">02</span> Now
+        </h2>
+      </div>
+      <ul class="grid gap-5 sm:grid-cols-2 md:col-span-2">
+        <li>
+          <p class="mono-label">Senior design · ASEN 4018</p>
+          <p class="mt-1">Weight model, trade studies and the 6-DOF simulator for our 55 lb electric capstone UAV.</p>
+        </li>
+        <li>
+          <p class="mono-label">Graduate courses</p>
+          <p class="mt-1">ASEN 5131 Hypersonic Aerodynamics and ATLS 5151 Flow Visualization.</p>
+        </li>
+        <li>
+          <p class="mono-label">Applications</p>
+          <p class="mt-1">MS/PhD, Fall 2027, with an emphasis on CFD and hypersonics simulation.</p>
+        </li>
+        <li>
+          <p class="mono-label">Long term</p>
+          <p class="mt-1">
+            A company building commercial supersonic and hypersonic aircraft.{" "}
+            <a href="/about/" class="text-flow underline underline-offset-2">
+              More about the long-term goal
+            </a>
+          </p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap py-16" aria-labelledby="tools">
+    <h2 id="tools" class="flex items-baseline gap-3 text-2xl">
+      <span class="font-mono text-sm text-faint">03</span> Tools I use
+    </h2>
+    <ul class="mt-6 flex flex-wrap gap-2">
+      {skillStrip.map((s) => (
+        <li class="chip !px-3 !py-1 !text-[0.8125rem]">{s}</li>
+      ))}
+    </ul>
+    <p class="mt-4 text-sm text-muted">
+      Every entry in the{" "}
+      <a href="/about/#skills" class="text-flow underline underline-offset-2">
+        skills matrix
+      </a>{" "}
+      links to the project where I used it.
+    </p>
+  </section>
+
+  <section class="wrap" aria-labelledby="research-teaser">
+    <div class="card grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center md:p-8">
+      <div>
+        <p class="eyebrow">For admissions committees</p>
+        <h2 id="research-teaser" class="mt-2 text-xl md:text-2xl">
+          Where I'm headed: CFD for hypersonic boundary layers and heating
+        </h2>
+        <p class="mt-2 max-w-[62ch] text-muted">
+          The questions I want to work on, and how each project builds toward them.
+        </p>
+      </div>
+      <a class="btn btn-primary justify-self-start" href="/research/">
+        Research interests →
+      </a>
+    </div>
+  </section>
+</BaseLayout>

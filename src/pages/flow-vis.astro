@@ -1,0 +1,32 @@
+---
+import type { ImageMetadata } from "astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Gallery from "@/components/Gallery.astro";
+import Lightbox from "@/components/Lightbox.astro";
+import { flowVis } from "@/data/flowvis";
+
+// Any image dropped into src/assets/flow-vis/ is picked up by file name.
+const files = import.meta.glob<{ default: ImageMetadata }>("/src/assets/flow-vis/*.{jpg,jpeg,png,webp,avif}", {
+  eager: true,
+});
+const byName = Object.fromEntries(Object.entries(files).map(([k, v]) => [k.split("/").pop()!, v.default]));
+const items = flowVis.map((e) => ({ ...e, image: e.file ? byName[e.file] : undefined }));
+---
+
+<BaseLayout
+  title="Flow Vis"
+  description="Flow visualisation photography from ATLS 5151: Marangoni flows, Chladni patterns and clouds."
+>
+  <section class="wrap pt-12 pb-8 md:pt-16">
+    <p class="eyebrow">Flow visualisation · ATLS 5151</p>
+    <h1 class="mt-3 text-[clamp(2rem,4.5vw,3rem)]">Seeing the flow</h1>
+    <p class="mt-4 max-w-[62ch] text-lg text-muted">
+      Images from the graduate Flow Visualization course, where each assignment is a photograph or video of real fluid
+      physics, with a write-up of the physics and the technique.
+    </p>
+  </section>
+  <section class="wrap">
+    <Gallery items={items} />
+  </section>
+  <Lightbox />
+</BaseLayout>

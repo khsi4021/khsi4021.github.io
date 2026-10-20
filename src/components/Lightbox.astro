@@ -1,0 +1,61 @@
+---
+// One shared <dialog> for every figure on the page. Native dialog gives us
+// focus trapping, Esc to close and focus return.
+---
+
+<dialog class="lightbox" data-lightbox-dialog aria-label="Enlarged figure">
+  <form method="dialog" class="flex justify-end">
+    <button class="btn h-9 px-3 py-1 text-sm" aria-label="Close enlarged figure">
+      Close ✕
+    </button>
+  </form>
+  <div class="paper mt-3 overflow-auto rounded-[var(--radius-lg)] p-3">
+    <img alt="" data-lightbox-img class="mx-auto h-auto max-h-[80vh] w-auto max-w-full" />
+  </div>
+  <p class="mt-3 text-sm text-muted" data-lightbox-caption></p>
+</dialog>
+
+<style>
+  .lightbox {
+    width: min(96vw, 1500px);
+    max-width: none;
+    max-height: 96vh;
+    margin: auto;
+    padding: 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+    color: var(--text);
+  }
+  .lightbox::backdrop {
+    background: rgb(5 7 11 / 0.82);
+    backdrop-filter: blur(4px);
+  }
+  .lightbox[open] {
+    animation: lb-in 250ms var(--ease-out-soft);
+  }
+  @keyframes lb-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.99);
+    }
+  }
+</style>
+
+<script>
+  const dlg = document.querySelector<HTMLDialogElement>("[data-lightbox-dialog]");
+  const img = dlg?.querySelector<HTMLImageElement>("[data-lightbox-img]");
+  const cap = dlg?.querySelector<HTMLElement>("[data-lightbox-caption]");
+  document.addEventListener("click", (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-lightbox]");
+    if (!btn || !dlg || !img || !cap) return;
+    img.src = btn.dataset.lightbox!;
+    img.alt = btn.dataset.lightboxAlt ?? "";
+    const fc = btn.closest("figure")?.querySelector("figcaption");
+    cap.textContent = fc?.textContent?.replace(/\s+/g, " ").trim() ?? "";
+    dlg.showModal();
+  });
+  dlg?.addEventListener("click", (e) => {
+    if (e.target === dlg) dlg.close();
+  });
+</script>

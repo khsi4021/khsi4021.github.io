@@ -1,0 +1,45 @@
+---
+import { TAB_LABELS, type TabId } from "@/data/tabs";
+
+interface Props {
+  id: TabId;
+}
+const { id } = Astro.props;
+---
+
+<section id={id} role="tabpanel" aria-labelledby={`tab-${id}`} tabindex="-1" class="tab-panel prose">
+  <h2 class="panel-heading">{TAB_LABELS[id]}</h2>
+  <slot />
+</section>
+
+<style>
+  .tab-panel {
+    max-width: none;
+  }
+  .tab-panel > :global(*:not(.figure, .wide, table, .katex-display, .code-snippet, .readouts, .island)) {
+    max-width: var(--container-prose);
+  }
+  .tab-panel + .tab-panel {
+    margin-top: 4rem;
+  }
+  /* With JS the tab label already names the panel; keep the heading for no-JS and print. */
+  :global(.js) .panel-heading {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  @media print {
+    :global(.js) .panel-heading {
+      position: static;
+      width: auto;
+      height: auto;
+      clip: auto;
+    }
+  }
+  .panel-heading {
+    margin-top: 0 !important;
+  }
+</style>

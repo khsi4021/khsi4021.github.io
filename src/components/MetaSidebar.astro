@@ -1,0 +1,83 @@
+---
+import type { CollectionEntry } from "astro:content";
+import TypeBadge from "./TypeBadge.astro";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+const d = Astro.props.project.data;
+const links = [
+  d.links.repo && { href: d.links.repo, label: "Repository" },
+  d.links.report && { href: d.links.report, label: "Report" },
+  d.links.video && { href: d.links.video, label: "Video" },
+  d.links.demo && { href: d.links.demo, label: "Demo" },
+].filter(Boolean) as { href: string; label: string }[];
+---
+
+<aside class="meta-sidebar text-sm" aria-label="Project details">
+  <dl class="grid grid-cols-[6.5rem_1fr] gap-x-3 gap-y-3 lg:grid-cols-1 lg:gap-y-0">
+    <div class="contents lg:block lg:border-b lg:border-line lg:py-3">
+      <dt class="mono-label">Type</dt>
+      <dd class="lg:mt-1">
+        <TypeBadge type={d.type} />
+      </dd>
+    </div>
+    <div class="contents lg:block lg:border-b lg:border-line lg:py-3">
+      <dt class="mono-label">Dates</dt>
+      <dd class="lg:mt-1">{d.dates}</dd>
+    </div>
+    {d.course && (
+      <div class="contents lg:block lg:border-b lg:border-line lg:py-3">
+        <dt class="mono-label">Course</dt>
+        <dd class="lg:mt-1">{d.course}</dd>
+      </div>
+    )}
+    {d.team && (
+      <div class="contents lg:block lg:border-b lg:border-line lg:py-3">
+        <dt class="mono-label">Team</dt>
+        <dd class="lg:mt-1">{d.team}</dd>
+      </div>
+    )}
+    <div class="contents lg:block lg:border-b lg:border-line lg:py-3">
+      <dt class="mono-label">My role</dt>
+      <dd class="lg:mt-1">{d.role}</dd>
+    </div>
+    <div class="contents lg:block lg:border-b lg:border-line lg:py-3">
+      <dt class="mono-label">Stack</dt>
+      <dd class="flex flex-wrap gap-1.5 lg:mt-1.5">
+        {d.stack.map((s) => (
+          <span class="chip">{s}</span>
+        ))}
+      </dd>
+    </div>
+    <div class="contents lg:block lg:border-b lg:border-line lg:py-3">
+      <dt class="mono-label">Topics</dt>
+      <dd class="flex flex-wrap gap-1.5 lg:mt-1.5">
+        {d.tags.map((t) => (
+          <a
+            class="chip no-underline hover:border-line-strong hover:text-ink"
+            href={`/projects/?tag=${encodeURIComponent(t)}`}
+          >
+            {t}
+          </a>
+        ))}
+      </dd>
+    </div>
+    <div class="contents lg:block lg:py-3">
+      <dt class="mono-label">Status</dt>
+      <dd class="capitalize lg:mt-1">{d.status}</dd>
+    </div>
+    {links.length > 0 && (
+      <div class="contents lg:block lg:border-t lg:border-line lg:py-3">
+        <dt class="mono-label">Links</dt>
+        <dd class="flex flex-col gap-1 lg:mt-1">
+          {links.map((l) => (
+            <a class="text-flow underline underline-offset-2" href={l.href}>
+              {l.label} ↗
+            </a>
+          ))}
+        </dd>
+      </div>
+    )}
+  </dl>
+</aside>

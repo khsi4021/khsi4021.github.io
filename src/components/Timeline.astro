@@ -1,0 +1,39 @@
+---
+export interface TimelineItem {
+  when: string;
+  title: string;
+  body?: string;
+  href?: string;
+  todo?: boolean;
+}
+interface Props {
+  items: TimelineItem[];
+}
+const { items } = Astro.props;
+---
+
+<ol class="relative ml-2 border-l border-line">
+  {items.map((it) => (
+    <li class="relative pb-7 pl-6 last:pb-0">
+      <span
+        class:list={[
+          "absolute top-[0.45rem] -left-[5px] h-[9px] w-[9px] rounded-full border",
+          it.todo ? "border-warn bg-bg" : "border-accent bg-accent",
+        ]}
+        aria-hidden="true"
+      />
+      <p class="mono-label">{it.when}</p>
+      <p class="mt-0.5 font-medium">
+        {it.href ? (
+          <a href={it.href} class="underline decoration-line-strong underline-offset-2 hover:text-flow">
+            {it.title}
+          </a>
+        ) : (
+          it.title
+        )}
+        {it.todo && <span class="draft-badge ml-2">to confirm</span>}
+      </p>
+      {it.body && <p class="mt-1 text-sm text-muted">{it.body}</p>}
+    </li>
+  ))}
+</ol>

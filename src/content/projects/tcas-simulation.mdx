@@ -1,0 +1,55 @@
+---
+title: TCAS Closest-Approach Analysis
+slug: tcas-simulation
+summary: Fitting two aircraft tracks with linear regression, extrapolating to the closest point of approach, and propagating the fit uncertainty into the predicted miss distance.
+hook: How confident can a collision-avoidance system be about a closest approach predicted from noisy tracks?
+tldr: Given noisy position data for two aircraft, I fit each track with least squares, extrapolated to the time and distance of closest approach, and propagated the regression uncertainty into the prediction. This was an early look at the conjunction problem I later tackled in DebriSolver.
+type: Course
+course: ASEN 2012 Experimental & Computational Methods, Project 1
+team: Pair project
+role: Wrote all of the code
+dates: Oct 2024
+date: 2024-10-21
+tags: [Flight Dynamics & Control]
+stack: [MATLAB]
+featured: false
+order: 9
+tier: supporting
+heroImage: ../../assets/projects/tcas/schematic.png
+heroAlt: Schematic, not a result. Two straight aircraft tracks crossing with sample points along each, and a dashed circle marking the closest approach.
+thumbnail: ../../assets/projects/tcas/schematic.png
+thumbnailAlt: Schematic of two converging aircraft tracks and their closest approach.
+metrics: []
+tabs: [overview, technical, reflection]
+links: {}
+status: archived
+---
+{/* TODO(Lilo): input CSVs are not in the folder, so no result figure. Add one to assets-inbox/other/ if you have it. */}
+
+<TabPanel id="overview">
+
+The Traffic Collision Avoidance System predicts whether two aircraft will come dangerously close, using noisy surveillance tracks. In this pair project I wrote all of the code to analyse a theoretical encounter between two aircraft:
+
+1. Fit each aircraft's x(t) and y(t) with linear least squares (`polyfit` with its error structure).
+2. Extrapolate both tracks on a common time vector to find the time and distance of closest approach.
+3. Propagate the fit uncertainty (`polyval` prediction intervals) into the predicted miss distance.
+
+The original input data are not in the archived folder, so this page has no result figure. The image above is a schematic.
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+With r<sub>A</sub>(t) and r<sub>B</sub>(t) linear in t, the separation d(t) = ‖r<sub>A</sub>(t) − r<sub>B</sub>(t)‖ is the square root of a quadratic in t, so the closest approach has a closed form:
+
+<Equation tex={String.raw`t^* = -\frac{\Delta\mathbf r_0\cdot\Delta\mathbf v}{\|\Delta\mathbf v\|^2}, \qquad d^* = \big\|\Delta\mathbf r_0 + \Delta\mathbf v\,t^*\big\|`} />
+
+The regression's coefficient uncertainty becomes an interval on each predicted position, and therefore on d\*.
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+This was my first encounter with the question that DebriSolver later answered properly: what a predicted miss distance means when the inputs are uncertain. Here the uncertainty was a regression interval. In conjunction assessment it becomes a full covariance and a probability of collision.
+
+</TabPanel>

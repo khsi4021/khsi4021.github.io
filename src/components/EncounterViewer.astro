@@ -1,0 +1,131 @@
+---
+import data from "@/data/encounters.json";
+const cases = data.cases;
+---
+
+<div
+  class="island encounter-viewer my-8 overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface"
+  data-encounter-viewer
+>
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3">
+    <div class="flex flex-wrap gap-1.5" role="group" aria-label="Showcase event">
+      {cases.map((c, i) => (
+        <button type="button" class="seg" data-case={c.id} aria-pressed={i === 0 ? "true" : "false"}>
+          C2 #{c.id} <span class="hidden text-faint sm:inline">· {c.label}</span>
+        </button>
+      ))}
+    </div>
+    <div class="flex gap-1.5" role="group" aria-label="View">
+      <button type="button" class="seg" data-view="orbit" aria-pressed="true">
+        Orbits
+      </button>
+      <button type="button" class="seg" data-view="encounter" aria-pressed="false">
+        Encounter frame
+      </button>
+    </div>
+  </div>
+  <div class="relative aspect-[4/3] w-full sm:aspect-[16/9]">
+    <canvas
+      class="absolute inset-0 h-full w-full touch-none"
+      role="img"
+      aria-label="Interactive 3D view of the selected conjunction. Orbits view: Earth with the two objects' orbits crossing at the time of closest approach. Encounter-frame view: the combined position-uncertainty ellipsoid around the primary, the relative path before the avoidance burn, and the miss point after it."
+    ></canvas>
+    <p class="absolute inset-0 grid place-items-center text-sm text-muted" data-loading>
+      <span class="js-only">Loading 3D view…</span>
+      <noscript>
+        The 3D viewer needs JavaScript. The encounter-plane figure on the Overview tab shows the same three events.
+      </noscript>
+    </p>
+  </div>
+  <div class="grid gap-px border-t border-line bg-line sm:grid-cols-5">
+    <div class="ro">
+      <span class="mono-label">Pc before</span>
+      <b data-ro="pcPre">–</b>
+    </div>
+    <div class="ro">
+      <span class="mono-label">Miss before</span>
+      <b data-ro="missPre">–</b>
+    </div>
+    <div class="ro">
+      <span class="mono-label">Tangential ΔV, 1 day out</span>
+      <b data-ro="dv">–</b>
+    </div>
+    <div class="ro">
+      <span class="mono-label">Pc after (propagated)</span>
+      <b data-ro="pcPost">–</b>
+    </div>
+    <div class="ro">
+      <span class="mono-label">Miss after</span>
+      <b data-ro="missPost">–</b>
+    </div>
+  </div>
+  <div class="space-y-1 border-t border-line px-4 py-3 text-sm text-muted">
+    <p data-legend="orbit">
+      <span class="text-flow">━ primary</span> · <span class="text-accent">━ secondary</span> · ring = TCA point. Drag
+      to rotate, scroll or pinch to zoom.
+    </p>
+    <p data-legend="encounter" hidden>
+      <span class="text-flow">Ellipsoids</span>: combined position covariance, 1σ (solid) and 3σ (wire); dot at origin =
+      hard-body sphere. <span class="text-accent">Orange</span>: relative path before the burn.{" "}
+      <span class="text-ok">Green</span>: after the burn. Disc = encounter plane.
+    </p>
+    <p class="mono-label">
+      Illustration: two-body propagation in the browser from the TCA states. The Pc and ΔV values above come from the
+      project's two-body + J2 propagation (not recomputed here).
+    </p>
+  </div>
+</div>
+
+<style>
+  .seg {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    background: transparent;
+    cursor: pointer;
+  }
+  .seg:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .seg[aria-pressed="true"] {
+    color: var(--text);
+    border-color: var(--flow);
+    background: color-mix(in srgb, var(--flow) 12%, transparent);
+  }
+  .ro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    background: var(--surface);
+    padding: 0.6rem 1rem;
+  }
+  .ro b {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+<script>
+  import data from "@/data/encounters.json";
+  const root = document.querySelector<HTMLElement>("[data-encounter-viewer]");
+  if (root) {
+    const start = async () => {
+      const { boot } = await import("@/scripts/encounter-viewer");
+      boot(root, data.cases as never);
+    };
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          obs.disconnect();
+          start();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    io.observe(root);
+  }
+</script>

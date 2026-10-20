@@ -1,0 +1,37 @@
+---
+title: Odyssey Text RPG (C++)
+slug: cpp-rpg
+summary: An Odyssey-themed text adventure in C++ with Entity, Map and Game classes and game content loaded from data files.
+hook: Object-oriented C++ game where every enemy, item and riddle is data, not code.
+tldr: A text RPG following Odysseus across the Mediterranean, written in C++17 for CSCI 1300. Entities, items and riddles load from text files into Entity, Map and Game classes, so the content can change without recompiling.
+type: Course
+course: CSCI 1300 Computer Science 1, Project 2
+role: Individual project
+dates: Spring 2024
+date: 2024-04-25
+tags: [Software]
+stack: [C++17]
+featured: false
+order: 10
+tier: fundamentals
+heroImage: ../../assets/projects/cpp/rpg.png
+heroAlt: Schematic of a terminal window showing the compile command and rows from the game's entity data file, including Sirens, Giants and the Cyclops.
+thumbnail: ../../assets/projects/cpp/rpg.png
+thumbnailAlt: Terminal-style schematic of the C++ RPG's entity data.
+metrics: []
+tabs: [overview]
+links: {}
+status: archived
+---
+
+<TabPanel id="overview">
+
+The player sails from enemy to enemy toward Ithaca, earning gold, visiting shops, buying weapons and potions, and solving riddles. The design separates **data from logic**:
+
+- `entity.txt` lists every hero and enemy (HP, stamina, defense, elemental weakness, gold, starting items).
+- `items.txt` and `riddles.txt` hold the shop inventory and puzzles.
+- `Entity`, `Map` and `Game` classes load the files, run the game loop and write results to `gameresults.txt`.
+
+It was my largest program at the time (the main game file is about 1,360 lines), and it's where I learned to structure code into classes with clear responsibilities.
+
+</TabPanel>

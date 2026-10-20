@@ -1,0 +1,93 @@
+---
+import "katex/dist/katex.min.css";
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProjectTabs from "@/components/ProjectTabs.astro";
+import TabPanel from "@/components/TabPanel.astro";
+import MetaSidebar from "@/components/MetaSidebar.astro";
+import Readouts from "@/components/Readouts.astro";
+import Figure from "@/components/Figure.astro";
+import Equation from "@/components/Equation.astro";
+import CodeSnippet from "@/components/CodeSnippet.astro";
+import Callout from "@/components/Callout.astro";
+import Video from "@/components/Video.astro";
+import Lightbox from "@/components/Lightbox.astro";
+import EncounterViewer from "@/components/EncounterViewer.astro";
+import PoleMap from "@/components/PoleMap.astro";
+import TypeBadge from "@/components/TypeBadge.astro";
+
+export async function getStaticPaths() {
+  const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+  return projects.map((p, i) => ({
+    params: { slug: p.data.slug },
+    props: { project: p, prev: projects[i - 1] ?? null, next: projects[i + 1] ?? null },
+  }));
+}
+
+const { project, prev, next } = Astro.props;
+const d = project.data;
+const { Content } = await render(project);
+const components = { TabPanel, Figure, Equation, CodeSnippet, Callout, Video, EncounterViewer, PoleMap, Readouts };
+---
+
+<BaseLayout title={d.title} description={d.summary} ogImage={d.heroImage} ogAlt={d.heroAlt} type="article">
+  <article class="wrap pt-8 md:pt-12">
+    <nav aria-label="Breadcrumb" class="mono-label no-print">
+      <a href="/projects/" class="hover:text-ink">
+        Projects
+      </a>
+      <span aria-hidden="true"> / </span>
+      <span aria-current="page">{d.title}</span>
+    </nav>
+
+    <header class="mt-5 max-w-4xl">
+      <div class="flex flex-wrap items-center gap-3">
+        <TypeBadge type={d.type} />
+        {d.course && <span class="mono-label">{d.course}</span>}
+        <span class="mono-label">{d.dates}</span>
+      </div>
+      <h1 class="mt-3 text-[clamp(2rem,4.5vw,3.1rem)]">{d.title}</h1>
+      <p class="mt-3 text-lg text-muted">{d.hook}</p>
+      <div class="mt-6 rounded-[var(--radius)] border border-line bg-surface p-4 md:p-5">
+        <p class="eyebrow">TL;DR</p>
+        <p class="mt-1.5 text-[1.0625rem] leading-relaxed">{d.tldr}</p>
+      </div>
+    </header>
+
+    {d.metrics.length > 0 && <Readouts items={d.metrics} class="mt-6" />}
+
+    <div class="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
+      <div class="min-w-0">
+        <ProjectTabs tabs={d.tabs}>
+          <Content components={components} />
+        </ProjectTabs>
+      </div>
+      <div class="order-first lg:order-none">
+        <div class="lg:sticky lg:top-24">
+          <MetaSidebar project={project} />
+        </div>
+      </div>
+    </div>
+
+    <nav class="no-print mt-20 grid gap-4 border-t border-line pt-8 sm:grid-cols-2" aria-label="More projects">
+      {prev ? (
+        <a href={`/projects/${prev.data.slug}/`} class="card block p-4 no-underline hover:border-line-strong">
+          <span class="mono-label">← Previous</span>
+          <span class="mt-1 block font-display font-semibold">{prev.data.title}</span>
+        </a>
+      ) : (
+        <span />
+      )}
+      {next && (
+        <a
+          href={`/projects/${next.data.slug}/`}
+          class="card block p-4 text-right no-underline hover:border-line-strong"
+        >
+          <span class="mono-label">Next →</span>
+          <span class="mt-1 block font-display font-semibold">{next.data.title}</span>
+        </a>
+      )}
+    </nav>
+  </article>
+  <Lightbox />
+</BaseLayout>

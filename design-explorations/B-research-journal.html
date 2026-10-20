@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup B · Research journal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #f6f1e7; --ink: #1d1b16; --muted: #625b4e; --rule: #d8cfbd; --accent: #8a2f1c; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 19px/1.65 "Newsreader", Georgia, serif; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 32px 16px 64px; }
+  .masthead { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 3px double var(--ink); padding-bottom: 10px; font-family: Inter, sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .masthead a { color: var(--ink); text-decoration: none; margin-left: 18px; }
+  .volume { color: var(--muted); }
+  h1 { font-size: clamp(40px, 7vw, 76px); line-height: 1.02; font-weight: 400; margin: 36px 0 8px; letter-spacing: -.01em; }
+  h1 em { color: var(--accent); }
+  .dek { font-style: italic; color: var(--muted); font-size: 22px; max-width: 40ch; margin: 0 0 28px; }
+  .cols { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; border-top: 1px solid var(--rule); padding-top: 24px; }
+  .abstract { font-family: Inter, sans-serif; font-size: 15px; line-height: 1.6; background: #efe8da; padding: 16px 18px; border-left: 3px solid var(--accent); }
+  .abstract b { letter-spacing: .08em; text-transform: uppercase; font-size: 12px; }
+  .fig { margin: 24px 0; }
+  .fig svg { width: 100%; height: auto; background: #fbf8f1; border: 1px solid var(--rule); }
+  .fig figcaption { font-family: Inter, sans-serif; font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .fig figcaption b { color: var(--ink); }
+  .eq { text-align: center; font-style: italic; font-size: 21px; margin: 18px 0; }
+  .eq span { float: right; font-style: normal; color: var(--muted); font-size: 15px; }
+  .toc { font-family: Inter, sans-serif; font-size: 14px; }
+  .toc h2 { font-family: "Newsreader", serif; font-weight: 600; font-size: 20px; margin: 0 0 8px; border-bottom: 1px solid var(--rule); padding-bottom: 6px; }
+  .toc ol { padding-left: 20px; margin: 0; }
+  .toc li { margin-bottom: 12px; }
+  .toc li span { display: block; color: var(--muted); font-size: 13px; }
+  .smallcaps { font-variant: small-caps; letter-spacing: .04em; }
+  @media (max-width: 760px) { .cols { grid-template-columns: 1fr; } .masthead nav { display: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead"><span>K. Sidani · <span class="volume">Working notes, vol. 1</span></span>
+    <nav><a href="#">Projects</a><a href="#">Research</a><a href="#">Flow Vis</a><a href="#">CV</a></nav></div>
+
+  <h1>Heating, transition, and <em>checking the answer</em>.</h1>
+  <p class="dek">Notes from an aerospace engineering student working toward CFD and hypersonics research.</p>
+
+  <div class="cols">
+    <article>
+      <div class="abstract"><b>Abstract.</b> A laminar stagnation-heating and roughness-transition estimator for a Mach-6 cylinder. It solves the compressible similarity boundary layer in Illingworth variables, marches downstream under local similarity, and applies the PANT family of correlations. It agrees with Fay–Riddell to −1.45 %. The benchmark gap against the source paper's Table 3 is reported and diagnosed rather than tuned away.</div>
+      <p><span class="smallcaps">The energy equation</span> as printed omits a pressure-work term that matters once the edge Mach number is finite. With it restored, the Pr = 1 total-enthalpy identity holds to 10⁻⁶:</p>
+      <div class="eq">(C g′)′ + Pr f g′ = −Pr C (γ−1) M<sub>e</sub>² f″² − Pr β (γ−1) M<sub>e</sub>² f′(f′² − g) <span>(1)</span></div>
+      <figure class="fig">
+        <svg viewBox="0 0 600 220" role="img" aria-label="Sketch of wall heat flux decreasing with angle for two energy-equation forms">
+          <g fill="none" stroke-width="2"><path d="M40 40 C 200 44, 400 60, 560 70" stroke="#1d1b16"/><path d="M40 40 C 200 48, 380 110, 560 170" stroke="#8a2f1c" stroke-dasharray="7 5"/></g>
+          <g font-family="Inter" font-size="12" fill="#625b4e"><text x="40" y="205">0°</text><text x="540" y="205">45°</text><text x="420" y="60">as printed</text><text x="430" y="150">+ pressure work</text></g>
+        </svg>
+        <figcaption><b>Figure 1.</b> Laminar wall heat flux along the cylinder. Restoring the pressure-work term brings the 30° value from 4.15 to 3.55 W/cm², against ≈ 3.6 in the source DNS.</figcaption>
+      </figure>
+    </article>
+    <aside class="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li>Hypersonic blunt-body solver<span>Personal · Python · 2026</span></li>
+        <li>DebriSolver conjunction risk<span>Competition · Python + MATLAB</span></li>
+        <li>Sim6DOF flight simulator<span>Team · Simulink</span></li>
+        <li>Capstone aircraft design<span>Team · MATLAB + OpenVSP</span></li>
+        <li>Coursework notes<span>Panel methods, PDEs, entry</span></li>
+      </ol>
+    </aside>
+  </div>
+</div>
+</body>
+</html>

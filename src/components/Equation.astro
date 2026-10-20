@@ -1,0 +1,28 @@
+---
+// Server-rendered KaTeX equation with an optional tag that matches the source
+// (e.g. "C 3" for the paper's equation (C 3)). No client JS.
+import katex from "katex";
+
+interface Props {
+  tex: string;
+  label?: string;
+  id?: string;
+}
+const { tex, label, id } = Astro.props;
+const html = katex.renderToString(tex, { displayMode: true, throwOnError: false, output: "html", strict: "ignore" });
+---
+
+<div class="equation my-6 flex items-center gap-4" id={id}>
+  <div class="min-w-0 flex-1 overflow-x-auto" set:html={html} />
+  {label && <span class="shrink-0 font-mono text-xs text-faint">({label})</span>}
+</div>
+
+<style>
+  .equation :global(.katex-display) {
+    margin: 0;
+    padding: 0.25rem 0;
+  }
+  .equation :global(.katex) {
+    font-size: 1.12em;
+  }
+</style>

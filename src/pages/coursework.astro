@@ -1,0 +1,341 @@
+---
+import "katex/dist/katex.min.css";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Figure from "@/components/Figure.astro";
+import Lightbox from "@/components/Lightbox.astro";
+import Equation from "@/components/Equation.astro";
+import clAlpha from "@/assets/coursework/aerolab_cl_alpha.png";
+import pllt from "@/assets/coursework/aerolab_pllt_delta.png";
+import wave from "@/assets/coursework/wave2d_snapshots.png";
+import entry from "@/assets/coursework/entry_trajectory.png";
+import heat from "@/assets/coursework/heat_conduction.png";
+import clarky from "@/assets/coursework/clarky_cp.png";
+
+const sections = [
+  { id: "computational-aero", n: "01", title: "Computational aerodynamics" },
+  { id: "numerical-methods", n: "02", title: "Numerical methods" },
+  { id: "hypersonics", n: "03", title: "Hypersonics (in progress)" },
+  { id: "flight-dynamics", n: "04", title: "Flight dynamics & control" },
+  { id: "experimental", n: "05", title: "Experimental" },
+  { id: "more", n: "06", title: "More courses" },
+];
+---
+
+<BaseLayout
+  title="Coursework"
+  description="Coursework highlights: vortex panel and lifting-line methods, PDE solvers, entry aerothermodynamics, flight dynamics and wind-tunnel and heat-transfer labs."
+>
+  <section class="wrap pt-12 pb-6 md:pt-16">
+    <p class="eyebrow">Coursework</p>
+    <h1 class="mt-3 text-[clamp(2rem,4.5vw,3rem)]">Coursework highlights</h1>
+    <p class="mt-4 max-w-[64ch] text-lg text-muted">
+      A figure and a few sentences for each, grouped by theme. These are graded assignments, so the source isn't
+      published, but it's available on request. Every figure was regenerated for this page from my course code, in the
+      site's figure style.
+    </p>
+    <nav aria-label="On this page" class="mt-6 flex flex-wrap gap-2">
+      {sections.map((s) => (
+        <a class="chip no-underline hover:text-ink" href={`#${s.id}`}>
+          {s.title}
+        </a>
+      ))}
+    </nav>
+  </section>
+
+  <div class="wrap">
+    <section id="computational-aero" class="cw-section">
+      <h2>
+        <span>01</span> Computational aerodynamics
+      </h2>
+      <div class="cw-grid">
+        <div class="prose">
+          <h3>ASEN 3802: vortex panel method and lifting-line theory</h3>
+          <p>
+            A team lab (four students). We built a NACA 4-digit airfoil generator, a Kuethe–Chow constant-strength
+            vortex panel method with the Kutta condition, and a Prandtl lifting-line solver using odd Fourier terms. The
+            panel method shows what thin-airfoil theory leaves out: thickness raises the lift slope above 2π, and camber
+            shifts the zero-lift angle. This is the most direct CFD precursor in my coursework.
+            <!-- TODO(Lilo): which tasks were yours? -->
+          </p>
+          <p class="text-sm text-muted">
+            To regenerate the figure I reordered the airfoil points clockwise from the trailing edge, which the archived
+            panel routine expects. With that ordering it gives c<sub>l,α</sub> = 0.120/deg for NACA 0012 (thin-airfoil
+            theory: 0.110/deg) and c<sub>l</sub> = 0.26 at α = 0 for NACA 2412.
+          </p>
+        </div>
+        <div>
+          <Figure
+            src={clAlpha}
+            alt="Sectional lift coefficient against angle of attack from minus 8 to 12 degrees for NACA 0006, 0012, 0018 and 2412 from the vortex panel method, with the thin-airfoil line 2 pi alpha. Thicker sections have slightly steeper slopes; the cambered 2412 is shifted up by about 0.26."
+            source="courses/ASEN3802/aero-lab (Vortex_Panel.m, NACAGenerator.m)"
+          >
+            Vortex panel method, 100 panels per surface, against thin-airfoil theory.
+          </Figure>
+          <Figure
+            src={pllt}
+            alt="Induced-drag factor delta against taper ratio from 0 to 1 for aspect ratios 4, 6, 8 and 10; each curve has a minimum near a taper ratio of 0.35 to 0.4 and rises toward both ends."
+            source="courses/ASEN3802/aero-lab (PLLT.m)"
+          >
+            Lifting-line theory: δ = 1/e − 1 for untwisted tapered wings. The minimum near λ ≈ 0.35–0.4 is the classic
+            result.
+          </Figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="numerical-methods" class="cw-section">
+      <h2>
+        <span>02</span> Numerical methods
+      </h2>
+      <div class="cw-grid">
+        <div class="prose">
+          <h3>APPM 3050: Scientific Computing</h3>
+          <p>
+            Root finding (bisection, Newton, secant), Taylor-series error, Euler, RK2 and RK4 integrators, an iterative
+            finite-difference boundary-value problem, a Monte Carlo random-walk escape probability, and explicit
+            finite-difference solvers for the 2-D wave and heat equations. Two projects grew into full pages:
+          </p>
+          <ul>
+            <li>
+              <a href="/projects/tsunami-simulation/">2-D tsunami over variable bathymetry</a> (with animation)
+            </li>
+            <li>
+              <a href="/projects/target-shooting/">Shooting method with event detection</a>
+            </li>
+          </ul>
+        </div>
+        <Figure
+          src={wave}
+          alt="Four 3D snapshots of a vibrating square membrane from t = 0 to about 1, starting as a single positive dome, flattening, inverting and returning."
+          source="courses/APPM3050/wave-2d (scheme re-run, vectorised)"
+        >
+          2-D wave equation on a fixed-edge square membrane, explicit central differences, λ = (cΔt/Δx)² = 0.25.
+        </Figure>
+      </div>
+    </section>
+
+    <section id="hypersonics" class="cw-section">
+      <h2>
+        <span>03</span> Hypersonics (in progress)
+      </h2>
+      <div class="cw-grid">
+        <div class="prose">
+          <h3>ASEN 5131: Hypersonic Aerodynamics (graduate)</h3>
+          <p>
+            Homework 1 compared the exponential atmosphere with the 1976 US Standard Atmosphere, then integrated a
+            ballistic entry at 4.5 km/s and −70° (3,400 kg, C<sub>D</sub> = 0.4, 5 cm nose radius) three ways: the
+            Allen–Eggers analytic solution, the numerically integrated ballistic equations, and the full equations with
+            gravity and curvature. Stagnation heating uses Sutton–Graves.
+          </p>
+          <Equation
+            tex={String.raw`\frac{V}{V_0} = \exp\!\left(-\frac{\rho}{\beta}\right),\quad \beta = -\frac{2m\alpha\sin\gamma_0}{C_D A},\qquad \dot q = K\sqrt{\rho}\,V^3`}
+          />
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Analytic</th>
+                <th>Ballistic (numerical)</th>
+                <th>Full equations</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Peak deceleration</td>
+                <td class="num">49.17 g</td>
+                <td class="num">49.18 g</td>
+                <td class="num">53.30 g (+8.4 %)</td>
+              </tr>
+              <tr>
+                <td>Altitude at peak deceleration</td>
+                <td class="num">7.55 km</td>
+                <td class="num">7.55 km</td>
+                <td class="num">7.40 km</td>
+              </tr>
+              <tr>
+                <td>Peak heat flux</td>
+                <td class="num">18.77 MW/m²</td>
+                <td class="num">18.77 MW/m²</td>
+                <td class="num">21.24 MW/m² (+13.1 %)</td>
+              </tr>
+              <tr>
+                <td>Altitude at peak heating</td>
+                <td class="num">15.53 km</td>
+                <td class="num">15.53 km</td>
+                <td class="num">15.30 km</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="text-sm text-muted">
+            The numerical ballistic solution matches the analytic peaks to within 0.02 %, which verifies the integrator.
+            Adding gravity raises peak heating by 13 %. My <a href="/projects/hypersonic-solver/">hypersonic solver</a>{" "}
+            picks up the same problem at the boundary-layer level.
+          </p>
+        </div>
+        <Figure
+          src={entry}
+          alt="Left, altitude against velocity for ballistic and full-equation entries with analytic peak-deceleration and peak-heating points on the ballistic curve. Right, Sutton-Graves stagnation heat flux against altitude peaking near 15 km at about 19 and 21 MW per square metre."
+          source="courses/ASEN5131/HW1 (re-run)"
+        >
+          Ballistic entry: altitude–velocity and stagnation heating. Markers are the analytic peaks.
+        </Figure>
+      </div>
+    </section>
+
+    <section id="flight-dynamics" class="cw-section">
+      <h2>
+        <span>04</span> Flight dynamics & control
+      </h2>
+      <div class="cw-grid">
+        <div class="prose">
+          <h3>ASEN 3801: Aircraft Dynamics</h3>
+          <p>
+            Lab 4 was a quadrotor: full 12-state nonlinear equations of motion, a motor-to-force/moment mixing matrix, a
+            linearised model, and inner-loop rate feedback plus outer-loop velocity feedback, compared in simulation
+            (team lab). Lab 5 extended the equations of motion to a fixed-wing aircraft with aerodynamic forces and
+            moments. Earlier labs covered rotation matrices and Euler angles from experimental tracking data.
+            <!-- TODO(Lilo): your part of lab 4; a figure from your runs would help. -->
+          </p>
+          <p>
+            The same ideas, at a larger scale, are in <a href="/projects/sim6dof/">Sim6DOF</a>.
+          </p>
+        </div>
+        <div class="card p-5">
+          <p class="mono-label">Quadrotor equations of motion (lab 4)</p>
+          <Equation
+            tex={String.raw`\dot{\boldsymbol\omega} = I^{-1}\big(\mathbf G_c - \boldsymbol\omega \times I\boldsymbol\omega\big),\qquad \dot{\mathbf v}^B = \mathbf v^B\times\boldsymbol\omega + R^{\mathsf T}\mathbf g + \tfrac{1}{m}\big(\mathbf F_\text{aero} + \mathbf F_c\big)`}
+          />
+          <p class="text-sm text-muted">
+            The control forces and moments come from the four rotor thrusts through a mixing matrix. The figure is still
+            to come.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="experimental" class="cw-section">
+      <h2>
+        <span>05</span> Experimental
+      </h2>
+      <div class="cw-grid">
+        <div class="prose">
+          <h3>ASEN 3802: heat conduction in metal rods</h3>
+          <p>
+            Eight thermocouples along aluminium, brass and steel rods heated at one end. We compared the measured
+            temperature histories with an analytic Fourier-series solution, including a convergence study in the number
+            of modes. The end-of-test gradient separates the materials clearly: about 287 K/m for steel at 22 V, against
+            79 K/m for aluminium at 30 V, even though the steel heater ran at lower power.
+          </p>
+          <h3>ASEN 2802: Clark Y-14 wind-tunnel test</h3>
+          <p>
+            Surface-pressure ports on a Clark Y-14 wing in the wind tunnel, reduced to pressure coefficient and
+            integrated for sectional lift and drag, plus a hot-air-balloon altitude and density model.
+          </p>
+        </div>
+        <div>
+          <Figure
+            src={heat}
+            alt="Left, eight thermocouple temperature histories for an aluminium rod at 25 V, rising over about 25 minutes to steady values between 19 and 24 degrees C. Right, end-of-test temperature against position for five rod and voltage cases, each with a straight-line fit; steel has the steepest slope."
+            source="courses/ASEN3802/heat-conduction-lab (raw thermocouple data)"
+          >
+            Measured thermocouple data and end-of-test profiles with linear fits.
+          </Figure>
+          <Figure
+            src={clarky}
+            alt="Pressure coefficient against chordwise position for a Clark Y-14 at 10 degrees angle of attack: a suction peak near minus 2.6 close to the leading edge on one surface, and near-zero to slightly positive values on the other."
+            source="courses/ASEN2802/milestone3/aero (FullSpanTest.csv)"
+          >
+            Clark Y-14 surface pressure at α = 10° and 29.9 m/s, at a mid-span station.
+          </Figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="more" class="cw-section">
+      <h2>
+        <span>06</span> More courses
+      </h2>
+      <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <li class="card p-4">
+          <p class="font-medium">ASEN 4018 Senior Design</p>
+          <p class="mt-1 text-sm text-muted">
+            The capstone weight model, flap model and design trades, and the 6-DOF simulator. See the{" "}
+            <a class="text-flow underline" href="/projects/aircraft-design-toolbox/">
+              capstone weight-model page
+            </a>
+            .
+          </p>
+        </li>
+        <li class="card p-4">
+          <p class="font-medium">ATLS 5151 Flow Visualization (graduate)</p>
+          <p class="mt-1 text-sm text-muted">
+            Marangoni flows, Chladni patterns and clouds. See the{" "}
+            <a class="text-flow underline" href="/flow-vis/">
+              gallery
+            </a>
+            .
+          </p>
+        </li>
+        <li class="card p-4">
+          <p class="font-medium">ASEN 3200 Orbital Mechanics</p>
+          <p class="mt-1 text-sm text-muted">Orbital mechanics homework, the background for DebriSolver.</p>
+        </li>
+        <li class="card p-4">
+          <p class="font-medium">ASEN 3711 / 3712 / 3713</p>
+          <p class="mt-1 text-sm text-muted">Aerodynamics, structures, and thermodynamics &amp; heat transfer.</p>
+        </li>
+        <li class="card p-4">
+          <p class="font-medium">ASEN 3300 Aerospace Electronics</p>
+          <p class="mt-1 text-sm text-muted">Circuits labs and Arduino sensor work.</p>
+        </li>
+        <li class="card p-4">
+          <p class="font-medium">APPM 2360 · ASEN 2012 · CSCI 1300</p>
+          <p class="mt-1 text-sm text-muted">
+            Differential equations, experimental and computational methods, and C++ programming.
+          </p>
+        </li>
+      </ul>
+    </section>
+  </div>
+  <Lightbox />
+</BaseLayout>
+
+<style>
+  .cw-section {
+    padding-block: 3.5rem;
+    border-top: 1px solid var(--border);
+    scroll-margin-top: 5rem;
+  }
+  .cw-section > h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-size: var(--text-2xl);
+    margin-bottom: 1.5rem;
+  }
+  .cw-section > h2 span {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--text-faint);
+  }
+  .cw-grid {
+    display: grid;
+    gap: 2rem;
+  }
+  .cw-grid > * {
+    min-width: 0;
+  }
+  @media (min-width: 1024px) {
+    .cw-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      gap: 3rem;
+      align-items: start;
+    }
+  }
+  .cw-grid :global(.figure) {
+    margin-top: 0;
+  }
+  .cw-grid .prose h3:first-child {
+    margin-top: 0;
+  }
+</style>

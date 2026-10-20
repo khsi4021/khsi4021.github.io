@@ -1,0 +1,101 @@
+---
+// Hero motif: Mach-6 flow over a blunt cylinder, the geometry of the lead
+// project. Streamlines are straight upstream, turn at the bow shock and wrap
+// around the body. Drawn procedurally so the shapes are qualitatively right:
+// stand-off 0.44 R from Billig's cylinder correlation, 0.386 exp(4.67/M^2), at M = 6.
+interface Props {
+  class?: string;
+}
+const { class: cls } = Astro.props;
+
+const W = 560,
+  H = 420,
+  cx = 360,
+  cy = 210,
+  R = 112;
+const standoff = 0.386 * Math.exp(4.67 / 36) * R;
+// Bow shock: hyperbola-like curve x = x0 - a*(sqrt(1 + (y/b)^2) - 1)... opening downstream.
+const x0 = cx - R - standoff;
+const shockPts: string[] = [];
+for (let y = -H / 2 - 20; y <= H / 2 + 20; y += 6) {
+  const x = x0 + 0.0042 * y * y + 0.0000008 * y ** 4;
+  shockPts.push(`${x.toFixed(1)},${(cy + y).toFixed(1)}`);
+}
+const shock = `M ${shockPts.join(" L ")}`;
+
+// Streamlines: straight until the shock, then deflected away from the axis and around the body.
+const lines: string[] = [];
+for (let k = -5; k <= 5; k++) {
+  if (k === 0) continue;
+  const y0 = cy + k * 34;
+  const yy = y0 - cy;
+  const xs = x0 + 0.0042 * yy * yy + 0.0000008 * yy ** 4;
+  const side = Math.sign(k);
+  const clearance = Math.max(R + 14 + (Math.abs(k) - 1) * 18, Math.abs(yy) + 6);
+  const yBody = cy + side * clearance;
+  const d = `M -10 ${y0} L ${xs.toFixed(1)} ${y0} C ${(xs + 40).toFixed(1)} ${y0}, ${(cx - R * 0.6).toFixed(1)} ${yBody.toFixed(1)}, ${cx} ${yBody.toFixed(1)} S ${(W + 20).toFixed(1)} ${(y0 + side * 18).toFixed(1)}, ${(W + 40).toFixed(1)} ${(y0 + side * 26).toFixed(1)}`;
+  lines.push(d);
+}
+---
+
+<svg viewBox={`0 0 ${W} ${H}`} class:list={["shock-motif", cls]} aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="stag-glow" cx={(cx - R) / W} cy={cy / H} r="0.36" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="var(--accent)" stop-opacity="0.5"></stop>
+      <stop offset="1" stop-color="var(--accent)" stop-opacity="0"></stop>
+    </radialGradient>
+    <linearGradient id="shock-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="var(--accent)" stop-opacity="0"></stop>
+      <stop offset="0.5" stop-color="var(--accent)" stop-opacity="1"></stop>
+      <stop offset="1" stop-color="var(--accent)" stop-opacity="0"></stop>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="var(--flow)" stroke-width="1.1" stroke-linecap="round">
+    {lines.map((d, i) => (
+      <path class="flowline" d={d} style={`animation-delay:${-i * 0.37}s`} opacity={0.55 + 0.08 * (i % 3)} />
+    ))}
+  </g>
+  <circle cx={cx - R * 0.55} cy={cy} r={R * 1.2} fill="url(#stag-glow)"></circle>
+  <path d={shock} fill="none" stroke="url(#shock-grad)" stroke-width="2.2"></path>
+  <circle cx={cx} cy={cy} r={R} fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.2"></circle>
+  <path
+    d={`M ${cx - R * Math.cos(0.267)} ${cy - R * Math.sin(0.267)} A ${R} ${R} 0 0 0 ${cx - R * Math.cos(0.267)} ${cy + R * Math.sin(0.267)}`}
+    fill="none"
+    stroke="var(--accent)"
+    stroke-width="3"
+    stroke-linecap="round"
+  ></path>
+  <g font-family="var(--font-mono)" font-size="12" fill="var(--text-faint)">
+    <text x="14" y={cy - 10}>
+      M∞ = 5.98
+    </text>
+    <text x={cx} y={cy + 4} text-anchor="middle" fill="var(--text-muted)">
+      R = 76.2 mm
+    </text>
+    <text x={x0 - 4} y="24" text-anchor="end">
+      bow shock
+    </text>
+  </g>
+</svg>
+
+<style>
+  .shock-motif {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+  .flowline {
+    stroke-dasharray: 16 12;
+    animation: drift 3.2s linear infinite;
+  }
+  @keyframes drift {
+    to {
+      stroke-dashoffset: -56;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .flowline {
+      animation: none;
+    }
+  }
+</style>

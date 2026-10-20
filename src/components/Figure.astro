@@ -1,0 +1,72 @@
+---
+import { Image, getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  /** Where the figure came from, e.g. "projects/hypersonic-solver/results/heat_flux_transition.png". */
+  source?: string;
+  id?: string;
+  /** Let the figure use the full content width instead of the prose column. */
+  wide?: boolean;
+  /** Max display width in px (keeps small figures from blowing up). */
+  maxWidth?: number;
+}
+const { src, alt, source, id, wide = false, maxWidth } = Astro.props;
+const full = await getImage({ src, width: Math.min(src.width, 2200), format: "webp" });
+const widths = [480, 800, 1200, 1600].filter((w) => w <= src.width);
+if (!widths.length) widths.push(src.width);
+---
+
+<figure class:list={["figure my-8", wide && "wide"]} id={id} style={maxWidth ? `max-width:${maxWidth}px` : undefined}>
+  <button
+    type="button"
+    class="paper block w-full cursor-zoom-in overflow-hidden rounded-[var(--radius-lg)] border border-line p-2 sm:p-3"
+    data-lightbox={full.src}
+    data-lightbox-alt={alt}
+    aria-label={`Enlarge figure: ${alt}`}
+  >
+    <Image
+      src={src}
+      alt={alt}
+      widths={widths}
+      sizes={wide ? "(min-width: 1200px) 1100px, 100vw" : "(min-width: 900px) 760px, 100vw"}
+      class="mx-auto h-auto w-full"
+      loading="lazy"
+      decoding="async"
+    />
+  </button>
+  <figcaption class="mt-3 text-sm leading-relaxed text-muted">
+    <span class="fig-num font-mono text-xs tracking-wide text-ink"></span>
+    <slot />
+    {source && <span class="mono-label mt-1 block break-all">Source: {source}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  :global(.prose) .figure {
+    max-width: var(--container-prose);
+  }
+  :global(.prose) .figure.wide {
+    max-width: 100%;
+  }
+  /* Numbering fallback when JS is off (all panels visible, CSS counters are correct) */
+  :global(main) {
+    counter-reset: fig;
+  }
+  .figure {
+    counter-increment: fig;
+  }
+  :global(html:not(.figs-numbered)) .fig-num::before {
+    content: "Fig. " counter(fig);
+  }
+  figcaption :global(> p) {
+    display: inline;
+  }
+  .fig-num:not(:empty)::after,
+  :global(html:not(.figs-numbered)) .fig-num::after {
+    content: "  ";
+    white-space: pre;
+  }
+</style>

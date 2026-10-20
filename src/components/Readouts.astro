@@ -1,0 +1,29 @@
+---
+interface Props {
+  items: { value: string; label: string; href?: string }[];
+  class?: string;
+}
+const { items, class: cls } = Astro.props;
+---
+
+<dl
+  class:list={[
+    "readouts flex flex-wrap gap-px overflow-hidden rounded-[var(--radius)] border border-line bg-line",
+    cls,
+  ]}
+>
+  {items.map((m) => (
+    <div class="flex flex-[1_1_150px] flex-col-reverse justify-end bg-surface px-4 py-3">
+      <dt class="mono-label mt-1 leading-snug">{m.label}</dt>
+      <dd class="font-display text-xl font-semibold tracking-tight text-ink tabular-nums">
+        {m.href ? (
+          <a href={m.href} class="no-underline hover:text-accent">
+            {m.value}
+          </a>
+        ) : (
+          m.value
+        )}
+      </dd>
+    </div>
+  ))}
+</dl>

@@ -1,0 +1,131 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { TAGS, TYPES } from "@/content.config";
+import ProjectCard from "./ProjectCard.astro";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+}
+const { projects } = Astro.props;
+const usedTags = TAGS.filter((t) => projects.some((p) => p.data.tags.includes(t)));
+const usedTypes = TYPES.filter((t) => projects.some((p) => p.data.type === t));
+const count = (tag: string) => projects.filter((p) => p.data.tags.includes(tag as never)).length;
+---
+
+<div data-grid>
+  <div class="no-print flex flex-col gap-4 border-b border-line pb-6" role="group" aria-label="Filter projects">
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="mono-label mr-1 w-14">Topic</span>
+      <button type="button" class="filter-btn" aria-pressed="true" data-filter-tag="">
+        All
+      </button>
+      {usedTags.map((t) => (
+        <button type="button" class="filter-btn" aria-pressed="false" data-filter-tag={t}>
+          {t} <span class="text-faint">{count(t)}</span>
+        </button>
+      ))}
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="mono-label mr-1 w-14">Type</span>
+      <button type="button" class="filter-btn" aria-pressed="true" data-filter-type="">
+        All
+      </button>
+      {usedTypes.map((t) => (
+        <button type="button" class="filter-btn" aria-pressed="false" data-filter-type={t}>
+          {t}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <p class="mono-label mt-4" aria-live="polite" data-count>
+    {projects.length} projects
+  </p>
+
+  <ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {projects.map((p, i) => (
+      <li data-item data-tags={p.data.tags.join("|")} data-type={p.data.type}>
+        <ProjectCard project={p} eager={i < 3} headingLevel="h2" />
+      </li>
+    ))}
+  </ul>
+  <p class="mt-8 hidden text-muted" data-empty>
+    No projects match both filters.
+  </p>
+</div>
+
+<style>
+  .filter-btn {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    background: transparent;
+    cursor: pointer;
+    transition:
+      color 150ms,
+      border-color 150ms,
+      background-color 150ms;
+  }
+  .filter-btn:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .filter-btn[aria-pressed="true"] {
+    color: var(--accent-ink);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .filter-btn[aria-pressed="true"] span {
+    color: inherit;
+    opacity: 0.75;
+  }
+</style>
+
+<script>
+  const grid = document.querySelector<HTMLElement>("[data-grid]");
+  if (grid) {
+    const items = [...grid.querySelectorAll<HTMLElement>("[data-item]")];
+    const countEl = grid.querySelector<HTMLElement>("[data-count]");
+    const emptyEl = grid.querySelector<HTMLElement>("[data-empty]");
+    const state = { tag: "", type: "" };
+
+    const params = new URLSearchParams(location.search);
+    state.tag = params.get("tag") ?? "";
+    state.type = params.get("type") ?? "";
+
+    const apply = () => {
+      let n = 0;
+      for (const el of items) {
+        const okTag = !state.tag || (el.dataset.tags ?? "").split("|").includes(state.tag);
+        const okType = !state.type || el.dataset.type === state.type;
+        const show = okTag && okType;
+        el.hidden = !show;
+        if (show) n++;
+      }
+      if (countEl) countEl.textContent = `${n} project${n === 1 ? "" : "s"}`;
+      emptyEl?.classList.toggle("hidden", n > 0);
+      grid
+        .querySelectorAll<HTMLButtonElement>("[data-filter-tag]")
+        .forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filterTag === state.tag)));
+      grid
+        .querySelectorAll<HTMLButtonElement>("[data-filter-type]")
+        .forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filterType === state.type)));
+      const q = new URLSearchParams();
+      if (state.tag) q.set("tag", state.tag);
+      if (state.type) q.set("type", state.type);
+      const qs = q.toString();
+      history.replaceState(null, "", qs ? `?${qs}` : location.pathname);
+    };
+
+    grid.addEventListener("click", (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>("button");
+      if (!b) return;
+      if (b.dataset.filterTag !== undefined) state.tag = b.dataset.filterTag;
+      if (b.dataset.filterType !== undefined) state.type = b.dataset.filterType;
+      apply();
+    });
+    apply();
+  }
+</script>

@@ -1,0 +1,507 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* Metric-matched fallbacks (computed from @capsizecss/metrics) so the swap to
+   the web fonts doesn't re-wrap text and shift the layout. */
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  size-adjust: 107.12%;
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Space Grotesk Fallback";
+  src: local("Arial");
+  size-adjust: 109.69%;
+  ascent-override: 89.71%;
+  descent-override: 26.62%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "JetBrains Mono Fallback";
+  src: local("Courier New");
+  size-adjust: 99.98%;
+  ascent-override: 102.02%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+}
+
+/* Class-based dark variant driven by <html data-theme="dark|light"> */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------ */
+/* Design tokens (DESIGN_SPEC.md). Dark is the default theme.          */
+/* ------------------------------------------------------------------ */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0a0d13;
+  --bg-raised: #10151e;
+  --surface: #151b26;
+  --surface-2: #1b2230;
+  --border: #252e3e;
+  --border-strong: #354055;
+  --text: #e8ecf3;
+  --text-muted: #a3adbd;
+  --text-faint: #8290a3;
+  --accent: #ff8a4c;
+  --accent-ink: #160b04;
+  --flow: #6ccbff;
+  --ok: #4ade9c;
+  --warn: #f5c451;
+  --fail: #ff6b6b;
+  --paper: #fafaf8;
+  --paper-ink: #1a1a1a;
+  --shadow-card: none;
+  --glow: rgb(255 138 76 / 0.35);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f5f1;
+  --bg-raised: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #efede7;
+  --border: #ddd9cf;
+  --border-strong: #c3bdb0;
+  --text: #10141c;
+  --text-muted: #4b5464;
+  --text-faint: #646c7a;
+  --accent: #b93c0b;
+  --accent-ink: #ffffff;
+  --flow: #0369a1;
+  --ok: #15803d;
+  --warn: #a16207;
+  --fail: #b91c1c;
+  --shadow-card: 0 1px 2px rgb(16 20 28 / 0.06), 0 4px 16px rgb(16 20 28 / 0.05);
+  --glow: rgb(194 65 12 / 0.18);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-ink: var(--text);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-flow: var(--flow);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-fail: var(--fail);
+  --color-paper: var(--paper);
+}
+
+@theme {
+  --font-sans: "Inter Variable", "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk Variable", "Space Grotesk Fallback", ui-sans-serif, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono Fallback", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.953rem;
+  --text-3xl: 2.441rem;
+
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+
+  --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --container-prose: 72ch;
+  --container-page: 1200px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--bg);
+    min-height: 100dvh;
+    font-size: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+    line-height: 1.65;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  /* Note: no `text-wrap: pretty` on paragraphs; it measurably slowed layout
+     on throttled mobile in Lighthouse. */
+  a {
+    color: inherit;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--flow);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  img,
+  video,
+  svg {
+    max-width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Components                                                          */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: var(--container-page);
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 768px) {
+    .wrap {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--flow);
+  }
+
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 0.6rem 1rem;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    color: var(--text);
+    transition:
+      border-color 150ms var(--ease-out-soft),
+      background-color 150ms var(--ease-out-soft),
+      transform 150ms var(--ease-out-soft);
+  }
+  .btn:hover {
+    border-color: var(--text-muted);
+    background: var(--surface);
+  }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+  .btn-primary:hover {
+    background: color-mix(in srgb, var(--accent) 88%, white);
+    border-color: color-mix(in srgb, var(--accent) 88%, white);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.1rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+
+  .paper {
+    background: var(--paper);
+    color: var(--paper-ink);
+  }
+
+  .draft-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px dashed var(--warn);
+    color: var(--warn);
+    border-radius: 4px;
+    padding: 0.05rem 0.4rem;
+    vertical-align: middle;
+  }
+
+  /* Long-form text inside project pages and MDX */
+  .prose {
+    max-width: var(--container-prose);
+    color: var(--text);
+  }
+  .prose > * + * {
+    margin-top: 1.1em;
+  }
+  .prose h2 {
+    font-size: var(--text-2xl);
+    margin-top: 2.2em;
+  }
+  .prose h3 {
+    font-size: var(--text-xl);
+    margin-top: 1.8em;
+  }
+  .prose h4 {
+    font-size: 1.125rem;
+    margin-top: 1.5em;
+  }
+  .prose :where(h2, h3, h4) + * {
+    margin-top: 0.6em;
+  }
+  .prose a {
+    color: var(--flow);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .prose a:hover {
+    text-decoration-thickness: 2px;
+  }
+  .prose strong {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .prose ul,
+  .prose ol {
+    padding-left: 1.3em;
+  }
+  .prose ul {
+    list-style: none;
+  }
+  .prose ul > li {
+    position: relative;
+  }
+  .prose ul > li::before {
+    content: "";
+    position: absolute;
+    left: -1em;
+    top: 0.72em;
+    width: 0.4em;
+    height: 1px;
+    background: var(--accent);
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li + li {
+    margin-top: 0.35em;
+  }
+  .prose li::marker {
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+  }
+  .prose blockquote {
+    border-left: 2px solid var(--accent);
+    padding-left: 1rem;
+    color: var(--text-muted);
+  }
+  .prose :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.05em 0.35em;
+  }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    display: block;
+    overflow-x: auto;
+  }
+  .prose th,
+  .prose td {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .prose th {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 500;
+  }
+  .prose tbody tr:hover {
+    background: var(--surface);
+  }
+  .prose td.num,
+  .prose .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .prose hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin-block: 2rem;
+  }
+
+  /* KaTeX display math */
+  .prose .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.75rem 0;
+    font-size: 1.1em;
+  }
+  .katex {
+    font-size: 1.08em;
+  }
+
+  /* Shiki dual themes (defaultColor: false) */
+  .astro-code {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    padding: 1rem 1.1rem;
+    border-radius: 0 0 var(--radius) var(--radius);
+    overflow-x: auto;
+    background-color: var(--surface-2);
+    border: 1px solid var(--border);
+    border-top: 0;
+  }
+  [data-theme="dark"] .astro-code,
+  [data-theme="dark"] .astro-code span {
+    color: var(--shiki-dark);
+  }
+  [data-theme="light"] .astro-code,
+  [data-theme="light"] .astro-code span {
+    color: var(--shiki-light);
+  }
+}
+
+/* Project tabs before the tabs script runs: show only the initial panel
+   (chosen in the head script from the URL hash). After init, the script sets
+   data-tabs-ready and the panels' `hidden` attributes take over. */
+.js:not([data-tabs-ready]) [data-tabs] [role="tabpanel"] {
+  display: none;
+}
+.js:not([data-tabs-ready])[data-initial-tab="overview"] #overview,
+.js:not([data-tabs-ready])[data-initial-tab="technical"] #technical,
+.js:not([data-tabs-ready])[data-initial-tab="results"] #results,
+.js:not([data-tabs-ready])[data-initial-tab="reflection"] #reflection,
+.js:not([data-tabs-ready])[data-initial-tab="code"] #code {
+  display: block;
+}
+
+/* Progressive enhancement: elements that only make sense with JS */
+.js-only {
+  display: none;
+}
+.js .js-only {
+  display: block;
+}
+
+/* Status colours used in validation tables */
+.pass {
+  color: var(--ok);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+.fail {
+  color: var(--fail);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+.info {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* Reduced motion: turn everything off */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print: project pages print every tab, no chrome */
+@media print {
+  :root,
+  :root[data-theme="dark"] {
+    --bg: #ffffff;
+    --bg-raised: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f4f4f4;
+    --border: #dddddd;
+    --border-strong: #bbbbbb;
+    --text: #000000;
+    --text-muted: #333333;
+    --text-faint: #555555;
+    --accent: #9a3412;
+    --flow: #075985;
+    color-scheme: light;
+  }
+  .no-print,
+  header.site-header,
+  footer.site-footer,
+  [role="tablist"] {
+    display: none !important;
+  }
+  [role="tabpanel"][hidden] {
+    display: block !important;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #555;
+  }
+  .figure {
+    break-inside: avoid;
+  }
+  body {
+    font-size: 11pt;
+  }
+}

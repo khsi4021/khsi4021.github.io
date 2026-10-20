@@ -1,0 +1,150 @@
+---
+title: "Sim6DOF: Simulink 6-DOF Flight Simulator"
+slug: sim6dof
+summary: A script-built Simulink six-degree-of-freedom flight simulator for the ASEN 4018 capstone UAV, verified against a Boeing 747 benchmark by linearising the full nonlinear model and by doublet tests.
+hook: A 6-DOF simulator that rebuilds itself from a script and matches the B747 analytic modes to within 0.09 %.
+tldr: With one teammate (I did most of the work), I built the capstone's 6-DOF Simulink simulator. On a Boeing 747 benchmark it matches all five analytic modes to 0.09 % in natural frequency; last year's missed one by 65 %.
+type: Team
+course: ASEN 4018 Senior Design
+team: Two-person team within the capstone
+role: Did the majority of the work on the simulator and its verification
+dates: Fall 2026
+date: 2026-10-17
+tags: [Flight Dynamics & Control, Aircraft Design]
+stack: [MATLAB, Simulink, Aerospace Blockset, Simulink Control Design]
+featured: true
+order: 3
+tier: flagship
+heroImage: ../../assets/projects/sim6dof/1_eigenvalues.png
+heroAlt: Five pole-map panels for the Boeing 747 modes, in which Etkin textbook, analytic linear model and both Sim6DOF variants cluster together while last year's simulator sits far away for the short period and Dutch roll.
+thumbnail: ../../assets/projects/sim6dof/1_eigenvalues.png
+thumbnailAlt: Pole maps comparing simulator eigenvalues with textbook values for a Boeing 747.
+metrics:
+  - { value: "≤ 0.09 %", label: "ω_n error vs analytic model, all 5 modes" }
+  - { value: "0.5–0.9 %", label: "doublet NRMSE, nonlinear vs linear" }
+  - { value: "2 % / 0.01", label: "proposed TRR pass limits (ω_n / ζ)" }
+  - { value: "65 % → 0.6 %", label: "Dutch-roll ω_n error vs Etkin, last year → now" }
+links: {}
+status: in progress
+---
+import eig from "../../assets/projects/sim6dof/1_eigenvalues.png";
+import err from "../../assets/projects/sim6dof/2_error_summary.png";
+import sp from "../../assets/projects/sim6dof/3_short_period.png";
+import ph from "../../assets/projects/sim6dof/4_phugoid.png";
+import dr from "../../assets/projects/sim6dof/5_dutch_roll.png";
+import modesSnip from "../../snippets/sim6dof_modes.m?raw";
+import inertiaSnip from "../../snippets/sim6dof_inertia.m?raw";
+
+<TabPanel id="overview">
+
+### The problem
+
+The capstone UAV needs a flight simulator that the controls, propulsion and aerodynamics leads can all plug into. The previous year's simulator could not be trusted: on the Boeing 747 benchmark, its short-period and Dutch-roll natural frequencies were 22 % and 65 % off the textbook values. A simulator is only useful if you can prove it integrates the equations you think it does.
+
+### What we built
+
+The simulator was a two-person effort, and I did the majority of the work.
+
+- **A Simulink model generated from a script** (`build_Sim6DOF.m`), so the architecture is reviewable in git and merge conflicts in the `.slx` are impossible. The signal flow is: test inputs → flight control system → actuators → aerodynamics and propulsion; ISA atmosphere with optional Dryden wind → air data; gravity + aero + propulsion → 6-DOF Euler equations of motion. It uses a fixed-step `ode4` solver at 5 ms.
+- **Aircraft data sets** that share one field layout: the B747 benchmark (Heffley & Jewell, NASA CR-2144, Condition 9: 40,000 ft, M 0.80) and a template for the capstone electric UAV, with turbofan and electric propulsion variants.
+- **A two-level benchmark.** Level 1 linearises the *full nonlinear* Simulink model about trim and compares its eigenvalues with an analytic linear model built from the same derivatives, and with Etkin's textbook values. Level 2 overlays elevator and rudder doublet responses.
+
+<Figure src={eig} alt="Five pole-map panels (short period, phugoid, Dutch roll, roll subsidence, spiral). Sim6DOF markers overlap the analytic model and Etkin values; last year's simulator (triangles) is far off for short period and Dutch roll." source="sim6dof-simulator/results/1_eigenvalues.png" wide>
+**Hero result.** Simulator vs analytic model on the same data: Δω<sub>n</sub> = 0.09 % (short period), 0.02 % (phugoid), 0.01 % (Dutch roll). Triangles are last year's simulator.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+### Why two references
+
+The benchmark separates two kinds of error:
+
+- **Simulator vs analytic model, same data.** This isolates simulator bugs: frames, signs, integration.
+- **Analytic model vs Etkin's textbook.** This isolates data differences.
+
+The pass criterion we proposed for the Test Readiness Review applies to the first comparison, with the atmosphere frozen so both models share the same assumptions:
+
+<Equation tex={String.raw`\frac{|\omega_{n,\text{sim}} - \omega_{n,\text{analytic}}|}{\omega_{n,\text{analytic}}} < 2\%, \qquad |\zeta_\text{sim} - \zeta_\text{analytic}| < 0.01`} />
+
+### Linearising the nonlinear model
+
+`linearize` extracts the state matrix A of the whole Simulink model. Its eigenvalues include actuator, filter and engine poles, so each physical mode is identified by **eigenvector content**: velocity states are scaled by 1/V, and the longitudinal (u, w, q, θ) and lateral (v, p, r, φ) parts of each eigenvector are compared. Complex pairs and real roots are then ordered to give short period, phugoid, Dutch roll, roll subsidence and spiral.
+
+### A sign that matters
+
+The body frame is the stability-axis frame of the reference condition. Heffley gives the inertias and lateral derivatives there, so no inertia rotation is needed. The Aerospace Blockset 6-DOF block expects the inertia *tensor*, whose off-diagonal term is the **negative** of the product of inertia I<sub>xz</sub>:
+
+<Equation tex={String.raw`J = \begin{bmatrix} I_x & 0 & -I_{xz} \\ 0 & I_y & 0 \\ -I_{xz} & 0 & I_z \end{bmatrix}`} />
+
+Getting this sign wrong makes the Dutch roll go unstable.
+
+### Ready for the controls team
+
+The flight control system block has an open-loop mode (for benchmarking) and a stability-augmentation mode (pitch, roll and yaw rate dampers). The controls team's outer loops plug in there. The UAV template warns about OpenVSP's x-aft/z-up frame, which caused last year's control-surface bug, and converts positions with a helper before they enter the model.
+
+</TabPanel>
+
+<TabPanel id="results">
+
+### Explore the poles
+
+<PoleMap />
+
+### How close is the model?
+
+<Figure src={err} alt="Four bar charts. Top, simulator versus analytic errors in natural frequency (all below 0.1 percent, far under a 2 percent limit) and damping (below 1e-3, under 0.01). Bottom, errors against Etkin's textbook for this simulator and last year's, with large bars for last year's short period and Dutch roll and for the spiral mode of both." source="sim6dof-simulator/results/2_error_summary.png" wide>
+Top: the simulator check passes for every mode with orders of magnitude to spare. Bottom: against the textbook, the remaining differences are data differences, not simulator errors (see the callout below).
+</Figure>
+
+<Callout tone="honest" title="Where it doesn't match the textbook">
+Against Etkin, the short period, Dutch roll and roll subsidence agree within about 0.6 % in ω<sub>n</sub>. Three differences remain, and none is a simulator error:
+- **Spiral mode: 84 % off.** Etkin's spiral target is unverified, and the analytic model built from the same derivatives gives the same root as the simulator.
+- **ISA phugoid: 27 % off.** This is a real density-gradient effect. With the atmosphere frozen, the phugoid is within 5 %.
+- **Dutch-roll damping:** ζ = 0.047 against Etkin's 0.035, again matching the analytic model built from the same data.
+</Callout>
+
+### Time-domain doublets
+
+<Figure src={sp} alt="Four stacked time histories (angle of attack, pitch rate, pitch angle, airspeed) after a minus 1 degree elevator doublet; nonlinear and linear curves overlap, NRMSE 0.5 to 0.7 percent." source="sim6dof-simulator/results/3_short_period.png">
+Short period: a −1° elevator doublet. The nonlinear simulator (solid) and the analytic linear model (dashed) agree to 0.5–0.7 % NRMSE.
+</Figure>
+
+<Figure src={dr} alt="Four stacked lateral time histories (sideslip, yaw rate, roll rate, bank angle) after a plus 2 degree rudder doublet, showing a lightly damped Dutch-roll oscillation; curves overlap, NRMSE 0.8 to 0.9 percent." source="sim6dof-simulator/results/5_dutch_roll.png">
+Dutch roll: a +2° rudder doublet, 0.8–0.9 % NRMSE.
+</Figure>
+
+<Figure src={ph} alt="Long-period phugoid response to an elevator doublet over 400 seconds, nonlinear and linear responses overlapping." source="sim6dof-simulator/results/4_phugoid.png">
+Phugoid: the same elevator doublet run for 400 s.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+### Limitations
+
+- The aerodynamics are a **derivative model** about one flight condition. That is right for a benchmark, but not for large excursions.
+- The capstone UAV data set is still a **placeholder** until the team's OpenVSP stability derivatives, mass properties and propulsion data arrive.
+- The analytic doublet responses neglect actuator dynamics, so part of the 0.5–0.9 % time-domain difference is the actuators, not the simulator.
+
+### Next steps
+
+Load the team's VSPAERO derivatives and mass properties into the UAV data set, close the controls team's outer loops in the FCS block, and add a validation case with published UAV flight data.
+
+### What I learned
+
+Build verification into the architecture. Generating the model from a script made every change reviewable, and comparing against an analytic model built from *the same numbers* turned "does it look right?" into a pass/fail test. Separating simulator error from data error was the step the previous simulator was missing.
+
+</TabPanel>
+
+<TabPanel id="code">
+
+<CodeSnippet code={modesSnip} lang="matlab" title="Identifying flight modes from the linearised Simulink model" source="sim6dof-simulator/run_747_benchmark.m">
+Classifying by eigenvector content (rather than frequency ranges) is what makes the comparison automatic. It still works when a bad data set moves a mode somewhere unexpected.
+</CodeSnippet>
+
+<CodeSnippet code={inertiaSnip} lang="matlab" title="The inertia-tensor sign convention" source="sim6dof-simulator/aircraft/B747_Heffley_Cond9.m" />
+
+</TabPanel>

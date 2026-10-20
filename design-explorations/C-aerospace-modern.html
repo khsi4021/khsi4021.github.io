@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup C · Aerospace modern (chosen)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d13; --surface: #151b26; --surface-2: #1b2230; --border: #252e3e; --border-strong: #354055;
+    --text: #e8ecf3; --muted: #a3adbd; --faint: #7c879a; --accent: #ff8a4c; --flow: #6ccbff; --ok: #4ade9c; --fail: #ff6b6b;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #f6f5f1; --surface: #ffffff; --surface-2: #efede7; --border: #ddd9cf; --border-strong: #c3bdb0;
+      --text: #10141c; --muted: #4b5464; --faint: #646c7a; --accent: #c2410c; --flow: #0369a1; --ok: #15803d; --fail: #b91c1c; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Inter, system-ui, sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+  .mono { font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .04em; }
+  nav.top { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--border); }
+  nav.top a { color: var(--muted); text-decoration: none; margin-left: 22px; font-size: 14px; }
+  nav.top a:hover { color: var(--text); }
+  .brand { font-family: "Space Grotesk"; font-weight: 600; letter-spacing: .01em; }
+  .brand i { font-style: normal; color: var(--accent); }
+  .hero { position: relative; display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: center; padding: 64px 0 48px; }
+  .eyebrow { color: var(--flow); text-transform: uppercase; }
+  h1 { font-family: "Space Grotesk"; font-weight: 600; font-size: clamp(38px, 6vw, 68px); line-height: 1.02; letter-spacing: -.02em; margin: 12px 0 18px; }
+  h1 span { color: var(--accent); }
+  .lede { color: var(--muted); font-size: 18px; max-width: 54ch; }
+  .btns { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+  .btn { border: 1px solid var(--border-strong); padding: 10px 16px; border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; font-size: 14px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #140a04; }
+  .shock svg { width: 100%; height: auto; }
+  .flowline { stroke-dasharray: 4 10; animation: flow 3.2s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -56; } }
+  @media (prefers-reduced-motion: reduce) { .flowline { animation: none; } }
+  .readout { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+  .readout div { flex: 1; padding: 12px 14px; border-right: 1px solid var(--border); background: var(--surface); }
+  .readout div:last-child { border-right: 0; }
+  .readout b { display: block; font-family: "Space Grotesk"; font-size: 22px; font-weight: 600; }
+  .readout span { color: var(--faint); }
+  h2 { font-family: "Space Grotesk"; font-weight: 600; font-size: 28px; margin: 56px 0 18px; display: flex; gap: 14px; align-items: baseline; }
+  h2 .mono { color: var(--faint); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color .2s, transform .2s; }
+  .card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+  .thumb { aspect-ratio: 16/10; background: #fafaf8; display: grid; place-items: center; color: #555; }
+  .card .body { padding: 14px 16px 18px; }
+  .card h3 { font-family: "Space Grotesk"; font-size: 19px; margin: 6px 0 4px; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .chip { border: 1px solid var(--border); border-radius: 999px; padding: 2px 9px; color: var(--muted); }
+  .badge { display: inline-block; border-radius: 4px; padding: 1px 6px; background: var(--surface-2); color: var(--flow); }
+  .skills { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px; border: 1px dashed var(--border-strong); border-radius: 12px; }
+  footer { margin: 64px 0 32px; color: var(--faint); border-top: 1px solid var(--border); padding-top: 18px; }
+  @media (max-width: 820px) { .hero { grid-template-columns: 1fr; padding-top: 32px; } nav.top .links { display: none; } .readout { flex-wrap: wrap; } .readout div { flex: 1 1 45%; border-bottom: 1px solid var(--border); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top"><div class="brand">Khalil Sidani <i>/</i> <span class="mono" style="color:var(--faint)">Lilo</span></div>
+    <div class="links"><a href="#">Projects</a><a href="#">Coursework</a><a href="#">Research</a><a href="#">Flow Vis</a><a href="#">About</a><a href="#">CV</a></div></nav>
+
+  <section class="hero">
+    <div>
+      <div class="mono eyebrow">Aerospace engineering · CU Boulder</div>
+      <h1>Simulation tools for <span>hypersonic</span> flight.</h1>
+      <p class="lede">I write solvers for boundary layers, heating and transition, and I verify them against exact solutions and published data. Applying to MS/PhD programs in CFD and hypersonics for Fall 2027.</p>
+      <div class="btns"><a class="btn primary" href="#">View projects</a><a class="btn" href="#">CV (PDF)</a><a class="btn" href="#">Contact</a></div>
+    </div>
+    <div class="shock" aria-hidden="true">
+      <svg viewBox="0 0 520 380">
+        <defs><radialGradient id="hot" cx="0.28" cy="0.5" r="0.6"><stop offset="0" stop-color="#ff8a4c" stop-opacity=".55"/><stop offset="1" stop-color="#ff8a4c" stop-opacity="0"/></radialGradient></defs>
+        <g fill="none" stroke="var(--flow)" stroke-width="1.2" opacity=".75">
+          <path class="flowline" d="M0 60 H180 C 250 60, 300 40, 520 20"/>
+          <path class="flowline" d="M0 110 H190 C 250 110, 300 80, 520 70"/>
+          <path class="flowline" d="M0 160 H205 C 240 160, 260 120, 300 100 S 420 70, 520 90"/>
+          <path class="flowline" d="M0 220 H205 C 240 220, 260 260, 300 280 S 420 310, 520 290"/>
+          <path class="flowline" d="M0 270 H190 C 250 270, 300 300, 520 310"/>
+          <path class="flowline" d="M0 320 H180 C 250 320, 300 340, 520 360"/>
+        </g>
+        <path d="M 230 10 Q 170 190 230 370" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+        <circle cx="350" cy="190" r="110" fill="url(#hot)"/>
+        <circle cx="350" cy="190" r="104" fill="var(--surface)" stroke="var(--border-strong)"/>
+        <text x="352" y="196" text-anchor="middle" font-family="JetBrains Mono" font-size="13" fill="var(--muted)">M∞ = 5.98</text>
+      </svg>
+      <div class="readout mono">
+        <div><b>−1.45%</b><span>Fay–Riddell check</span></div>
+        <div><b>8.9e-8</b><span>Pc vs NASA CARA</span></div>
+        <div><b>0.09%</b><span>747 short period</span></div>
+      </div>
+    </div>
+  </section>
+
+  <h2><span class="mono">01</span> Featured work</h2>
+  <div class="grid">
+    <article class="card"><div class="thumb mono">[heat-flux figure]</div><div class="body"><span class="badge mono">PERSONAL</span><h3>Hypersonic blunt-body solver</h3><p>Stagnation heating and roughness-transition onset on a Mach-6 cylinder.</p><div class="chips mono"><span class="chip">Hypersonics</span><span class="chip">CFD/Numerical</span></div></div></article>
+    <article class="card"><div class="thumb mono">[B-plane figure]</div><div class="body"><span class="badge mono">COMPETITION</span><h3>DebriSolver</h3><p>Autonomous conjunction-risk pipeline with verified avoidance maneuvers.</p><div class="chips mono"><span class="chip">Orbital/SSA</span><span class="chip">ML</span></div></div></article>
+    <article class="card"><div class="thumb mono">[pole map]</div><div class="body"><span class="badge mono">TEAM</span><h3>Sim6DOF</h3><p>Simulink 6-DOF simulator benchmarked on a Boeing 747.</p><div class="chips mono"><span class="chip">Flight Dynamics</span></div></div></article>
+  </div>
+
+  <h2><span class="mono">02</span> Tools</h2>
+  <div class="skills mono"><span class="chip">Python</span><span class="chip">MATLAB / Simulink</span><span class="chip">C++</span><span class="chip">SciPy solve_bvp</span><span class="chip">XGBoost</span><span class="chip">OpenVSP</span><span class="chip">pytest</span></div>
+
+  <footer class="mono">© Khalil Sidani · Boulder, CO · Built with Astro</footer>
+</div>
+</body>
+</html>
