@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 1 · Bold engineering · Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --paper:#f4f3ef; --white:#fff; --ink:#111110; --muted:#5b5b57; --rule:#d6d3cc; --accent:#ff5a1f; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--paper); color:var(--ink); font:16px/1.55 Inter, system-ui, sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  .wrap { max-width:1320px; margin:0 auto; padding:0 24px; }
+  .mono { font-family:"IBM Plex Mono", monospace; font-size:12px; letter-spacing:.06em; text-transform:uppercase; }
+  .display { font-family:Archivo, sans-serif; font-stretch:72%; font-weight:850; text-transform:uppercase; letter-spacing:-.01em; line-height:.86; }
+
+  /* top bar + ticker */
+  .bar { border-bottom:1.5px solid var(--ink); }
+  .bar .wrap { display:flex; justify-content:space-between; align-items:center; height:60px; }
+  .brand { font-family:Archivo; font-stretch:100%; font-weight:800; font-size:17px; letter-spacing:.02em; text-transform:uppercase; }
+  .brand span { color:var(--accent); }
+  nav a { margin-left:22px; font-weight:500; font-size:14px; }
+  nav a:hover { color:var(--accent); }
+  .ticker { background:var(--ink); color:var(--paper); overflow:hidden; white-space:nowrap; }
+  .ticker div { display:inline-block; padding:8px 0; animation:tick 40s linear infinite; }
+  .ticker span { margin:0 28px; } .ticker b { color:var(--accent); font-weight:500; }
+  @keyframes tick { to { transform:translateX(-50%); } }
+  @media (prefers-reduced-motion:reduce){ .ticker div{ animation:none; } }
+
+  /* hero */
+  .hero { padding:40px 0 0; }
+  .hero h1 { font-size:clamp(52px, 8.6vw, 132px); }
+  .hero h1 em { font-style:normal; color:var(--accent); }
+  .hero-grid { display:grid; grid-template-columns:repeat(12,1fr); gap:24px; margin-top:36px; border-top:1.5px solid var(--ink); padding-top:24px; }
+  .intro { grid-column:span 4; }
+  .intro p { font-size:18px; color:#2a2a28; }
+  .btns { display:flex; gap:10px; margin-top:24px; flex-wrap:wrap; }
+  .btn { border:1.5px solid var(--ink); padding:12px 18px; font-weight:600; font-size:14px; text-transform:uppercase; letter-spacing:.04em; }
+  .btn.primary { background:var(--accent); border-color:var(--accent); color:#111; }
+  .btn:hover { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .fig { grid-column:span 8; position:relative; background:var(--white); border:1.5px solid var(--ink); padding:18px; }
+  .fig img { width:100%; display:block; }
+  .fig::before, .fig::after { content:""; position:absolute; width:14px; height:14px; border:2px solid var(--accent); }
+  .fig::before { top:-8px; left:-8px; border-right:0; border-bottom:0; }
+  .fig::after { bottom:-8px; right:-8px; border-left:0; border-top:0; }
+  .figcap { display:flex; justify-content:space-between; gap:16px; margin-top:12px; padding-top:10px; border-top:1px solid var(--rule); }
+  .figcap p { font-size:14px; color:var(--muted); max-width:60ch; }
+  .readouts { grid-column:span 12; display:grid; grid-template-columns:repeat(4,1fr); border-top:1.5px solid var(--ink); border-bottom:1.5px solid var(--ink); margin-top:8px; }
+  .readouts div { padding:18px 20px; border-right:1px solid var(--rule); }
+  .readouts div:last-child { border-right:0; }
+  .readouts b { display:block; font-family:Archivo; font-stretch:80%; font-weight:800; font-size:44px; line-height:1; }
+  .readouts span { color:var(--muted); }
+
+  /* index of work */
+  section.block { padding:80px 0 0; }
+  .block-head { display:flex; justify-content:space-between; align-items:end; border-bottom:1.5px solid var(--ink); padding-bottom:14px; }
+  .block-head h2 { font-size:clamp(44px, 6vw, 84px); }
+  .row { display:grid; grid-template-columns:110px 1.2fr 1fr 360px; gap:28px; align-items:center; padding:28px 0; border-bottom:1px solid var(--rule); transition:background .2s; }
+  .row:hover { background:var(--white); }
+  .row .n { font-family:Archivo; font-stretch:70%; font-weight:900; font-size:96px; line-height:.8; color:var(--rule); transition:color .2s; }
+  .row:hover .n { color:var(--accent); }
+  .row h3 { font-family:Archivo; font-stretch:90%; font-weight:800; font-size:30px; line-height:1.05; text-transform:uppercase; }
+  .row .hook { color:var(--muted); margin-top:8px; }
+  .row .metric b { font-family:Archivo; font-stretch:80%; font-weight:800; font-size:40px; display:block; line-height:1; }
+  .tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+  .tag { border:1px solid var(--ink); padding:2px 7px; }
+  .thumb { background:var(--white); border:1px solid var(--ink); aspect-ratio:16/10; overflow:hidden; }
+  .thumb img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+
+  /* spec */
+  .spec { display:grid; grid-template-columns:repeat(4,1fr); border:1.5px solid var(--ink); margin-top:28px; background:var(--white); }
+  .spec div { padding:20px; border-right:1px solid var(--rule); }
+  .spec div:last-child { border-right:0; }
+  .spec h4 { font-family:"IBM Plex Mono"; font-size:12px; letter-spacing:.06em; color:var(--accent); text-transform:uppercase; font-weight:500; margin-bottom:10px; }
+  .spec li { list-style:none; padding:6px 0; border-bottom:1px dashed var(--rule); font-weight:500; }
+  .spec ul { padding:0; }
+
+  /* strip of other work */
+  .strip { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:28px; }
+  .strip a { background:var(--white); border:1px solid var(--ink); }
+  .strip img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; border-bottom:1px solid var(--ink); }
+  .strip p { padding:12px 14px; font-weight:600; }
+  .strip span { display:block; font-weight:400; color:var(--muted); font-size:14px; }
+
+  footer { margin-top:100px; background:var(--ink); color:var(--paper); padding:56px 0; }
+  footer .display { font-size:clamp(48px, 9vw, 128px); }
+  footer .display em { font-style:normal; color:var(--accent); }
+  footer .meta { display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:28px; color:#b9b7b0; }
+
+  @media (max-width:900px) {
+    nav { display:none; }
+    .intro, .fig { grid-column:span 12; }
+    .readouts { grid-template-columns:repeat(2,1fr); }
+    .readouts div:nth-child(2) { border-right:0; }
+    .row { grid-template-columns:64px 1fr; }
+    .row .n { font-size:60px; }
+    .row .metric, .row .thumb { grid-column:2; }
+    .spec, .strip { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<header class="bar"><div class="wrap">
+  <a class="brand" href="#">Khalil Sidani <span>/</span> Lilo</a>
+  <nav><a href="#">Projects</a><a href="#">Coursework</a><a href="#">Research</a><a href="#">Flow Vis</a><a href="#">About</a><a href="#">CV</a></nav>
+</div></header>
+<div class="ticker mono"><div>
+  <span>M∞ <b>5.98</b> blunt cylinder</span><span>Fay–Riddell check <b>−1.45 %</b></span><span>Pc vs NASA CARA <b>8.9e−8</b></span><span>567/567 maneuvers <b>≤ 3.2e−6</b></span><span>B747 short period <b>Δω 0.09 %</b></span><span>Blind weight benchmark <b>+1.7 %</b></span>
+  <span>M∞ <b>5.98</b> blunt cylinder</span><span>Fay–Riddell check <b>−1.45 %</b></span><span>Pc vs NASA CARA <b>8.9e−8</b></span><span>567/567 maneuvers <b>≤ 3.2e−6</b></span><span>B747 short period <b>Δω 0.09 %</b></span><span>Blind weight benchmark <b>+1.7 %</b></span>
+</div></div>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="mono" style="color:var(--muted)">Aerospace Engineering Sciences · CU Boulder · Class of 2027</p>
+    <h1 class="display" style="margin-top:14px">Simulation tools<br>for <em>hypersonic</em> flight</h1>
+    <div class="hero-grid">
+      <div class="intro">
+        <p>I write solvers for boundary layers, heating and transition, and I check them against exact solutions and published data. Applying to MS/PhD programs in CFD and hypersonics for Fall 2027.</p>
+        <div class="btns"><a class="btn primary" href="#">View projects →</a><a class="btn" href="#">CV</a><a class="btn" href="#">Contact</a></div>
+      </div>
+      <figure class="fig">
+        <img src="img/heatflux.webp" alt="Laminar wall heat flux and transition onset along a Mach-6 cylinder">
+        <figcaption class="figcap"><span class="mono">Fig. 01</span><p>Laminar heating on a Mach-6 cylinder, with and without the restored pressure-work term, and the predicted roughness-transition onset.</p></figcaption>
+      </figure>
+      <div class="readouts">
+        <div><b>−1.45%</b><span class="mono">Fay–Riddell check</span></div>
+        <div><b>8.9e−8</b><span class="mono">Pc vs NASA CARA</span></div>
+        <div><b>0.09%</b><span class="mono">B747 modes vs analytic</span></div>
+        <div><b>+1.7%</b><span class="mono">Blind weight benchmark</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><h2 class="display">Index of work</h2><span class="mono">04 flagship · 06 more</span></div>
+    <a class="row" href="1-bold-engineering-project.html">
+      <span class="n">01</span>
+      <div><h3>Hypersonic heating &amp; transition solver</h3><p class="hook">Compressible similarity boundary layer, local-similarity marching and PANT transition correlations on a Mach-6 cylinder.</p><div class="tags mono"><span class="tag">Personal</span><span class="tag">Hypersonics</span><span class="tag">CFD</span></div></div>
+      <div class="metric"><b>−1.45 %</b><span class="mono" style="color:var(--muted)">vs Fay–Riddell</span></div>
+      <div class="thumb"><img src="img/heatflux.webp" alt=""></div>
+    </a>
+    <a class="row" href="#">
+      <span class="n">02</span>
+      <div><h3>DebriSolver: conjunction-risk response</h3><p class="hook">From raw conjunction messages to a verified avoidance burn, with every stage validated against an independent reference.</p><div class="tags mono"><span class="tag">Competition</span><span class="tag">Orbital/SSA</span><span class="tag">ML</span></div></div>
+      <div class="metric"><b>567/567</b><span class="mono" style="color:var(--muted)">maneuvers meet target</span></div>
+      <div class="thumb"><img src="img/bplane.webp" alt=""></div>
+    </a>
+    <a class="row" href="#">
+      <span class="n">03</span>
+      <div><h3>Sim6DOF flight simulator</h3><p class="hook">A Simulink 6-DOF simulator built from a script and verified on a Boeing 747 benchmark.</p><div class="tags mono"><span class="tag">Team of 2</span><span class="tag">Flight dynamics</span></div></div>
+      <div class="metric"><b>0.09 %</b><span class="mono" style="color:var(--muted)">max ω<sub>n</sub> error</span></div>
+      <div class="thumb"><img src="img/poles.webp" alt=""></div>
+    </a>
+    <a class="row" href="#">
+      <span class="n">04</span>
+      <div><h3>Capstone UAV: sizing &amp; design trades</h3><p class="hook">A blind-validated empty-weight model, a flap model, and the sweeps that size our 55 lb electric UAV.</p><div class="tags mono"><span class="tag">Team</span><span class="tag">Aircraft design</span></div></div>
+      <div class="metric"><b>+1.7 %</b><span class="mono" style="color:var(--muted)">blind benchmark</span></div>
+      <div class="thumb"><img src="img/trade.webp" alt=""></div>
+    </a>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><h2 class="display">More results</h2><span class="mono">Course projects</span></div>
+    <div class="strip">
+      <a href="#"><img src="img/tsunami.webp" alt=""><p>2-D tsunami<span>Finite differences over bathymetry</span></p></a>
+      <a href="#"><img src="img/target.webp" alt=""><p>Shooting method<span>Bisection + event detection</span></p></a>
+      <a href="#"><img src="img/entry.webp" alt=""><p>Ballistic entry<span>ASEN 5131, Sutton–Graves heating</span></p></a>
+      <a href="#"><img src="img/clalpha.webp" alt=""><p>Vortex panel method<span>ASEN 3802 aero lab</span></p></a>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><h2 class="display">Spec sheet</h2><span class="mono">Tools, with where I used them</span></div>
+    <div class="spec">
+      <div><h4>Languages</h4><ul><li>Python</li><li>MATLAB / Simulink</li><li>C++</li><li>C#, JavaScript</li></ul></div>
+      <div><h4>Simulation</h4><ul><li>SciPy solve_bvp</li><li>Finite differences</li><li>Panel methods</li><li>ANSYS · OpenRocket</li></ul></div>
+      <div><h4>Analysis</h4><ul><li>XGBoost + SHAP</li><li>fmincon / MultiStart</li><li>Monte Carlo</li><li>Sensitivity studies</li></ul></div>
+      <div><h4>Lab &amp; build</h4><ul><li>Vacuum-chamber testing</li><li>Wind-tunnel pressures</li><li>Tripoli L1 rocketry</li><li>Fusion 360</li></ul></div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <p class="display">Let's build <em>faster</em><br>aircraft.</p>
+  <div class="meta mono"><span>khsi4021@colorado.edu</span><span>github.com/khsi4021</span><span>Boulder, CO · from Bahrain</span></div>
+</div></footer>
+</body>
+</html>

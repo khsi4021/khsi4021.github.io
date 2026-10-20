@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 2 · Minimal Swiss · Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#000; --muted:#6f6f6f; --red:#e30613; --hair:#e4e4e4; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:#fff; color:var(--ink); font:17px/1.6 "Inter Tight", Helvetica, Arial, sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  .page { max-width:1400px; margin:0 auto; padding:0 32px; }
+  .grid { display:grid; grid-template-columns:repeat(12,1fr); column-gap:24px; }
+  header.top { padding:28px 0; font-size:14px; font-weight:500; display:flex; justify-content:space-between; }
+
+  .title { border-top:2px solid #000; padding:56px 0 64px; }
+  .title .lab { grid-column:1 / span 3; font-size:13px; font-weight:500; }
+  .title .lab .r { color:var(--red); }
+  .title h1 { grid-column:4 / -1; font-size:clamp(44px, 6.4vw, 104px); font-weight:700; line-height:.97; letter-spacing:-.035em; }
+  .title .lede { grid-column:4 / span 6; margin-top:32px; font-size:22px; line-height:1.4; letter-spacing:-.01em; }
+
+  .fullfig { border-top:2px solid #000; padding-top:24px; }
+  .fullfig img { grid-column:1 / -1; width:100%; display:block; }
+  .fullfig .cap { grid-column:4 / span 6; font-size:14px; color:var(--muted); margin-top:12px; }
+  .fullfig .cap b { color:#000; font-weight:600; }
+
+  .body { padding:64px 0; }
+  .meta { grid-column:1 / span 3; font-size:13px; position:sticky; top:24px; align-self:start; }
+  .meta dt { color:var(--muted); margin-top:14px; }
+  .meta dd { margin:2px 0 0; font-weight:500; }
+  .tabs { display:flex; gap:24px; font-weight:600; font-size:15px; margin-bottom:40px; border-bottom:1px solid #000; }
+  .tabs a { padding:0 0 10px; }
+  .tabs a.on { border-bottom:3px solid var(--red); margin-bottom:-2px; }
+  .text { grid-column:4 / span 6; }
+  .text h2 { font-size:30px; font-weight:700; letter-spacing:-.02em; line-height:1.1; margin:48px 0 14px; }
+  .text h2:first-of-type { margin-top:0; }
+  .text p + p { margin-top:14px; }
+  .eq { margin:28px 0; padding:20px 0; border-top:1px solid #000; border-bottom:1px solid #000; font-family:"Times New Roman", serif; font-size:23px; }
+  .eq .r { color:var(--red); }
+  .nums { grid-column:4 / -1; display:grid; grid-template-columns:repeat(3,1fr); column-gap:24px; margin:56px 0; }
+  .nums div { border-top:2px solid #000; padding-top:12px; }
+  .nums b { font-size:56px; font-weight:700; letter-spacing:-.04em; line-height:1; display:block; }
+  .nums span { font-size:14px; color:var(--muted); }
+  .side { grid-column:10 / -1; align-self:start; }
+  .side img { width:100%; display:block; }
+  .side p { font-size:13px; color:var(--muted); margin-top:8px; }
+
+  @media (max-width:900px) {
+    .title .lab, .title h1, .title .lede, .fullfig .cap, .meta, .text, .side, .nums { grid-column:1 / -1; }
+    .meta { position:static; margin-bottom:28px; }
+    .nums { grid-template-columns:1fr; row-gap:20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top"><a href="2-minimal-swiss-home.html">Khalil Sidani</a><a href="2-minimal-swiss-home.html">← Index</a></header>
+
+  <div class="title grid">
+    <div class="lab">01 / Personal<br><span class="r">Hypersonics · CFD</span></div>
+    <h1>Hypersonic heating and transition on a Mach-6 cylinder</h1>
+    <p class="lede">A laminar heating and transition-onset solver, verified against exact solutions. I found a pressure-work term missing from the printed energy equation and verified the fix.</p>
+  </div>
+
+  <div class="fullfig grid">
+    <img src="img/heatflux.webp" alt="Laminar wall heat flux and transition onset along a Mach-6 cylinder">
+    <p class="cap"><b>Fig. 1</b>  Laminar wall heat flux, as printed and with the pressure-work term restored; PANT-RT transition onset for three roughness heights.</p>
+  </div>
+
+  <div class="body grid">
+    <dl class="meta">
+      <dt>Type</dt><dd>Personal</dd>
+      <dt>Date</dt><dd>August 2026</dd>
+      <dt>Role</dt><dd>Sole developer</dd>
+      <dt>Stack</dt><dd>Python, SciPy, pytest</dd>
+      <dt>Tests</dt><dd>144</dd>
+    </dl>
+    <div class="text">
+      <nav class="tabs"><a class="on" href="#">Overview</a><a href="#">Technical</a><a href="#">Results</a><a href="#">Reflection</a><a href="#">Code</a></nav>
+      <h2>The problem</h2>
+      <p>Surface roughness can trip a hypersonic boundary layer to turbulence, and turbulence multiplies wall heating. The goal was to predict where that happens on a blunt body: compute the laminar heating, then find the angle where a published roughness correlation says the layer trips.</p>
+      <h2>A missing term</h2>
+      <p>At Pr = 1, total enthalpy must satisfy (CS′)′ + fS′ = 0 for any β. The printed energy equation satisfies it only when β·M<sub>e</sub> = 0. Restoring the pressure-gradient work term:</p>
+      <div class="eq">(C g′)′ + Pr f g′ = −Pr C(γ−1)M<sub>e</sub>² f″² <span class="r">− Pr β(γ−1)M<sub>e</sub>² f′(f′² − g)</span></div>
+      <p>With it, the identity holds to 10⁻⁶ and the 30° heat flux moves from 4.15 to 3.55 W/cm², against ≈ 3.6 in the DNS.</p>
+    </div>
+    <div class="side"><img src="img/geometry.webp" alt="Cylinder geometry"><p>Fig. 2  The 76.2 mm cylinder, solved to Θ = 45°.</p></div>
+    <div class="nums">
+      <div><b>−1.45%</b><span>vs Fay–Riddell at the stagnation line</span></div>
+      <div><b>144</b><span>pytest tests</span></div>
+      <div><b>&lt;10⁻⁸</b><span>Crocco–Busemann exactness</span></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

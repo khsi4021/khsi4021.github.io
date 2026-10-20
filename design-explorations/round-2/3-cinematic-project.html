@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 3 · Visual / cinematic · Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#fbfaf7; --ink:#16181c; --muted:#5f636b; --rule:#e3e1db; --accent:#1f5bd6; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink); font:18px/1.7 Inter, system-ui, sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  .wrap { max-width:1240px; margin:0 auto; padding:0 24px; }
+  .label { font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+  header .wrap { display:flex; justify-content:space-between; align-items:center; height:72px; }
+  header .name { font-family:Fraunces; font-weight:600; font-size:20px; }
+
+  .herofig { background:#fff; padding:clamp(16px, 4vw, 56px) 0; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+  .herofig img { display:block; width:min(1240px, 100%); margin:0 auto; padding:0 24px; }
+
+  .title { display:grid; grid-template-columns:repeat(12,1fr); gap:32px; padding:64px 0 24px; }
+  .title .k { grid-column:1 / span 3; }
+  .title .k dl { margin-top:14px; font-size:14px; color:var(--muted); }
+  .title .k dt { margin-top:10px; font-weight:600; color:var(--ink); }
+  .title .t { grid-column:4 / span 8; }
+  .title h1 { font-family:Fraunces; font-weight:400; font-size:clamp(40px, 5.4vw, 80px); line-height:1.02; letter-spacing:-.02em; }
+  .title .lede { font-family:Fraunces; font-weight:300; font-size:26px; line-height:1.4; margin-top:24px; color:#2b2e33; }
+
+  .layout { display:grid; grid-template-columns:repeat(12,1fr); gap:32px; padding-bottom:120px; }
+  .toc { grid-column:1 / span 3; position:sticky; top:28px; align-self:start; font-size:15px; }
+  .toc a { display:flex; align-items:center; gap:10px; padding:6px 0; color:var(--muted); }
+  .toc a::before { content:""; width:8px; height:8px; border-radius:50%; border:1.5px solid currentColor; }
+  .toc a.on { color:var(--ink); font-weight:600; } .toc a.on::before { background:var(--accent); border-color:var(--accent); }
+  article { grid-column:4 / span 7; }
+  article h2 { font-family:Fraunces; font-weight:400; font-size:38px; line-height:1.1; letter-spacing:-.01em; margin:56px 0 16px; }
+  article h2:first-child { margin-top:0; }
+  article p + p { margin-top:16px; }
+  article > p:first-of-type::first-letter { font-family:Fraunces; font-size:76px; float:left; line-height:.85; padding:6px 10px 0 0; color:var(--accent); }
+  .breakout { margin:44px -16% 44px 0; background:#fff; border-radius:6px; padding:20px; box-shadow:0 30px 80px -40px rgba(22,24,28,.35); }
+  .breakout img { width:100%; display:block; }
+  .breakout figcaption { font-size:14px; color:var(--muted); margin-top:10px; }
+  .pull { margin:48px 0; padding-left:24px; border-left:3px solid var(--accent); }
+  .pull b { display:block; font-family:Fraunces; font-style:italic; font-weight:300; font-size:72px; line-height:1; color:var(--accent); }
+  .pull span { color:var(--muted); }
+  .eq { margin:28px 0; padding:22px 26px; background:#fff; border-radius:6px; font-family:"Times New Roman", serif; font-size:23px; }
+  .eq i { color:var(--accent); font-style:normal; }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:36px 0; }
+  .pair figure { background:#fff; border-radius:6px; padding:12px; }
+  .pair img { width:100%; display:block; }
+
+  @media (max-width:900px) {
+    .title .k, .title .t, .toc, article { grid-column:1 / -1; }
+    .toc { position:static; display:flex; gap:16px; overflow-x:auto; }
+    .breakout { margin-right:0; } .pair { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="name" href="3-cinematic-home.html">Khalil Sidani</a><a href="3-cinematic-home.html" style="font-weight:500">← All work</a></div></header>
+
+<div class="herofig"><img src="img/heatflux.webp" alt="Laminar wall heat flux and transition onset along a Mach-6 cylinder"></div>
+
+<main class="wrap">
+  <div class="title">
+    <div class="k"><p class="label">Chapter 01</p>
+      <dl><dt>Type</dt><dd>Personal project</dd><dt>When</dt><dd>August 2026</dd><dt>Role</dt><dd>Sole developer</dd><dt>Stack</dt><dd>Python, SciPy, pytest</dd></dl>
+    </div>
+    <div class="t">
+      <h1>Heating and transition on a blunt body at Mach 6</h1>
+      <p class="lede">Where does roughness trip a hypersonic boundary layer? A laminar heating solver, a published transition criterion, and a missing term found along the way.</p>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="toc"><a class="on" href="#">Overview</a><a href="#">Technical</a><a href="#">Results</a><a href="#">Reflection</a><a href="#">Code</a></nav>
+    <article>
+      <h2>The problem</h2>
+      <p>Surface roughness can trip a hypersonic boundary layer to turbulence, and turbulence multiplies wall heating. The aim was to predict where that happens on a blunt body: compute the laminar heating along the surface, then find the angle where a published correlation says the layer trips.</p>
+      <p>I set the case to the DNS configuration of a published Mach-6 study, so every number could be checked against its results.</p>
+      <div class="pull"><b>−1.45 %</b><span>stagnation heating against the 2-D Fay–Riddell correlation</span></div>
+      <h2>A missing term</h2>
+      <p>Marched downstream, the heat flux fell only 6 % over 45°, against about 20 % in the DNS. At Pr = 1, total enthalpy must satisfy (CS′)′ + fS′ = 0 for any β, and the printed energy equation only does when β·M<sub>e</sub> = 0. It omits the pressure-gradient work term.</p>
+      <div class="eq">(C g′)′ + Pr f g′ = −Pr C(γ−1)M<sub>e</sub>² f″² <i>− Pr β(γ−1)M<sub>e</sub>² f′(f′² − g)</i></div>
+      <figure class="breakout"><img src="img/heatflux.webp" alt=""><figcaption>Fig. 1 · Heat flux with and without the restored term, and the PANT-RT transition parameter.</figcaption></figure>
+      <p>With the term restored, the identity holds to 10⁻⁶ and the 30° heat flux moves from 4.15 to 3.55 W/cm², against ≈ 3.6 in the DNS.</p>
+      <figure class="breakout" style="margin-right:0;max-width:620px"><img src="img/geometry.webp" alt="The 76.2 mm cylinder with the solved arc"><figcaption>Fig. 2 · The 76.2 mm cylinder, solved to Θ = 45°.</figcaption></figure>
+    </article>
+  </div>
+</main>
+</body>
+</html>

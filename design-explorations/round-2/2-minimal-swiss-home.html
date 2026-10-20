@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 2 · Minimal Swiss · Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#000; --muted:#6f6f6f; --rule:#000; --hair:#e4e4e4; --red:#e30613; --bg:#fff; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink); font:16px/1.5 "Inter Tight", Helvetica, Arial, sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  .page { max-width:1400px; margin:0 auto; padding:0 32px; }
+  .grid { display:grid; grid-template-columns:repeat(12, 1fr); column-gap:24px; }
+  .lab { grid-column:1 / span 3; font-size:13px; font-weight:500; padding-top:6px; }
+  .lab .r { color:var(--red); }
+  .content { grid-column:4 / -1; }
+
+  header.top { display:grid; grid-template-columns:repeat(12,1fr); column-gap:24px; padding:28px 0; font-size:14px; font-weight:500; }
+  header.top .name { grid-column:1 / span 3; }
+  header.top nav { grid-column:4 / -1; display:flex; gap:28px; flex-wrap:wrap; }
+  header.top nav a:hover { color:var(--red); }
+
+  .hero { padding:64px 0 96px; border-top:2px solid var(--rule); }
+  .hero h1 { font-weight:700; font-size:clamp(48px, 7.4vw, 118px); line-height:.96; letter-spacing:-.035em; }
+  .hero h1 .r { color:var(--red); }
+  .hero .sub { display:grid; grid-template-columns:repeat(9,1fr); column-gap:24px; margin-top:48px; }
+  .hero .sub p { grid-column:span 4; font-size:19px; line-height:1.45; }
+  .hero .sub .facts { grid-column:6 / span 4; font-size:14px; }
+  .facts div { display:flex; justify-content:space-between; border-top:1px solid var(--rule); padding:8px 0; }
+  .facts div:last-child { border-bottom:1px solid var(--rule); }
+  .facts b { font-weight:600; }
+
+  section { padding:72px 0; border-top:2px solid var(--rule); }
+  .feature { display:grid; grid-template-columns:repeat(9,1fr); column-gap:24px; row-gap:56px; }
+  .card { grid-column:span 4; }
+  .card:nth-child(2n) { grid-column:6 / span 4; margin-top:96px; }
+  .card .img { background:#f5f5f5; aspect-ratio:4/3; overflow:hidden; }
+  .card img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s; }
+  .card:hover img { transform:scale(1.03); }
+  .card .meta { display:flex; justify-content:space-between; margin-top:14px; font-size:13px; font-weight:500; }
+  .card h3 { font-size:28px; font-weight:700; letter-spacing:-.02em; line-height:1.08; margin-top:6px; }
+  .card:hover h3 { color:var(--red); }
+  .card p { color:var(--muted); margin-top:8px; }
+  .card .num { font-weight:700; font-size:15px; }
+  .card .metric { color:var(--red); font-weight:600; }
+
+  table { width:100%; border-collapse:collapse; font-size:15px; }
+  th { text-align:left; font-weight:500; font-size:13px; color:var(--muted); padding:0 0 10px; }
+  td { padding:14px 0; border-top:1px solid var(--rule); vertical-align:top; }
+  tr:last-child td { border-bottom:1px solid var(--rule); }
+  tbody tr:hover td { color:var(--red); }
+  td.t { font-weight:600; }
+
+  .about { display:grid; grid-template-columns:repeat(9,1fr); column-gap:24px; }
+  .about p { grid-column:span 6; font-size:28px; line-height:1.25; font-weight:500; letter-spacing:-.015em; }
+  .about p .r { color:var(--red); }
+
+  footer { padding:48px 0 64px; border-top:2px solid var(--rule); font-size:14px; }
+  footer .big { font-size:clamp(40px, 6vw, 88px); font-weight:700; letter-spacing:-.035em; line-height:1; }
+  footer .big a:hover { color:var(--red); }
+
+  @media (max-width:900px) {
+    .lab, .content, header.top .name, header.top nav { grid-column:1 / -1; }
+    .lab { margin-bottom:16px; }
+    .hero .sub p, .hero .sub .facts { grid-column:1 / -1; } .hero .sub .facts { margin-top:28px; }
+    .card, .card:nth-child(2n) { grid-column:1 / -1; margin-top:0; }
+    .about p { grid-column:1 / -1; font-size:22px; }
+    .hide-m { display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top"><a class="name" href="#">Khalil Sidani</a>
+    <nav><a href="#">Projects</a><a href="#">Coursework</a><a href="#">Research</a><a href="#">Flow Vis</a><a href="#">About</a><a href="#">CV</a></nav>
+  </header>
+
+  <div class="hero grid">
+    <div class="lab">Aerospace engineer<br><span class="r">CFD · Hypersonics</span></div>
+    <div class="content">
+      <h1>I build simulation tools for <span class="r">hypersonic</span> flight, and I check that they're right.</h1>
+      <div class="sub">
+        <p>Senior in Aerospace Engineering Sciences at CU Boulder. Applying to MS/PhD programs in CFD and hypersonics for Fall 2027.</p>
+        <div class="facts">
+          <div><span>Fay–Riddell heating check</span><b>−1.45 %</b></div>
+          <div><span>Collision probability vs NASA CARA</span><b>8.9 × 10⁻⁸</b></div>
+          <div><span>B747 modes, simulator vs analytic</span><b>≤ 0.09 %</b></div>
+          <div><span>Blind empty-weight benchmark</span><b>+1.7 %</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="grid">
+    <div class="lab">01<br>Selected work</div>
+    <div class="content">
+      <div class="feature">
+        <a class="card" href="2-minimal-swiss-project.html">
+          <div class="img"><img src="img/heatflux.webp" alt=""></div>
+          <div class="meta"><span class="num">01</span><span>Personal · 2026</span></div>
+          <h3>Hypersonic heating &amp; transition solver</h3>
+          <p>Similarity boundary layer and roughness-transition onset on a Mach-6 cylinder. <span class="metric">−1.45 % vs Fay–Riddell.</span></p>
+        </a>
+        <a class="card" href="#">
+          <div class="img"><img src="img/bplane.webp" alt=""></div>
+          <div class="meta"><span class="num">02</span><span>Competition · 2025–26</span></div>
+          <h3>DebriSolver</h3>
+          <p>Conjunction messages in, verified avoidance burns out. <span class="metric">567 of 567 maneuvers meet the target.</span></p>
+        </a>
+        <a class="card" href="#">
+          <div class="img"><img src="img/poles.webp" alt=""></div>
+          <div class="meta"><span class="num">03</span><span>Team of 2 · 2026</span></div>
+          <h3>Sim6DOF flight simulator</h3>
+          <p>Script-built Simulink 6-DOF, verified on a Boeing 747. <span class="metric">Modes within 0.09 %.</span></p>
+        </a>
+        <a class="card" href="#">
+          <div class="img"><img src="img/trade.webp" alt=""></div>
+          <div class="meta"><span class="num">04</span><span>Team · 2026</span></div>
+          <h3>Capstone UAV design trades</h3>
+          <p>Blind-validated weight model, flap model and sweeps. <span class="metric">+1.7 % vs Raymer's +29 %.</span></p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="lab">02<br>Index</div>
+    <div class="content">
+      <table>
+        <thead><tr><th>Year</th><th>Project</th><th class="hide-m">Type</th><th class="hide-m">Topic</th></tr></thead>
+        <tbody>
+          <tr><td>2026</td><td class="t">Hypersonic heating &amp; transition solver</td><td class="hide-m">Personal</td><td class="hide-m">Hypersonics, CFD</td></tr>
+          <tr><td>2026</td><td class="t">DebriSolver: conjunction-risk response</td><td class="hide-m">Competition</td><td class="hide-m">Orbital safety, ML</td></tr>
+          <tr><td>2026</td><td class="t">Sim6DOF flight simulator</td><td class="hide-m">Team</td><td class="hide-m">Flight dynamics</td></tr>
+          <tr><td>2026</td><td class="t">Capstone UAV: sizing &amp; design trades</td><td class="hide-m">Team</td><td class="hide-m">Aircraft design</td></tr>
+          <tr><td>2026</td><td class="t">2-D tsunami over bathymetry</td><td class="hide-m">Course</td><td class="hide-m">Numerical PDEs</td></tr>
+          <tr><td>2026</td><td class="t">Shooting method with event detection</td><td class="hide-m">Course</td><td class="hide-m">Numerical methods</td></tr>
+          <tr><td>2024</td><td class="t">Water-rocket trajectory model</td><td class="hide-m">Course</td><td class="hide-m">Aerodynamics</td></tr>
+          <tr><td>2024</td><td class="t">TCAS closest-approach analysis</td><td class="hide-m">Course</td><td class="hide-m">Flight dynamics</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="lab">03<br>About</div>
+    <div class="content about">
+      <p>From Bahrain to Boulder. I led a 16-person NASA RASC-AL team, flew a payload to the Kármán line, and want to found a company that builds <span class="r">supersonic and hypersonic aircraft</span>.</p>
+    </div>
+  </section>
+
+  <footer class="grid">
+    <div class="lab">Contact</div>
+    <div class="content"><p class="big"><a href="#">khsi4021@colorado.edu</a></p><p style="margin-top:20px;color:var(--muted)">GitHub · LinkedIn · CV</p></div>
+  </footer>
+</div>
+</body>
+</html>

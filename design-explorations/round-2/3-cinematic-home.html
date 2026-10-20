@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 3 · Visual / cinematic · Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#fbfaf7; --paper:#fafaf8; --ink:#16181c; --muted:#5f636b; --rule:#e3e1db; --accent:#1f5bd6; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink); font:17px/1.65 Inter, system-ui, sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  .serif { font-family:Fraunces, Georgia, serif; font-optical-sizing:auto; }
+  .wrap { max-width:1240px; margin:0 auto; padding:0 24px; }
+  .label { font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+
+  header { position:absolute; inset:0 0 auto 0; z-index:10; }
+  header .wrap { display:flex; justify-content:space-between; align-items:center; height:72px; }
+  header .name { font-family:Fraunces; font-weight:600; font-size:20px; }
+  header nav a { margin-left:24px; font-weight:500; font-size:15px; color:#2b2e33; }
+
+  .hero { position:relative; height:min(92vh, 860px); min-height:560px; overflow:hidden; background:var(--paper); }
+  .hero video, .hero img { position:absolute; top:0; bottom:0; left:44%; width:56%; height:100%; object-fit:contain; object-position:right 45%; }
+  .hero::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg, #fbfaf7 0%, #fbfaf7 30%, rgba(251,250,247,0) 52%), linear-gradient(180deg, rgba(251,250,247,.9) 0%, rgba(251,250,247,0) 18%, rgba(251,250,247,0) 70%, #fbfaf7 96%); }
+  @media (max-width:900px) { .hero video, .hero img { left:0; width:100%; opacity:.45; } }
+  .hero .copy { position:absolute; z-index:2; left:0; right:0; bottom:48px; }
+  .hero h1 { font-family:Fraunces; font-weight:400; font-size:clamp(46px, 7.2vw, 108px); line-height:.98; letter-spacing:-.02em; max-width:14ch; }
+  .hero h1 i { color:var(--accent); font-weight:300; }
+  .hero .now { display:flex; justify-content:space-between; align-items:end; gap:24px; margin-top:24px; }
+  .hero .now p { max-width:52ch; color:#2b2e33; }
+  .hero .now small { font-size:13px; color:var(--muted); max-width:34ch; text-align:right; }
+  .btn { display:inline-block; margin-top:20px; margin-right:10px; padding:13px 22px; border-radius:999px; background:var(--ink); color:var(--bg); font-weight:600; font-size:15px; }
+  .btn.ghost { background:transparent; color:var(--ink); border:1.5px solid var(--ink); }
+
+  .chapter { padding:120px 0 40px; }
+  .chapter .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:32px; align-items:center; }
+  .chapter figure { grid-column:1 / span 8; background:#fff; border-radius:6px; padding:20px; box-shadow:0 30px 80px -40px rgba(22,24,28,.35); }
+  .chapter figure img { width:100%; display:block; }
+  .chapter .text { grid-column:9 / span 4; }
+  .chapter.flip figure { grid-column:5 / span 8; grid-row:1; }
+  .chapter.flip .text { grid-column:1 / span 4; grid-row:1; }
+  .chapter h2 { font-family:Fraunces; font-weight:400; font-size:clamp(34px, 3.6vw, 52px); line-height:1.04; letter-spacing:-.015em; margin-top:10px; }
+  .chapter .quote { font-family:Fraunces; font-style:italic; font-weight:300; font-size:56px; line-height:1; color:var(--accent); margin:22px 0 6px; }
+  .chapter .q2 { color:var(--muted); font-size:15px; }
+  .chapter p.body { margin-top:16px; color:#33363c; }
+  .chapter .more { display:inline-block; margin-top:18px; font-weight:600; border-bottom:2px solid var(--accent); }
+  figcaption { font-size:13px; color:var(--muted); margin-top:10px; }
+
+  .reel { padding:120px 0 40px; }
+  .reel h2 { font-family:Fraunces; font-weight:400; font-size:44px; letter-spacing:-.015em; }
+  .track { display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x mandatory; padding:28px 24px 24px; margin:0 -24px; }
+  .track figure { flex:0 0 min(78vw, 460px); scroll-snap-align:start; background:#fff; border-radius:6px; padding:14px; box-shadow:0 20px 50px -35px rgba(22,24,28,.4); }
+  .track img { width:100%; aspect-ratio:4/3; object-fit:contain; background:#fff; display:block; }
+  .track figcaption b { color:var(--ink); font-weight:600; display:block; font-size:15px; }
+
+  .flowvis { padding:100px 0; }
+  .fv { display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px; margin-top:28px; }
+  .fv div { border-radius:6px; aspect-ratio:3/4; background:linear-gradient(135deg,#e9e6dd,#d9e3f2); display:grid; place-items:end start; padding:16px; color:#3a3d44; font-family:Fraunces; font-size:22px; }
+  .fv div:first-child { aspect-ratio:auto; }
+
+  footer { border-top:1px solid var(--rule); padding:64px 0; }
+  footer p.serif { font-size:clamp(34px, 4.6vw, 64px); line-height:1.05; letter-spacing:-.015em; max-width:18ch; }
+  footer p.serif a { border-bottom:2px solid var(--accent); }
+
+  @media (max-width:900px) {
+    header nav { display:none; }
+    .chapter figure, .chapter .text, .chapter.flip figure, .chapter.flip .text { grid-column:1 / -1; grid-row:auto; }
+    .hero .now { flex-direction:column; align-items:start; } .hero .now small { text-align:left; }
+    .fv { grid-template-columns:1fr 1fr; } .fv div:first-child { grid-column:1 / -1; aspect-ratio:16/9; }
+  }
+  @media (prefers-reduced-motion:reduce) { .hero video { display:none; } }
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="name" href="#">Khalil Sidani</a>
+  <nav><a href="#">Work</a><a href="#">Research</a><a href="#">Flow Vis</a><a href="#">About</a><a href="#">CV</a></nav>
+</div></header>
+
+<section class="hero">
+  <img src="img/tsunami.webp" alt="">
+  <video src="../../public/media/tsunami.mp4" poster="img/tsunami.webp" autoplay muted loop playsinline aria-label="Simulated wave crossing a basin over a variable seabed"></video>
+  <div class="copy"><div class="wrap">
+    <p class="label">Aerospace engineering · CU Boulder</p>
+    <h1 style="margin-top:12px">Simulation tools for <i>hypersonic</i> flight.</h1>
+    <div class="now">
+      <div><p>I write solvers for boundary layers, heating and transition, and check them against exact solutions and published data. Applying to MS/PhD programs for Fall 2027.</p>
+        <a class="btn" href="#">See the work</a><a class="btn ghost" href="#">CV</a></div>
+      <small>Playing: a shallow-water wave crossing a shoal, from my finite-difference solver (APPM 3050).</small>
+    </div>
+  </div></div>
+</section>
+
+<main class="wrap">
+  <section class="chapter">
+    <div class="grid">
+      <figure><img src="img/heatflux.webp" alt="Laminar heat flux and transition onset on a Mach-6 cylinder"><figcaption>Laminar heating on a Mach-6 cylinder and predicted roughness-transition onset.</figcaption></figure>
+      <div class="text">
+        <p class="label">Chapter 01 · Personal · 2026</p>
+        <h2>Heating and transition on a blunt body at Mach 6</h2>
+        <p class="quote">−1.45 %</p><p class="q2">agreement with Fay–Riddell at the stagnation line</p>
+        <p class="body">A compressible similarity boundary layer, marched downstream, with a missing pressure-work term found and verified along the way.</p>
+        <a class="more" href="3-cinematic-project.html">Read the case study →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter flip">
+    <div class="grid">
+      <div class="text">
+        <p class="label">Chapter 02 · Competition · 2025–26</p>
+        <h2>Deciding when a satellite should dodge</h2>
+        <p class="quote">567 / 567</p><p class="q2">avoidance maneuvers meet the NASA target after propagation</p>
+        <p class="body">Conjunction messages in, decisions out. The collision-probability code matches NASA CARA to 8.9 × 10⁻⁸.</p>
+        <a class="more" href="#">Read the case study →</a>
+      </div>
+      <figure><img src="img/bplane.webp" alt="Encounter-plane plots of avoidance maneuvers"><figcaption>The burn moves each miss point outside the 3.2 × 10⁻⁶ contour.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter">
+    <div class="grid">
+      <figure><img src="img/dutchroll.webp" alt="Dutch roll response of nonlinear and linear models"><figcaption>Dutch-roll response to a rudder doublet: nonlinear simulator and analytic model overlap.</figcaption></figure>
+      <div class="text">
+        <p class="label">Chapter 03 · Team of 2 · 2026</p>
+        <h2>A flight simulator that proves itself</h2>
+        <p class="quote">0.09 %</p><p class="q2">largest modal error against the analytic model</p>
+        <p class="body">A Simulink 6-DOF simulator generated from a script and verified on a Boeing 747 benchmark.</p>
+        <a class="more" href="#">Read the case study →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter flip">
+    <div class="grid">
+      <div class="text">
+        <p class="label">Chapter 04 · Team · 2026</p>
+        <h2>Sizing an electric UAV around the weight it can't spare</h2>
+        <p class="quote">+1.7 %</p><p class="q2">blind benchmark error, against +29 % for the textbook model</p>
+        <p class="body">A survey-based empty-weight model, a flap model and the design sweeps for our 55 lb capstone aircraft.</p>
+        <a class="more" href="#">Read the case study →</a>
+      </div>
+      <figure><img src="img/trade.webp" alt="Gross weight against wing geometry heat map"><figcaption>Which wings close: gross weight across area and aspect ratio.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="reel">
+    <p class="label">Results reel</p>
+    <h2 style="margin-top:8px">More from coursework and smaller projects</h2>
+    <div class="track">
+      <figure><img src="img/entry.webp" alt=""><figcaption><b>Ballistic entry, ASEN 5131</b>Analytic and numerical peak heating</figcaption></figure>
+      <figure><img src="img/wave2d.webp" alt=""><figcaption><b>2-D membrane wave</b>Explicit finite differences</figcaption></figure>
+      <figure><img src="img/clalpha.webp" alt=""><figcaption><b>Vortex panel method</b>Thickness and camber effects</figcaption></figure>
+      <figure><img src="img/target.webp" alt=""><figcaption><b>Shooting method</b>Bisection through force fields</figcaption></figure>
+      <figure><img src="img/weightreg.webp" alt=""><figcaption><b>Empty-weight regression</b>Electric UAV survey</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="flowvis">
+    <p class="label">Flow visualisation · ATLS 5151</p>
+    <h2 class="serif" style="font-weight:400;font-size:44px;margin-top:8px">Seeing the flow</h2>
+    <div class="fv"><div>Marangoni flow</div><div>Chladni patterns</div><div>Clouds</div></div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <p class="serif">Working on hypersonics, or hiring for it? <a href="#">Let's talk.</a></p>
+  <p style="margin-top:20px;color:var(--muted)">khsi4021@colorado.edu · github.com/khsi4021 · Boulder, CO</p>
+</div></footer>
+</body>
+</html>

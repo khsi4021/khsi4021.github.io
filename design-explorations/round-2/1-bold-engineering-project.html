@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 1 · Bold engineering · Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --paper:#f4f3ef; --white:#fff; --ink:#111110; --muted:#5b5b57; --rule:#d6d3cc; --accent:#ff5a1f; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--paper); color:var(--ink); font:17px/1.65 Inter, system-ui, sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  .wrap { max-width:1320px; margin:0 auto; padding:0 24px; }
+  .mono { font-family:"IBM Plex Mono", monospace; font-size:12px; letter-spacing:.06em; text-transform:uppercase; }
+  .display { font-family:Archivo, sans-serif; font-stretch:72%; font-weight:850; text-transform:uppercase; line-height:.88; letter-spacing:-.01em; }
+  .bar { border-bottom:1.5px solid var(--ink); }
+  .bar .wrap { display:flex; justify-content:space-between; align-items:center; height:60px; }
+  .brand { font-family:Archivo; font-weight:800; font-size:17px; text-transform:uppercase; letter-spacing:.02em; }
+  .brand span { color:var(--accent); }
+
+  .head { display:grid; grid-template-columns:auto 1fr; gap:28px; align-items:end; padding:48px 0 28px; border-bottom:1.5px solid var(--ink); }
+  .head .n { font-family:Archivo; font-stretch:68%; font-weight:900; font-size:clamp(120px, 18vw, 260px); line-height:.74; color:var(--accent); }
+  .head h1 { font-size:clamp(44px, 6.4vw, 96px); }
+  .head p { margin-top:16px; max-width:62ch; font-size:19px; color:#2a2a28; }
+
+  .spec { display:grid; grid-template-columns:repeat(5,1fr); border-bottom:1.5px solid var(--ink); }
+  .spec div { padding:14px 16px; border-right:1px solid var(--rule); }
+  .spec div:last-child { border-right:0; }
+  .spec b { display:block; font-weight:600; margin-top:4px; font-size:15px; }
+  .spec .mono { color:var(--muted); }
+
+  .tabs { display:flex; border:1.5px solid var(--ink); margin:28px 0 0; background:var(--white); position:sticky; top:0; z-index:5; }
+  .tabs a { flex:1; text-align:center; padding:14px 8px; font-family:Archivo; font-stretch:90%; font-weight:700; text-transform:uppercase; letter-spacing:.03em; border-right:1px solid var(--rule); }
+  .tabs a:last-child { border-right:0; }
+  .tabs a.on { background:var(--ink); color:var(--paper); }
+
+  .tldr { display:grid; grid-template-columns:200px 1fr; gap:28px; padding:36px 0; border-bottom:1px solid var(--rule); }
+  .tldr p { font-size:22px; line-height:1.45; font-weight:500; max-width:58ch; }
+
+  .figwrap { margin:40px 0; background:var(--white); border:1.5px solid var(--ink); position:relative; }
+  .figwrap img { width:100%; display:block; padding:24px; }
+  .callout { position:absolute; background:var(--accent); color:#111; padding:6px 10px; font-family:"IBM Plex Mono"; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:.04em; }
+  .callout::after { content:""; position:absolute; width:40px; height:1.5px; background:var(--accent); top:50%; }
+  .c1 { left:6%; top:20%; } .c1::after { left:100%; }
+  .c2 { right:6%; top:44%; } .c2::after { right:100%; }
+  .figcap { display:grid; grid-template-columns:200px 1fr; gap:28px; padding:14px 24px; border-top:1px solid var(--rule); font-size:15px; color:var(--muted); }
+
+  .big { display:grid; grid-template-columns:repeat(3,1fr); border-top:1.5px solid var(--ink); border-bottom:1.5px solid var(--ink); }
+  .big div { padding:26px 24px; border-right:1px solid var(--rule); }
+  .big div:last-child { border-right:0; }
+  .big b { display:block; font-family:Archivo; font-stretch:72%; font-weight:850; font-size:72px; line-height:.9; }
+  .big b small { font-size:36px; }
+  .big p { color:var(--muted); margin-top:8px; font-size:15px; }
+
+  .cols { display:grid; grid-template-columns:200px minmax(0,1fr) 280px; gap:28px; padding:48px 0; }
+  .cols h2 { font-family:Archivo; font-stretch:85%; font-weight:800; text-transform:uppercase; font-size:28px; line-height:1; }
+  .cols .body p + p { margin-top:14px; }
+  .eq { margin:24px 0; padding:20px 24px; background:var(--white); border-left:4px solid var(--accent); font-family:"Times New Roman", serif; font-size:24px; display:flex; justify-content:space-between; align-items:center; }
+  .eq .mono { font-family:"IBM Plex Mono"; color:var(--muted); }
+  aside.side { border:1.5px solid var(--ink); background:var(--white); padding:16px; align-self:start; }
+  aside.side .mono { color:var(--accent); }
+  aside.side img { width:100%; border:1px solid var(--rule); margin-top:10px; }
+  aside.side p { font-size:14px; color:var(--muted); margin-top:8px; }
+
+  @media (max-width:900px) {
+    .head { grid-template-columns:1fr; }
+    .spec { grid-template-columns:1fr 1fr; }
+    .tabs { overflow-x:auto; } .tabs a { flex:none; padding:12px 16px; }
+    .tldr, .figcap, .cols { grid-template-columns:1fr; }
+    .big { grid-template-columns:1fr; } .big div { border-right:0; border-bottom:1px solid var(--rule); }
+    .callout { display:none; }
+  }
+</style>
+</head>
+<body>
+<header class="bar"><div class="wrap"><a class="brand" href="1-bold-engineering-home.html">Khalil Sidani <span>/</span> Lilo</a><span class="mono">← Index of work</span></div></header>
+<main class="wrap">
+  <div class="head">
+    <span class="n">01</span>
+    <div>
+      <p class="mono" style="color:var(--muted);margin:0">Personal project · Aug 2026 · Python</p>
+      <h1 class="display" style="margin-top:10px">Hypersonic heating &amp; transition solver</h1>
+      <p>Compressible similarity boundary layer, local-similarity marching and PANT transition correlations on a Mach-6 cylinder, each step verified.</p>
+    </div>
+  </div>
+  <div class="spec">
+    <div><span class="mono">Type</span><b>Personal</b></div>
+    <div><span class="mono">Role</span><b>Sole developer</b></div>
+    <div><span class="mono">Stack</span><b>Python · SciPy · pytest</b></div>
+    <div><span class="mono">Tests</span><b>144 (≈15 s)</b></div>
+    <div><span class="mono">Status</span><b>Complete</b></div>
+  </div>
+
+  <nav class="tabs"><a class="on" href="#">Overview</a><a href="#">Technical</a><a href="#">Results</a><a href="#">Reflection</a><a href="#">Code</a></nav>
+
+  <div class="tldr"><span class="mono">TL;DR</span><p>Laminar heating and transition-onset solver for a Mach-6 blunt body. Matches Fay–Riddell to −1.45 %. I found and verified a pressure-work term missing from the printed energy equation.</p></div>
+
+  <figure class="figwrap">
+    <img src="img/heatflux.webp" alt="Laminar wall heat flux and transition onset along a Mach-6 cylinder">
+    <span class="callout c1">Fay–Riddell −1.45 %</span>
+    <span class="callout c2">Θ<sub>tr</sub> = 15.30°</span>
+    <figcaption class="figcap"><span class="mono">Fig. 01</span><span>Top: laminar wall heat flux, as printed and with the pressure-work term restored. Bottom: the PANT-RT parameter crossing its threshold of 434.</span></figcaption>
+  </figure>
+
+  <div class="big">
+    <div><b>−1.45<small>%</small></b><p>Stagnation heating vs the 2-D Fay–Riddell correlation</p></div>
+    <div><b>&lt;1e−8</b><p>Crocco–Busemann exactness error at Pr = 1</p></div>
+    <div><b>0°</b><p>Change in PANT-RT onset when the energy equation is corrected, because θ cancels algebraically</p></div>
+  </div>
+
+  <div class="cols">
+    <h2>A missing term</h2>
+    <div class="body">
+      <p>Marched downstream, the heat flux fell only 6 % over 45°, against about 20 % in the paper's DNS. At Pr = 1, total enthalpy must satisfy (CS′)′ + fS′ = 0 for any β. The printed energy equation satisfies that only when β·M<sub>e</sub> = 0, because it omits the pressure-gradient work term.</p>
+      <div class="eq"><span>(C g′)′ + Pr f g′ = −Pr C(γ−1)M<sub>e</sub>² f″² <b style="color:var(--accent)">− Pr β(γ−1)M<sub>e</sub>² f′(f′² − g)</b></span><span class="mono">restored</span></div>
+      <p>With the term restored, the identity holds to 10⁻⁶, and the 30° heat flux moves from 4.15 to 3.55 W/cm², against ≈ 3.6 in the DNS.</p>
+    </div>
+    <aside class="side"><span class="mono">Fig. 02 · Geometry</span><img src="img/geometry.webp" alt="Cylinder geometry with solved arc"><p>R = 76.2 mm, solved to Θ = 45°.</p></aside>
+  </div>
+</main>
+</body>
+</html>

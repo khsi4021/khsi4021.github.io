@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redesign · round 2 mockups</title>
+<style>
+  body { margin:0; font:16px/1.55 system-ui, sans-serif; background:#f6f5f2; color:#141414; }
+  .wrap { max-width:1100px; margin:0 auto; padding:48px 24px; }
+  h1 { font-size:36px; margin:0 0 8px; }
+  p.lead { color:#555; max-width:70ch; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; margin-top:32px; }
+  .card { background:#fff; border:1px solid #ddd; border-radius:10px; padding:20px; }
+  .card h2 { margin:0; font-size:21px; }
+  .card p { color:#555; font-size:15px; }
+  .card a { display:inline-block; margin:6px 10px 0 0; font-weight:600; color:#1f5bd6; }
+  .sw { display:flex; gap:6px; margin:12px 0; } .sw span { width:28px; height:28px; border-radius:6px; border:1px solid #0002; }
+</style>
+</head>
+<body><div class="wrap">
+  <h1>Redesign: three directions</h1>
+  <p class="lead">Light by default and figure-first, as you asked. Each direction has a home page and the hypersonic project page with your real figures and text. Mix freely: "1's headlines with 3's chapters" works.</p>
+  <div class="grid">
+    <div class="card"><h2>1 · Bold engineering</h2>
+      <div class="sw"><span style="background:#f4f3ef"></span><span style="background:#111110"></span><span style="background:#ff5a1f"></span></div>
+      <p>Spec-sheet energy: huge condensed headlines, a strict grid with hard rules, big numbered project rows, data read-outs and a ticker. It reads like an aerospace company.</p>
+      <a href="1-bold-engineering-home.html">Home →</a><a href="1-bold-engineering-project.html">Project page →</a></div>
+    <div class="card"><h2>2 · Minimal Swiss</h2>
+      <div class="sw"><span style="background:#fff"></span><span style="background:#000"></span><span style="background:#e30613"></span></div>
+      <p>Pure white, black type, one red accent, an asymmetric grid and a project index table. The quietest of the three; it lets the figures and numbers speak.</p>
+      <a href="2-minimal-swiss-home.html">Home →</a><a href="2-minimal-swiss-project.html">Project page →</a></div>
+    <div class="card"><h2>3 · Visual / cinematic</h2>
+      <div class="sw"><span style="background:#fbfaf7"></span><span style="background:#16181c"></span><span style="background:#1f5bd6"></span></div>
+      <p>Magazine feel: a full-width video hero (your tsunami simulation), serif headlines, one large "chapter" per project, a scrolling results reel.</p>
+      <a href="3-cinematic-home.html">Home →</a><a href="3-cinematic-project.html">Project page →</a></div>
+  </div>
+  <p class="lead" style="margin-top:32px">The current live design ("aerospace modern", dark) is still in <code>design-explorations/C-aerospace-modern.html</code> for comparison.</p>
+</div></body>
+</html>
