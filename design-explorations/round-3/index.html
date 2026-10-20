@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redesign · round 3 (dark) mockups</title>
+<style>
+  body { margin:0; font:16px/1.55 system-ui, sans-serif; background:#0d0d0f; color:#ececef; }
+  .wrap { max-width:1120px; margin:0 auto; padding:48px 24px; }
+  h1 { font-size:36px; margin:0 0 8px; }
+  p.lead { color:#a1a1aa; max-width:72ch; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; margin-top:32px; }
+  .card { background:#17171a; border:1px solid #2a2a30; border-radius:12px; padding:20px; display:flex; flex-direction:column; }
+  .card h2 { margin:0; font-size:20px; }
+  .card p { color:#a1a1aa; font-size:15px; flex:1; }
+  .card a.go { font-weight:600; color:#ff9a6b; }
+  .sw { display:flex; gap:6px; margin:12px 0 4px; } .sw span { width:26px; height:26px; border-radius:6px; border:1px solid #ffffff22; }
+  .note { margin-top:36px; padding:16px 18px; border:1px solid #2a2a30; border-radius:10px; color:#c4c4cc; font-size:15px; }
+  .note a { color:#ff9a6b; }
+</style>
+</head>
+<body><div class="wrap">
+  <h1>Round 3: dark by default</h1>
+  <p class="lead">Four new directions. All are dark but deliberately not "sci-fi techy", and all put your figures and simulation video up front. Home pages only for now; I'll build project pages for the ones you shortlist.</p>
+  <div class="grid">
+    <div class="card"><h2>A · Gallery at night</h2>
+      <div class="sw"><span style="background:#121110"></span><span style="background:#ece7df"></span><span style="background:#d4935f"></span></div>
+      <p>Warm charcoal and an elegant serif. Each figure is framed like a print on a gallery wall with a museum label. Calm and confident; figures keep their original colours.</p>
+      <a class="go" href="A-gallery-night.html">Open →</a></div>
+    <div class="card"><h2>B · Bento</h2>
+      <div class="sw"><span style="background:#0a0a0b"></span><span style="background:#1a1a1d"></span><span style="background:#ff7a45"></span></div>
+      <p>A grid of rounded tiles mixing the tsunami video, figures, big numbers, "Now" and contact. Modern, like a product launch page. Figures are re-inked for dark.</p>
+      <a class="go" href="B-bento.html">Open →</a></div>
+    <div class="card"><h2>C · Scrollytelling</h2>
+      <div class="sw"><span style="background:#0e1013"></span><span style="background:#e9ebee"></span><span style="background:#f2b84b"></span></div>
+      <p>Each project is a chapter. The figure stays pinned while problem → method → result scroll past. Story-driven and great for admissions readers.</p>
+      <a class="go" href="C-scrollytelling.html">Open →</a></div>
+    <div class="card"><h2>D · Dark Swiss poster</h2>
+      <div class="sw"><span style="background:#000"></span><span style="background:#fff"></span><span style="background:#ff3b1f"></span></div>
+      <p>Black and white, huge type, one red accent, a giant "M6", and figures re-inked to sit natively on black. The boldest typographic option.</p>
+      <a class="go" href="D-dark-swiss.html">Open →</a></div>
+  </div>
+  <div class="note"><b>Two ways to show figures on dark:</b> as light "prints" (A, C), which keep the exact original colours, or <b>re-inked</b> (B, D), where a CSS filter inverts the plot so it sits natively on black. Re-inking is approximate. For the real site I'd re-export the figures with a proper dark style.<br><br>Round 2 (light) is still here: <a href="../round-2/">round-2 mockups →</a>. Any of those can also be done dark.</div>
+</div></body>
+</html>

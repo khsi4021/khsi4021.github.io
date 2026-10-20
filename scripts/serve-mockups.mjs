@@ -20,7 +20,7 @@ const types = {
 createServer(async (req, res) => {
   const path = decodeURIComponent(new URL(req.url ?? "/", "http://x").pathname);
   // Redirect (not rewrite) so relative links in the mockups resolve against their own folder.
-  if (path === "/") return res.writeHead(302, { location: "/design-explorations/round-2/" }).end();
+  if (path === "/") return res.writeHead(302, { location: "/design-explorations/round-3/" }).end();
   const file = normalize(join(root, path));
   if (!file.startsWith(root)) return res.writeHead(403).end();
   try {

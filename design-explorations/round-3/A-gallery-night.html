@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 3 · A · Gallery at night</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#121110; --wall:#171614; --ink:#ece7df; --muted:#a39d93; --rule:#2c2a27; --accent:#d4935f; --mat:#f3efe7; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink); font:16px/1.65 Inter, system-ui, sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  .serif { font-family:"Instrument Serif", Georgia, serif; font-weight:400; }
+  .wrap { max-width:1280px; margin:0 auto; padding:0 28px; }
+  .small { font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+
+  header .wrap { display:flex; justify-content:space-between; align-items:center; height:80px; }
+  header .name { font-family:"Instrument Serif"; font-size:26px; }
+  header nav a { margin-left:26px; font-size:13px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  header nav a:hover { color:var(--ink); }
+
+  .hero { display:grid; grid-template-columns:1fr 1.15fr; gap:64px; align-items:center; padding:56px 0 110px; }
+  .hero h1 { font-size:clamp(52px, 6.6vw, 100px); line-height:.98; letter-spacing:-.01em; }
+  .hero h1 em { color:var(--accent); }
+  .hero p.lede { margin-top:28px; font-size:18px; color:#cfc9bf; max-width:46ch; }
+  .links { margin-top:30px; display:flex; gap:22px; font-size:14px; letter-spacing:.06em; }
+  .links a { border-bottom:1px solid var(--accent); padding-bottom:2px; }
+
+  /* framed print */
+  .print { background:#0d0c0b; padding:14px; box-shadow:0 40px 80px -30px rgba(0,0,0,.8), 0 0 0 1px #2a2826; transition:transform .5s cubic-bezier(.2,.8,.2,1); }
+  .print .mat { background:var(--mat); padding:clamp(18px, 3vw, 40px); }
+  .print img { display:block; width:100%; background:#fff; }
+  a:hover .print { transform:translateY(-6px); }
+  .label { margin-top:18px; display:grid; grid-template-columns:auto 1fr; gap:4px 18px; font-size:14px; }
+  .label b { font-family:"Instrument Serif"; font-weight:400; font-size:22px; grid-column:1 / -1; line-height:1.15; color:var(--ink); }
+  .label span { color:var(--muted); }
+  .label i { font-style:normal; color:var(--accent); grid-column:1 / -1; }
+
+  section { padding:90px 0; border-top:1px solid var(--rule); }
+  .sec-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:56px; }
+  .sec-head h2 { font-size:clamp(40px, 4.6vw, 64px); }
+  .collection { display:grid; grid-template-columns:1fr 1fr; gap:80px 64px; }
+  .collection > a:nth-child(2) { margin-top:120px; }
+  .collection > a:nth-child(4) { margin-top:120px; }
+
+  .studies { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; }
+  .studies .print { padding:8px; } .studies .print .mat { padding:12px; }
+  .studies .label b { font-size:18px; }
+
+  .about { display:grid; grid-template-columns:1fr 1.4fr; gap:64px; }
+  .about p.big { font-family:"Instrument Serif"; font-size:clamp(28px, 3vw, 40px); line-height:1.2; }
+  .about p.big em { color:var(--accent); }
+  .about ul { list-style:none; padding:0; }
+  .about li { padding:14px 0; border-bottom:1px solid var(--rule); display:flex; justify-content:space-between; gap:16px; }
+  .about li span { color:var(--muted); }
+
+  footer { padding:90px 0 60px; border-top:1px solid var(--rule); text-align:center; }
+  footer .serif { font-size:clamp(40px, 6vw, 84px); line-height:1; }
+  footer .serif a { font-style:italic; color:var(--accent); }
+
+  @media (max-width:900px) {
+    header nav { display:none; }
+    .hero, .collection, .about { grid-template-columns:1fr; gap:48px; }
+    .collection > a:nth-child(n) { margin-top:0; }
+    .studies { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="name" href="#">Khalil Sidani</a>
+  <nav><a href="#">Work</a><a href="#">Studies</a><a href="#">Research</a><a href="#">Flow Vis</a><a href="#">About</a><a href="#">CV</a></nav>
+</div></header>
+
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <p class="small">Aerospace engineering · CU Boulder · 2027</p>
+      <h1 class="serif" style="margin-top:18px">Simulation tools for <em>hypersonic</em> flight.</h1>
+      <p class="lede">I write solvers for boundary layers, heating and transition, and I check them against exact solutions and published data. Applying to MS/PhD programs in CFD and hypersonics for Fall 2027.</p>
+      <div class="links"><a href="#">See the collection</a><a href="#">CV</a><a href="#">Contact</a></div>
+    </div>
+    <a href="#"><div class="print"><div class="mat"><img src="../round-2/img/tsunami.webp" alt="Simulated wave crossing a basin over a variable seabed"></div></div>
+      <div class="label"><b>A shallow-water wave crossing a shoal</b><span>2026 · MATLAB finite differences</span><i>From my tsunami solver</i></div></a>
+  </div>
+
+  <section>
+    <div class="sec-head"><h2 class="serif">The collection</h2><span class="small">Four projects</span></div>
+    <div class="collection">
+      <a href="#"><div class="print"><div class="mat"><img src="../round-2/img/heatflux.webp" alt=""></div></div>
+        <div class="label"><b>Hypersonic heating &amp; transition solver</b><span>Personal · 2026</span><i>Found and verified a missing pressure-work term</i></div></a>
+      <a href="#"><div class="print"><div class="mat"><img src="../round-2/img/bplane.webp" alt=""></div></div>
+        <div class="label"><b>DebriSolver: conjunction-risk response</b><span>Competition · 2025–26</span><i>567 of 567 avoidance maneuvers verified</i></div></a>
+      <a href="#"><div class="print"><div class="mat"><img src="../round-2/img/poles.webp" alt=""></div></div>
+        <div class="label"><b>Sim6DOF flight simulator</b><span>Team of two · 2026</span><i>Boeing 747 modes within 0.09 %</i></div></a>
+      <a href="#"><div class="print"><div class="mat"><img src="../round-2/img/trade.webp" alt=""></div></div>
+        <div class="label"><b>Capstone UAV: sizing &amp; design trades</b><span>Team · 2026</span><i>Blind weight benchmark +1.7 %</i></div></a>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2 class="serif">Studies</h2><span class="small">Coursework &amp; smaller projects</span></div>
+    <div class="studies">
+      <a href="#"><div class="print"><div class="mat"><img src="../round-2/img/wave2d.webp" alt=""></div></div><div class="label"><b>2-D membrane wave</b><span>APPM 3050</span></div></a>
+      <a href="#"><div class="print"><div class="mat"><img src="../round-2/img/entry.webp" alt=""></div></div><div class="label"><b>Ballistic entry heating</b><span>ASEN 5131</span></div></a>
+      <a href="#"><div class="print"><div class="mat"><img src="../round-2/img/clalpha.webp" alt=""></div></div><div class="label"><b>Vortex panel method</b><span>ASEN 3802</span></div></a>
+      <a href="#"><div class="print"><div class="mat"><img src="../round-2/img/target.webp" alt=""></div></div><div class="label"><b>Shooting method</b><span>APPM 3050</span></div></a>
+    </div>
+  </section>
+
+  <section class="about">
+    <p class="big">From Bahrain to Boulder. I led a 16-person NASA RASC-AL team, flew a payload to the Kármán line, and one day want to build <em>supersonic and hypersonic aircraft</em>.</p>
+    <ul>
+      <li>B.S. Aerospace Engineering Sciences<span>May 2027</span></li>
+      <li>Dual minor, Applied Math &amp; Engineering Management<span>CU Boulder</span></li>
+      <li>Team lead, NASA RASC-AL<span>2025–26</span></li>
+      <li>Tripoli Level 1 rocketry certification<span>2024</span></li>
+    </ul>
+  </section>
+</main>
+
+<footer><div class="wrap"><p class="serif">Let's talk: <a href="#">khsi4021@colorado.edu</a></p><p class="small" style="margin-top:24px">GitHub · LinkedIn · CV</p></div></footer>
+</body>
+</html>

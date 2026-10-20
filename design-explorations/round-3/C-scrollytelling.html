@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 3 · C · Scrollytelling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0e1013; --panel:#14171c; --ink:#e9ebee; --muted:#9aa1ab; --rule:#232831; --accent:#f2b84b; }
+  * { box-sizing:border-box; margin:0; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--ink); font:17px/1.7 Inter, system-ui, sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  .serif { font-family:Newsreader, Georgia, serif; }
+  .wrap { max-width:1280px; margin:0 auto; padding:0 28px; }
+  .kicker { font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+
+  header { position:sticky; top:0; z-index:20; background:rgba(14,16,19,.82); backdrop-filter:blur(10px); border-bottom:1px solid var(--rule); }
+  header .wrap { display:flex; justify-content:space-between; align-items:center; height:64px; }
+  header .name { font-family:Newsreader; font-size:22px; }
+  header nav a { margin-left:22px; font-size:14px; color:var(--muted); }
+  .rail { position:fixed; left:20px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:14px; z-index:15; }
+  .rail a { width:10px; height:10px; border-radius:50%; border:1.5px solid var(--muted); }
+  .rail a:hover { background:var(--accent); border-color:var(--accent); }
+  @media (max-width:1400px) { .rail { display:none; } }
+
+  .opening { min-height:calc(100vh - 64px); display:grid; place-items:center; text-align:center; padding:60px 0; background:radial-gradient(70% 60% at 50% 40%, #1a1d24 0%, var(--bg) 70%); }
+  .opening h1 { font-family:Newsreader; font-weight:300; font-size:clamp(52px, 7.6vw, 120px); line-height:1; letter-spacing:-.02em; max-width:15ch; margin:18px auto 0; }
+  .opening h1 em { color:var(--accent); }
+  .opening p { margin:28px auto 0; max-width:56ch; color:var(--muted); font-size:18px; }
+  .cue { margin-top:48px; font-size:13px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; }
+  .cue::after { content:""; display:block; width:1px; height:56px; background:linear-gradient(var(--accent), transparent); margin:14px auto 0; }
+
+  .chapter { border-top:1px solid var(--rule); }
+  .chapter .grid { display:grid; grid-template-columns:1.25fr 1fr; gap:64px; }
+  .stage { position:sticky; top:96px; height:calc(100vh - 128px); display:flex; flex-direction:column; justify-content:center; }
+  .stage .print { background:#fafaf8; border-radius:10px; padding:18px; box-shadow:0 40px 90px -40px rgba(0,0,0,.9); }
+  .stage img { width:100%; display:block; max-height:62vh; object-fit:contain; }
+  .stage .cap { margin-top:14px; font-size:14px; color:var(--muted); }
+  .steps { padding:12vh 0 20vh; }
+  .step { min-height:72vh; display:flex; flex-direction:column; justify-content:center; }
+  .step .n { font-family:Newsreader; font-style:italic; color:var(--accent); font-size:22px; }
+  .step h2 { font-family:Newsreader; font-weight:400; font-size:clamp(34px, 3.4vw, 50px); line-height:1.08; margin:8px 0 16px; }
+  .step p { color:#c9ced6; max-width:46ch; }
+  .step .big { font-family:Newsreader; font-weight:300; font-size:clamp(64px, 7vw, 104px); line-height:1; color:var(--accent); }
+  .step .more { margin-top:18px; display:inline-block; border-bottom:1px solid var(--accent); font-weight:500; }
+
+  .coda { padding:120px 0; border-top:1px solid var(--rule); text-align:center; }
+  .coda h2 { font-family:Newsreader; font-weight:300; font-size:clamp(40px, 5vw, 72px); line-height:1.05; }
+  .coda h2 a { font-style:italic; color:var(--accent); }
+
+  @media (max-width:900px) {
+    header nav, .rail { display:none; }
+    .chapter .grid { grid-template-columns:1fr; gap:0; }
+    .stage { position:sticky; top:64px; height:auto; z-index:5; background:var(--bg); padding:12px 0; }
+    .stage img { max-height:34vh; } .stage .cap { display:none; }
+    .step { min-height:60vh; }
+  }
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="name" href="#">Khalil Sidani</a>
+  <nav><a href="#c1">Work</a><a href="#">Research</a><a href="#">Flow Vis</a><a href="#">About</a><a href="#">CV</a></nav>
+</div></header>
+<nav class="rail" aria-label="Chapters"><a href="#c1" title="Hypersonic solver"></a><a href="#c2" title="DebriSolver"></a><a href="#c3" title="Sim6DOF"></a><a href="#c4" title="Capstone UAV"></a></nav>
+
+<section class="opening"><div class="wrap">
+  <p class="kicker">Aerospace engineering · CU Boulder</p>
+  <h1>Simulation tools for <em>hypersonic</em> flight.</h1>
+  <p>Four projects, told the way I worked them: the problem, the method, and how I checked the answer.</p>
+  <p class="cue">Scroll</p>
+</div></section>
+
+<section class="chapter" id="c1"><div class="wrap grid">
+  <div class="stage"><div class="print"><img src="../round-2/img/heatflux.webp" alt="Laminar heat flux and transition onset on a Mach-6 cylinder"></div><p class="cap">Chapter 1 · Laminar heating and PANT-RT transition onset on a Mach-6 cylinder.</p></div>
+  <div class="steps">
+    <div class="step"><span class="n">i. The problem</span><h2>Where does roughness trip a hypersonic boundary layer?</h2><p>Turbulence multiplies wall heating. Predicting where it starts on a blunt body means computing laminar heating first, then applying a published transition criterion.</p></div>
+    <div class="step"><span class="n">ii. The method</span><h2>A compressible similarity boundary layer, marched downstream</h2><p>Illingworth variables, a five-state BVP solved with SciPy, local-similarity marching, and the PANT family of correlations. 144 tests pin the physics.</p></div>
+    <div class="step"><span class="n">iii. The check</span><p class="big">−1.45 %</p><h2>against Fay–Riddell, plus a missing term found</h2><p>The printed energy equation omits a pressure-work term once β·M<sub>e</sub> ≠ 0. I restored it and verified the fix with an exact identity.</p><a class="more" href="#">Read the full case study →</a></div>
+  </div>
+</div></section>
+
+<section class="chapter" id="c2"><div class="wrap grid">
+  <div class="stage"><div class="print"><img src="../round-2/img/bplane.webp" alt="Encounter-plane plots of avoidance maneuvers"></div><p class="cap">Chapter 2 · Each burn moves the miss point outside the 3.2 × 10⁻⁶ contour.</p></div>
+  <div class="steps">
+    <div class="step"><span class="n">i. The problem</span><h2>Most conjunction warnings are routine. Which ones aren't?</h2><p>Analysts judge data quality, interpret collision probability and design maneuvers. The aim: automate the routine cases and flag the ambiguous ones.</p></div>
+    <div class="step"><span class="n">ii. The method</span><h2>Parse, score, forecast, maneuver</h2><p>CDM parsing and credibility scoring, an XGBoost risk forecast, and MATLAB minimum-ΔV burns verified by propagation and Monte Carlo.</p></div>
+    <div class="step"><span class="n">iii. The check</span><p class="big">567 / 567</p><h2>maneuvers meet the NASA target</h2><p>The collision-probability code matches NASA CARA to 8.9 × 10⁻⁸. The ML model's tie with its baseline is reported as-is.</p><a class="more" href="#">Read the full case study →</a></div>
+  </div>
+</div></section>
+
+<section class="chapter" id="c3"><div class="wrap grid">
+  <div class="stage"><div class="print"><img src="../round-2/img/dutchroll.webp" alt="Dutch-roll response of nonlinear and linear models"></div><p class="cap">Chapter 3 · Dutch-roll response: nonlinear simulator and analytic model overlap.</p></div>
+  <div class="steps">
+    <div class="step"><span class="n">i. The problem</span><h2>Last year's simulator was 65 % off on the Dutch roll</h2><p>Our capstone UAV needed a simulator the whole team could trust.</p></div>
+    <div class="step"><span class="n">ii. The method</span><h2>A Simulink 6-DOF model generated from a script</h2><p>Linearise the full nonlinear model and compare its modes with an analytic model built from the same derivatives.</p></div>
+    <div class="step"><span class="n">iii. The check</span><p class="big">0.09 %</p><h2>largest modal error</h2><p>All five Boeing 747 modes, plus doublet responses within 0.5–0.9 % NRMSE.</p><a class="more" href="#">Read the full case study →</a></div>
+  </div>
+</div></section>
+
+<section class="chapter" id="c4"><div class="wrap grid">
+  <div class="stage"><div class="print"><img src="../round-2/img/trade.webp" alt="Gross weight against wing geometry"></div><p class="cap">Chapter 4 · Which wings close at the design mission.</p></div>
+  <div class="steps">
+    <div class="step"><span class="n">i. The problem</span><h2>Two weight models, a factor of 1.7 apart</h2><p>At a fixed 55 lb MTOW, the battery is whatever weight is left, so the empty-weight estimate decides whether the mission closes.</p></div>
+    <div class="step"><span class="n">ii. The method</span><h2>A survey of real electric UAVs, held-out benchmark</h2><p>Grade the sources, fit a regression, then test it blind on an aircraft kept out of the fit.</p></div>
+    <div class="step"><span class="n">iii. The check</span><p class="big">+1.7 %</p><h2>blind error, against +29 % for the textbook model</h2><p>That model feeds the flap model, design sweeps and mission envelope.</p><a class="more" href="#">Read the full case study →</a></div>
+  </div>
+</div></section>
+
+<section class="coda"><div class="wrap"><h2>Working on hypersonics, or hiring for it?<br><a href="#">khsi4021@colorado.edu</a></h2></div></section>
+</body>
+</html>
