@@ -1,0 +1,154 @@
+---
+title: "Newtonian Hypersonic Aerodynamics: Plate, Sphere and Apollo Capsule"
+slug: newtonian-aero
+summary: A surface-panel solver that applies Newtonian impact theory to triangulated bodies and integrates the pressure into lift and drag, checked against exact results on a flat plate and a sphere, then applied to the Apollo command module.
+hook: Newtonian impact theory on triangulated surfaces. Exact on a flat plate, 0.13 % from exact on a sphere, then applied to the Apollo capsule.
+tldr: A panel solver for Newtonian impact theory on triangulated bodies. It reproduces the exact flat-plate result, gets sphere drag to 0.13 % of exact, and gives L/D = 0.30 for the Apollo command module 20° off heat-shield-forward.
+type: Course
+course: ASEN 5131 Hypersonic Aerodynamics (graduate), Assignment 4, Problem 1
+role: Wrote the solver
+dates: Nov 2026
+date: 2026-11-10
+tags: [Hypersonics, Aerodynamics, CFD/Numerical]
+stack: [MATLAB]
+featured: false
+order: 4.5
+tier: supporting
+heroImage: ../../assets/projects/newtonian/apollo_poster.png
+heroAlt: Apollo command module coloured by Newtonian pressure coefficient with the flow arriving 20 degrees off the heat-shield axis. The pressure peaks near 2 toward the windward edge of the spherical heat shield and falls to zero at the shoulder; the conical afterbody is in shadow.
+thumbnail: ../../assets/projects/newtonian/apollo_thumb.png
+thumbnailKeepInk: true
+thumbnailAlt: Pressure coefficient map on the Apollo command module heat shield.
+metrics:
+  - { value: "0.9987", label: "sphere C_D (exact Newtonian value: 1)" }
+  - { value: "0.303", label: "Apollo L/D, 20° off heat-shield-forward" }
+  - { value: "32,456", label: "triangles on the Apollo grid" }
+links: {}
+status: complete
+tabs: [overview, technical, results, reflection]
+---
+{/* TODO(Lilo): check the TN D-6725 Table I digits (160.06°, 0.388, 1.289, 0.301) against the scanned PDF; they were read from OCR text. If you want to say where those values come from (wind tunnel, flight-adjusted), cite a source that states it; that report does not. */}
+import apollo from "../../assets/projects/newtonian/apollo_cp.png";
+import sphere from "../../assets/projects/newtonian/sphere_cp.png";
+import sweep from "../../assets/projects/newtonian/apollo_sweep.png";
+import plate from "../../assets/projects/newtonian/plate.png";
+import poster from "../../assets/projects/newtonian/apollo_poster.png";
+
+<TabPanel id="overview">
+
+In the limit of very high Mach number and a specific-heat ratio approaching 1, the shock layer collapses onto the body and the flow behaves like a stream of particles: what hits the surface loses its normal momentum, and what is shadowed feels nothing. Real hypersonic flow only approaches that limit, but blunt-body pressures follow it closely. That is Newtonian impact theory, and it turns aerodynamics into geometry.
+
+For Problem 1 of Assignment 4 in ASEN 5131 I wrote a solver that reads a triangulated surface, computes each triangle's area and outward normal, assigns it a Newtonian pressure coefficient, and sums the pressure forces into lift and drag at any angle of attack. I ran it on the three surface grids supplied with the assignment: a flat plate, a unit sphere and the Apollo command module.
+
+<Video src="/media/newton_apollo_sweep.mp4" poster={poster} keepInk alt="Animation of the Apollo command module with the freestream direction swinging from minus 40 to plus 40 degrees. The high-pressure region slides across the heat shield toward whichever edge faces the flow. The conical afterbody stays dark throughout: its windward side becomes exposed past about 33 degrees, but its pressure coefficient stays below 0.05, too small to show on the colour scale." source="courses/ASEN5131/HW4/newton_aero.m, re-run with an angle-of-attack sweep added for this page">
+**Hero result.** Newtonian pressure on the Apollo command module as the freestream swings from −40° to 40° and back. The assignment asks for −20° only. The angle-of-attack sweep is my own addition and was not part of the course. The pressure peak follows the windward edge of the heat shield. Colour is C<sub>p</sub>, from 0 (dark purple, shadowed) to 2 (dark red).
+</Video>
+
+<Callout tone="note">Graded coursework from a course that is still running, so no source code is shown.</Callout>
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+### Geometry
+
+Each triangle with vertices **x**<sub>1</sub>, **x**<sub>2</sub>, **x**<sub>3</sub> gives its own area and unit normal. The vertex order in the grid file decides which way is outward.
+
+<Equation tex={String.raw`\begin{gathered}\mathbf{c} = (\mathbf{x}_2-\mathbf{x}_1)\times(\mathbf{x}_3-\mathbf{x}_1) \\[4pt] A = \tfrac12\lvert\mathbf{c}\rvert,\qquad \hat{\mathbf{n}} = \mathbf{c}/\lvert\mathbf{c}\rvert\end{gathered}`} />
+
+### Pressure and forces
+
+The wind direction is V̂ = (cos α, sin α, 0) in body axes, so α rotates the flow, not the body. A triangle is exposed when its outward normal points against the flow.
+
+<Equation tex={String.raw`C_p = \begin{cases} 2\,(\hat{\mathbf{n}}\cdot\hat{\mathbf{V}})^2 = 2\cos^2\phi, & \hat{\mathbf{n}}\cdot\hat{\mathbf{V}} < 0 \\ 0, & \text{shadowed} \end{cases}`} />
+
+Here φ is the angle between the freestream and the inward surface normal, so φ = 0 at a stagnation point and 90° where the surface is parallel to the flow.
+
+<Equation tex={String.raw`\begin{gathered}\mathbf{C}_F = -\frac{1}{S_\text{ref}}\sum_i C_{p,i}\,A_i\,\hat{\mathbf{n}}_i \\[4pt] C_D = \mathbf{C}_F\cdot\hat{\mathbf{V}},\qquad C_L = \mathbf{C}_F\cdot\hat{\mathbf{L}} \\[4pt] \hat{\mathbf{L}} = (-\sin\alpha,\ \cos\alpha,\ 0)\end{gathered}`} />
+
+The assignment's freestream (5,100 m/s, about Mach 16) sets the dynamic pressure, which cancels out of every coefficient. This is unmodified Newtonian theory: the stagnation C<sub>p</sub> is fixed at 2.
+
+### Checks
+
+The area and closed-surface checks run inside the solver. The comparisons with exact values, and the 0–90° plate sweep below, are my own additions made from its output. They were not part of the course.
+
+| Check | Result |
+|---|---|
+| Sphere surface area against 4πr² | 12.5497 m² against 12.5664 m² (−0.13 %) |
+| Closed surface, \|Σ&nbsp;n̂A\| = 0 | 2.2 × 10⁻¹⁵ m² (sphere), 2.8 × 10⁻¹⁵ m² (Apollo) |
+| Flat plate against the exact 2 sin²α cos α and 2 sin³α | equal to all 6 printed decimals at 30° and 60° |
+| Sphere C<sub>D</sub> against the exact Newtonian value 1 | 0.9987 at 0°, 30° and 60° (−0.13 %) |
+| Sphere C<sub>L</sub> against 0 | below 3 × 10⁻⁵ at all three angles |
+
+The sphere's drag deficit matches its surface-area deficit, both −0.13 %. Flat facets inscribed in the sphere have slightly less area than the surface they replace, while the reference area uses the exact πr².
+
+<Figure src={plate} alt="Flat-plate lift and drag coefficients against angle of attack from 0 to 90 degrees. The solver's points lie on the exact curves 2 sin squared alpha cos alpha and 2 sin cubed alpha, with the assigned 0, 30 and 60 degree cases marked." source="courses/ASEN5131/HW4/newton_aero.m, re-run with a sweep added for this page" maxWidth={620}>
+Flat plate: the solver against the exact Newtonian lift and drag. The assigned cases are 0°, 30° and 60°. The rest of the sweep was not part of the course.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="results">
+
+### Assigned cases
+
+| Body | α | C<sub>L</sub> | C<sub>D</sub> | L/D |
+|---|---|---|---|---|
+| Flat plate | 30° | 0.4330 | 0.2500 | 1.732 |
+| Flat plate | 60° | 0.7500 | 1.2990 | 0.577 |
+| Sphere | 0°, 30°, 60° | 0.0000 | 0.9987 | 0 |
+| Apollo CM | −20° | 0.4510 | 1.4876 | 0.303 |
+
+Reference areas: 1 m² for the plate, πr² for the sphere and π · 1.9558² m² for the Apollo CM. At α = 0 the plate is edge-on and carries no load. The Apollo grid has its heat shield facing the flow, so α = −20° here corresponds to 160° in the Apollo wind-tunnel convention, where 0° is apex-forward (NASA TN D-4688). Lift is positive because the large axial force is tilted off the wind axis.
+
+<Figure src={apollo} keepInk alt="Two views of the Apollo command module coloured by pressure coefficient with the flow 20 degrees off the heat-shield axis. Looking along the flow, the pressure peaks near 2 at a stagnation point offset toward the windward edge of the heat shield and falls toward the shoulder. From the side, the conical afterbody is uniformly zero." source="re-run of courses/ASEN5131/HW4/newton_aero.m (restyled)" wide>
+The assigned Apollo case, flow 20° off the heat-shield axis. The stagnation point sits on the spherical heat shield, offset toward the windward edge, and the whole conical afterbody is in shadow. Integrated: C<sub>L</sub> = 0.451, C<sub>D</sub> = 1.488, L/D = 0.303.
+</Figure>
+
+<Figure src={sphere} keepInk alt="Left, a sphere coloured by pressure coefficient, 2 at the stagnation point falling to zero at 90 degrees, with the rear half zero. Right, the pressure coefficient of every panel against its angle from the stagnation point, lying on the exact curve 2 cos squared phi." source="re-run of courses/ASEN5131/HW4/newton_aero.m (restyled)">
+Sphere at α = 0. Every panel's C<sub>p</sub> lies on 2 cos²φ, and the rear hemisphere is in shadow.
+</Figure>
+
+### Beyond the assignment: a sweep and a reality check
+
+The assignment asks for one Apollo attitude. The angle-of-attack sweeps on this page were not for the course: I ran the same solver from −40° to 40° to see how a capsule makes lift at all.
+
+<Figure src={sweep} alt="Apollo command module lift coefficient, drag coefficient and lift-to-drag ratio against angle of attack from minus 40 to 40 degrees. Drag peaks at 1.74 at zero and falls on both sides; lift is antisymmetric, positive for negative angles; the assigned minus 20 degree point is marked at L over D of 0.30." source="courses/ASEN5131/HW4/newton_aero.m, re-run with an angle-of-attack sweep added for this page" wide>
+Apollo CM sweep. Drag peaks at 1.741 at α = 0, where lift is zero. Tilting the capsule trades drag for lift: at α = −20° it gives up 15 % of its drag for an L/D of 0.30.
+</Figure>
+
+NASA's Apollo entry mission-planning report tabulates trim aerodynamic coefficients for the Apollo 11 command module. At Mach 29.5 and above it lists a trim angle of 160.06°, essentially the attitude of my assigned case.
+
+| | Newtonian (this solver) | NASA TN D-6725, Table I | Difference |
+|---|---|---|---|
+| C<sub>L</sub> | 0.451 | 0.388 | +16 % |
+| C<sub>D</sub> | 1.488 | 1.289 | +15 % |
+| L/D | 0.303 | 0.301 | +1 % |
+
+<Callout tone="honest" title="The L/D match is not a validation of the pressures">
+Lift and drag are both about 15 % high, and the ratio hides it. L/D is the tangent of the angle between the resultant force and the wind axis. On a shallow heat shield the surface normals all lie close to the body axis, so the resultant stays close to that axis whatever the pressure law, and any uniform scale factor on the pressure cancels exactly.
+</Callout>
+
+Reference: Graves and Harpold, "Apollo Experience Report: Mission Planning for Apollo Entry," NASA TN D-6725, 1972, Table I. The report tabulates these values without saying how they were derived, so I treat them as NASA's published trim values, not as a measurement from a specific flight. My coefficients use the 129.35 ft² (12.02 m²) Apollo reference area given in NASA TN D-5399; TN D-6725 does not restate its own.
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+### Limitations
+
+- **Stagnation pressure is too high.** Unmodified Newtonian theory fixes the peak C<sub>p</sub> at 2. For a perfect gas with γ = 1.4, the normal-shock value at the assignment's freestream (Mach 16.2) is 1.836. Modified Newtonian theory with that value would scale C<sub>L</sub> and C<sub>D</sub> by 0.918 and leave L/D unchanged, which still leaves the drag about 6&nbsp;% above the TN D-6725 value.
+- **Pressure only, no Mach number or gas model.** The freestream cancels: no skin friction, real-gas, viscous or rarefaction effects, and every shadowed panel sits at freestream pressure.
+- **Shadowing by panel normal.** There is no ray test for one part of the body shading another. That is exact for convex shapes like these three and wrong for anything concave.
+- **Forces only.** There are no moments, so the solver cannot find the trim angle. The 20° attitude is an input. The real capsule trims there because of its offset centre of gravity.
+
+### Next steps
+
+- Modified Newtonian theory, with the stagnation pressure taken from the normal-shock relations. My [hypersonic solver](/projects/hypersonic-solver/) already uses that model for its boundary-layer edge pressure.
+- Moments about a specified centre of gravity, to solve for the trim angle of attack and not assume it.
+
+### Takeaway
+
+Agreement in a ratio like L/D can hide a 15 % error in both of its parts.
+
+</TabPanel>

@@ -20,7 +20,9 @@ const H = headingLevel;
   data-tags={d.tags.join("|")}
   data-type={d.type}
 >
-  <div class="figure-ground relative aspect-[16/10] overflow-hidden rounded-xl">
+  <div
+    class:list={["figure-ground relative aspect-[16/10] overflow-hidden rounded-xl", d.thumbnailKeepInk && "keep-ink"]}
+  >
     <Image
       src={d.thumbnail}
       alt={d.thumbnailAlt}
@@ -29,7 +31,7 @@ const H = headingLevel;
       fit="cover"
       position="center"
       loading={eager ? "eager" : "lazy"}
-      class="reink h-full w-full object-cover object-center"
+      class:list={[!d.thumbnailKeepInk && "reink", "h-full w-full object-cover object-center"]}
     />
     <TypeBadge type={d.type} class="absolute top-2.5 left-2.5 z-[3]" />
   </div>

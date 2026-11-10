@@ -6,7 +6,7 @@ import ProjTile from "@/components/BentoProject.astro";
 import { site } from "@/data/site";
 import { skillStrip } from "@/data/skills";
 import tsunamiPoster from "@/assets/projects/tsunami/tsunami_poster.png";
-import entryFig from "@/assets/coursework/entry_trajectory.png";
+import apolloFig from "@/assets/projects/newtonian/apollo_thumb.png";
 
 const all = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
 const bySlug = Object.fromEntries(all.map((p) => [p.data.slug, p.data]));
@@ -196,24 +196,24 @@ const metrics = [
         <span class="mt-1.5 text-lg leading-snug font-semibold tracking-[-0.02em]">Marangoni, Chladni, clouds →</span>
       </a>
 
-      <section class="tile tile-media w2" aria-labelledby="t-entry">
-        <div class="figure-ground absolute inset-0">
+      <section class="tile tile-media w2" aria-labelledby="t-newton">
+        <div class="figure-ground keep-ink absolute inset-0">
           <Image
-            src={entryFig}
+            src={apolloFig}
             alt=""
             widths={[480, 800, 1200]}
             sizes="(min-width: 1024px) 620px, 100vw"
-            class="reink"
+            style="object-fit: contain; object-position: right center"
             loading="lazy"
           />
         </div>
         <div class="tile-cap">
-          <h2 id="t-entry" class="text-[0.9375rem] font-semibold tracking-[-0.01em]">
-            <a class="stretched no-underline" href="/coursework/#hypersonics">
-              Ballistic entry heating
+          <h2 id="t-newton" class="text-[0.9375rem] font-semibold tracking-[-0.01em]">
+            <a class="stretched no-underline" href="/projects/newtonian-aero/">
+              Newtonian pressure on the Apollo capsule
             </a>
           </h2>
-          <p class="mono-label">ASEN 5131 coursework</p>
+          <p class="mono-label">Hypersonic aerodynamics · ASEN 5131</p>
         </div>
       </section>
 

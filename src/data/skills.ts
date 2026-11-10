@@ -35,6 +35,7 @@ export const skillMatrix: SkillGroup[] = [
         where: [p("tsunami-simulation", "Tsunami"), c("numerical-methods", "APPM 3050")],
       },
       { name: "Panel methods & lifting line", where: [c("computational-aero", "ASEN 3802")] },
+      { name: "Newtonian impact theory on surface grids", where: [p("newtonian-aero", "Newtonian aero")] },
       { name: "Simulink 6-DOF", where: [p("sim6dof", "Sim6DOF")] },
       {
         name: "ODE integration & event detection",

@@ -43,6 +43,8 @@ const projects = defineCollection({
       heroAlt: z.string(),
       thumbnail: image(),
       thumbnailAlt: z.string(),
+      /** Colour-mapped thumbnail: keep its colours on a paper card in dark mode. */
+      thumbnailKeepInk: z.boolean().default(false),
       /** Key numbers shown as read-outs. Each must be quoted from a source. */
       metrics: z.array(z.object({ value: z.string(), label: z.string() })).default([]),
       links: z

@@ -8,6 +8,7 @@ import clAlpha from "@/assets/coursework/aerolab_cl_alpha.png";
 import pllt from "@/assets/coursework/aerolab_pllt_delta.png";
 import wave from "@/assets/coursework/wave2d_snapshots.png";
 import entry from "@/assets/coursework/entry_trajectory.png";
+import newtonSphere from "@/assets/projects/newtonian/sphere_cp.png";
 import heat from "@/assets/coursework/heat_conduction.png";
 import clarky from "@/assets/coursework/clarky_cp.png";
 
@@ -30,8 +31,7 @@ const sections = [
     <h1 class="mt-3 text-[clamp(2rem,4.5vw,3rem)]">Coursework highlights</h1>
     <p class="mt-4 max-w-[64ch] text-lg text-muted">
       A figure and a few sentences for each, grouped by theme. These are graded assignments, so the source isn't
-      published, but it's available on request. Every figure was regenerated for this page from my course code, in the
-      site's figure style.
+      published. Every figure was regenerated for this page from my course code, in the site's figure style.
     </p>
     <nav aria-label="On this page" class="mt-6 flex flex-wrap gap-2">
       {sections.map((s) => (
@@ -171,14 +171,31 @@ const sections = [
             Adding gravity raises peak heating by 13 %. My <a href="/projects/hypersonic-solver/">hypersonic solver</a>{" "}
             picks up the same problem at the boundary-layer level.
           </p>
+          <p>
+            Problem 1 of Assignment 4 was a Newtonian impact-theory solver for triangulated surfaces: C<sub>p</sub> = 2
+            cos²φ on every panel facing the flow, zero in shadow, summed into lift and drag. It reproduces the exact
+            flat-plate result, gets the sphere's drag coefficient to 0.9987 against the exact value of 1, and gives L/D
+            = 0.303 for the Apollo command module 20° off heat-shield-forward. It grew into a full page:{" "}
+            <a href="/projects/newtonian-aero/">Newtonian hypersonic aerodynamics</a>.
+          </p>
         </div>
-        <Figure
-          src={entry}
-          alt="Left, altitude against velocity for ballistic and full-equation entries with analytic peak-deceleration and peak-heating points on the ballistic curve. Right, Sutton-Graves stagnation heat flux against altitude peaking near 15 km at about 19 and 21 MW per square metre."
-          source="courses/ASEN5131/HW1 (re-run)"
-        >
-          Ballistic entry: altitude–velocity and stagnation heating. Markers are the analytic peaks.
-        </Figure>
+        <div>
+          <Figure
+            src={entry}
+            alt="Left, altitude against velocity for ballistic and full-equation entries with analytic peak-deceleration and peak-heating points on the ballistic curve. Right, Sutton-Graves stagnation heat flux against altitude peaking near 15 km at about 19 and 21 MW per square metre."
+            source="courses/ASEN5131/HW1 (re-run)"
+          >
+            Ballistic entry: altitude–velocity and stagnation heating. Markers are the analytic peaks.
+          </Figure>
+          <Figure
+            src={newtonSphere}
+            keepInk
+            alt="Left, a sphere coloured by Newtonian pressure coefficient, 2 at the stagnation point falling to zero at 90 degrees. Right, the pressure coefficient of every panel against its angle from the stagnation point, lying on the exact curve 2 cos squared phi."
+            source="courses/ASEN5131/HW4 (re-run)"
+          >
+            Newtonian pressure on a sphere: every panel lies on 2 cos²φ.
+          </Figure>
+        </div>
       </div>
     </section>
 

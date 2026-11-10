@@ -22,14 +22,14 @@ const wide = t.size.includes("w2");
   <span class="tile-pill">
     {t.d.type} · {t.d.dates}
   </span>
-  <div class="tile-fig figure-ground">
+  <div class:list={["tile-fig figure-ground", t.d.thumbnailKeepInk && "keep-ink"]}>
     <Image
       src={t.d.thumbnail}
       alt=""
       widths={wide ? [480, 800, 1200] : [400, 640]}
       sizes={wide ? "(min-width: 1024px) 600px, 100vw" : "(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw"}
       loading={eager ? "eager" : "lazy"}
-      class="reink"
+      class:list={[!t.d.thumbnailKeepInk && "reink"]}
       style={`object-position: ${t.pos}`}
     />
   </div>

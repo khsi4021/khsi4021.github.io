@@ -103,7 +103,12 @@ const { tabs } = Astro.props;
         const top = root.getBoundingClientRect().top + window.scrollY - 72;
         if (window.scrollY > top) window.scrollTo({ top });
       }
-      tabs[idx].scrollIntoView({ block: "nearest", inline: "nearest" });
+      // Keep the selected pill visible in the tab strip without scrolling the page.
+      const b = tabs[idx];
+      tablist.scrollLeft +=
+        b.getBoundingClientRect().left -
+        tablist.getBoundingClientRect().left -
+        (tablist.clientWidth - b.offsetWidth) / 2;
       document.dispatchEvent(new CustomEvent("tabshown", { detail: id }));
     };
 

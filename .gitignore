@@ -14,6 +14,7 @@ Thumbs.db
 # Private planning docs and source media. Kept out of the PUBLIC repo by default.
 # Delete a line (and commit) if you decide to publish that file.
 CLAUDE.md
+AGENTS.md
 START_HERE.md
 setup/
 PROGRESS.md

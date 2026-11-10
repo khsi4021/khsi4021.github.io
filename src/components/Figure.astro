@@ -12,8 +12,10 @@ interface Props {
   wide?: boolean;
   /** Max display width in px (keeps small figures from blowing up). */
   maxWidth?: number;
+  /** Colour-mapped image: keep the original colours on a paper card in dark mode. */
+  keepInk?: boolean;
 }
-const { src, alt, source, id, wide = false, maxWidth } = Astro.props;
+const { src, alt, source, id, wide = false, maxWidth, keepInk = false } = Astro.props;
 const full = await getImage({ src, width: Math.min(src.width, 2200), format: "webp" });
 const widths = [480, 800, 1200, 1600].filter((w) => w <= src.width);
 if (!widths.length) widths.push(src.width);
@@ -22,7 +24,10 @@ if (!widths.length) widths.push(src.width);
 <figure class:list={["figure my-8", wide && "wide"]} id={id} style={maxWidth ? `max-width:${maxWidth}px` : undefined}>
   <button
     type="button"
-    class="figure-ground block w-full cursor-zoom-in overflow-hidden rounded-[var(--radius-lg)] border border-line p-2 transition-colors hover:border-accent sm:p-4"
+    class:list={[
+      "figure-ground block w-full cursor-zoom-in overflow-hidden rounded-[var(--radius-lg)] border border-line p-2 transition-colors hover:border-accent sm:p-4",
+      keepInk && "keep-ink",
+    ]}
     data-lightbox={full.src}
     data-lightbox-alt={alt}
     aria-label={`Enlarge figure: ${alt}`}
@@ -32,7 +37,7 @@ if (!widths.length) widths.push(src.width);
       alt={alt}
       widths={widths}
       sizes={wide ? "(min-width: 1200px) 1100px, 100vw" : "(min-width: 900px) 760px, 100vw"}
-      class="reink mx-auto h-auto w-full"
+      class:list={[!keepInk && "reink", "mx-auto h-auto w-full"]}
       loading="lazy"
       decoding="async"
     />

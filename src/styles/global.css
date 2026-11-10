@@ -271,6 +271,11 @@
   [data-theme="dark"] .figure-ground {
     background: var(--surface);
   }
+  /* Colour-mapped media opt out of re-inking (inverting lightness would reverse
+     the scale) and keep their paper ground in dark mode. */
+  [data-theme="dark"] .figure-ground.keep-ink {
+    background: var(--paper);
+  }
   [data-theme="dark"] .reink {
     filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(1.06);
     mix-blend-mode: screen;
