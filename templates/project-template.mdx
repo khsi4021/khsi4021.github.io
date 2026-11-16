@@ -6,8 +6,9 @@ slug: project-slug # URL: /projects/project-slug/
 summary: One sentence for search results and link previews.
 hook: One line shown on the project card.
 tldr: 40 words or fewer. What it is, what you did, the headline result.
-type: Personal # Personal | Course | Team | Competition
-course: ASEN 0000 Course Name # optional
+type: Personal # Personal | Course | Team
+# context: competition entry # optional: short label shown after the type, as in "Personal · competition entry"
+course: ASEN 0000 Course Name # optional: the course, or the competition or event the work was built for
 team: Team of 4 # optional
 role: What YOU did, specifically
 dates: Spring 2027
@@ -15,8 +16,8 @@ date: 2027-05-01 # used for sorting
 tags: [CFD/Numerical] # Hypersonics, CFD/Numerical, Aerodynamics, Flight Dynamics & Control, Orbital/SSA, Aircraft Design, Machine Learning, Experimental, Software
 stack: [Python, NumPy]
 featured: false # kept in the schema; no longer decides what the home page shows
-order: 20 # reading order, 1 = most relevant to hypersonic CFD; lower = earlier in lists
-group: Numerical methods # optional: heading this project is listed under on the home page
+order: 20 # reading order on Home and Projects, lower = earlier: relevance to hypersonic CFD combined with complexity and recency
+group: Numerical methods # optional: heading on the home page. In use: Hypersonics, Simulation and verification, Numerical methods, Earlier coursework, Software fundamentals
 contribution: One sentence on what this project contributes toward hypersonic CFD. # optional; say so plainly if the link is loose
 tier: supporting # flagship | supporting | fundamentals
 heroImage: ../../assets/projects/<slug>/hero.png

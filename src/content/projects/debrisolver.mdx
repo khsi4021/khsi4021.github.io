@@ -4,7 +4,8 @@ slug: debrisolver
 summary: An end-to-end pipeline that turns satellite conjunction data messages into a decision (no action, monitor, human review or a verified avoidance maneuver), with every stage validated against an independent reference.
 hook: From raw conjunction messages to a verified avoidance burn. Pc matches NASA CARA to 8.9e-8, and the ML model's tie with its baseline is reported as-is.
 tldr: A four-stage pipeline for LEO collision risk covering parsing and credibility scoring, a 114-feature dataset, an XGBoost risk forecast and MATLAB minimum-ΔV maneuvers. Pc matches NASA CARA to 8.9e-8, and all 567 propagated maneuvers meet the 3.2e-6 target.
-type: Competition
+type: Personal
+context: competition entry
 course: DebriSolver competition, Phase III (Saudi Space Agency)
 role: Sole developer, from proposal to pipeline, validation and report
 dates: 2025 – Oct 2026
@@ -12,8 +13,8 @@ date: 2026-10-18
 tags: [Orbital/SSA, Machine Learning]
 stack: [Python, pandas, XGBoost, SHAP, MATLAB, fmincon / MultiStart, Plotly, pytest]
 featured: true
-order: 5
-group: Simulation and verification in other fields
+order: 4
+group: Simulation and verification
 contribution: "Orbital mechanics and machine learning, not fluid dynamics. What carries over is the practice of validating every stage against an independent reference and reporting a result that misses its target as a failure."
 tier: flagship
 heroImage: ../../assets/projects/debrisolver/V12_bplane_showcase.png

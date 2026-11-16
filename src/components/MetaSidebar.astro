@@ -18,7 +18,7 @@ const links = [
   <dl>
     <div class="meta-row">
       <dt>Type</dt>
-      <dd>{d.type}</dd>
+      <dd>{d.context ? `${d.type} · ${d.context}` : d.type}</dd>
     </div>
     <div class="meta-row">
       <dt>Dates</dt>
@@ -26,7 +26,7 @@ const links = [
     </div>
     {d.course && (
       <div class="meta-row">
-        <dt>Course</dt>
+        <dt>{d.type === "Course" || !d.context ? "Course" : "Built for"}</dt>
         <dd>{d.course}</dd>
       </div>
     )}
@@ -46,14 +46,7 @@ const links = [
     </div>
     <div class="meta-row">
       <dt>Topics</dt>
-      <dd>
-        {d.tags.map((t, i) => (
-          <span>
-            <a href={`/projects/?tag=${encodeURIComponent(t)}`}>{t}</a>
-            {i < d.tags.length - 1 ? ", " : ""}
-          </span>
-        ))}
-      </dd>
+      <dd>{d.tags.map((t, i) => [i > 0 ? ", " : "", <a href={`/projects/?tag=${encodeURIComponent(t)}`}>{t}</a>])}</dd>
     </div>
     <div class="meta-row">
       <dt>Status</dt>
@@ -82,7 +75,7 @@ const links = [
   dl {
     display: grid;
     grid-template-columns: 8rem minmax(0, 1fr);
-    border-top: 2px solid var(--text);
+    border-top: 2px solid var(--accent);
   }
   .meta-row {
     display: contents;

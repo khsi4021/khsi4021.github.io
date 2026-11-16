@@ -91,7 +91,7 @@ const isActive = (href: string) => path.startsWith(href);
 
     <header class="site-header">
       <div class="wrap">
-        <div class="flex items-center justify-between gap-6 border-b border-line py-5">
+        <div class="flex items-center justify-between gap-6 py-3.5">
           <a href="/" class="no-underline">
             <span class="block font-serif text-[1.1875rem] leading-tight font-semibold">{site.name}</span>
             <span class="mt-0.5 hidden text-[0.8125rem] text-muted sm:block">
@@ -129,7 +129,7 @@ const isActive = (href: string) => path.startsWith(href);
             </button>
           </div>
         </div>
-        <nav id="mobile-nav" aria-label="Main" class="hidden border-b border-line lg:hidden" data-menu>
+        <nav id="mobile-nav" aria-label="Main" class="hidden border-t border-line lg:hidden" data-menu>
           <ul>
             {nav.map((n) => (
               <li class="border-t border-line first:border-t-0">
@@ -154,57 +154,59 @@ const isActive = (href: string) => path.startsWith(href);
       <slot />
     </main>
 
-    <footer class="site-footer wrap mt-24">
-      <div class="grid gap-8 border-t-2 border-ink py-10 text-[0.9375rem] text-muted md:grid-cols-[1.4fr_1fr_1fr]">
-        <div>
-          <p class="font-serif text-base font-semibold text-ink">{site.name}</p>
-          <p class="mt-1 max-w-[40ch]">{site.degree}</p>
-        </div>
-        <div>
-          <p class="font-semibold text-ink">Contents</p>
-          <ul class="mt-2 space-y-1">
-            {nav.map((n) => (
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="grid gap-6 py-6 text-[0.9375rem] text-muted md:grid-cols-[1.4fr_1fr_1fr]">
+          <div>
+            <p class="font-serif text-base font-semibold text-ink">{site.name}</p>
+            <p class="mt-1 max-w-[40ch]">{site.degree}</p>
+          </div>
+          <div>
+            <p class="font-semibold text-ink">Contents</p>
+            <ul class="mt-1.5 columns-2 gap-x-6 space-y-0.5">
+              {nav.map((n) => (
+                <li>
+                  <a class="hover:text-flow hover:underline" href={n.href}>
+                    {n.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p class="font-semibold text-ink">Contact</p>
+            <ul class="mt-1.5 space-y-0.5">
+              {hasEmail && (
+                <li>
+                  <a class="hover:text-flow hover:underline" href={`mailto:${site.email}`}>
+                    {site.email}
+                  </a>
+                </li>
+              )}
               <li>
-                <a class="hover:text-ink" href={n.href}>
-                  {n.label}
+                <a class="hover:text-flow hover:underline" href={site.github} rel="me">
+                  GitHub
                 </a>
               </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <p class="font-semibold text-ink">Contact</p>
-          <ul class="mt-2 space-y-1">
-            {hasEmail && (
+              {hasLinkedIn && (
+                <li>
+                  <a class="hover:text-flow hover:underline" href={site.linkedin} rel="me">
+                    LinkedIn
+                  </a>
+                </li>
+              )}
               <li>
-                <a class="hover:text-ink" href={`mailto:${site.email}`}>
-                  {site.email}
+                <a class="hover:text-flow hover:underline" href="/cv/">
+                  Curriculum vitae
                 </a>
               </li>
-            )}
-            <li>
-              <a class="hover:text-ink" href={site.github} rel="me">
-                GitHub
-              </a>
-            </li>
-            {hasLinkedIn && (
-              <li>
-                <a class="hover:text-ink" href={site.linkedin} rel="me">
-                  LinkedIn
-                </a>
-              </li>
-            )}
-            <li>
-              <a class="hover:text-ink" href="/cv/">
-                Curriculum vitae
-              </a>
-            </li>
-          </ul>
+            </ul>
+          </div>
         </div>
+        <p class="border-t border-line py-3 text-[0.8125rem] text-faint">
+          © {new Date().getFullYear()} {site.name}
+        </p>
       </div>
-      <p class="border-t border-line py-4 text-[0.8125rem] text-faint">
-        © {new Date().getFullYear()} {site.name}
-      </p>
     </footer>
 
     <script>

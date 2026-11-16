@@ -1,37 +1,45 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import Timeline from "@/components/Timeline.astro";
+import PathFlow from "@/components/PathFlow.astro";
+import type { PathFlowItem } from "@/components/PathFlow.astro";
 
 // Title, link and date only. The descriptive sentences were removed with the rest of the draft prose.
-const path = [
+// kind drives the block colour: course = neutral, personal = accent wash, goal = accent fill.
+const path: PathFlowItem[] = [
   {
     when: "Fall 2024 · ASEN 2012",
     title: "First simulations: ODE models with uncertainty",
     href: "/projects/bottle-rocket/",
+    kind: "course",
   },
   {
     when: "Spring 2026 · APPM 3050",
     title: "Finite differences for PDEs",
     href: "/projects/tsunami-simulation/",
+    kind: "course",
   },
   {
     when: "Spring 2026 · ASEN 3802",
     title: "Panel methods and lifting-line theory",
     href: "/coursework/#computational-aero",
+    kind: "course",
   },
   {
     when: "Aug 2026 · Personal",
     title: "Hypersonic boundary-layer and transition solver",
     href: "/projects/hypersonic-solver/",
+    kind: "personal",
   },
   {
     when: "Fall 2026 · ASEN 5131",
     title: "Graduate hypersonic aerodynamics",
     href: "/coursework/#hypersonics",
+    kind: "course",
   },
   {
     when: "Fall 2027 · Goal",
     title: "Graduate research in CFD for hypersonic flows",
+    kind: "goal",
     todo: true,
   },
 ];
@@ -81,14 +89,12 @@ const path = [
         <span class="n">3</span>How the projects build toward it
       </h2>
       <div>
-        <Timeline items={path} />
+        <PathFlow items={path} label="Steps from early coursework to the graduate research goal" />
         <div class="placeholder mt-6 max-w-[68ch]" data-placeholder>
-          <p>A sentence on what each step added will go next to each entry above.</p>
+          <p>A sentence on what each step added will go with each block above.</p>
         </div>
         <p class="mt-6 font-sans text-sm">
-          <a href="/projects/" class="underline decoration-line-strong underline-offset-2 hover:text-flow">
-            All projects
-          </a>
+          <a href="/projects/">All projects</a>
         </p>
       </div>
     </section>

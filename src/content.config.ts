@@ -14,7 +14,7 @@ export const TAGS = [
   "Software",
 ] as const;
 
-export const TYPES = ["Personal", "Course", "Team", "Competition"] as const;
+export const TYPES = ["Personal", "Course", "Team"] as const;
 
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/projects" }),
@@ -29,6 +29,8 @@ const projects = defineCollection({
       /** TL;DR, 40 words or fewer. */
       tldr: z.string(),
       type: z.enum(TYPES),
+      /** Short secondary label shown after the type, e.g. "competition entry". */
+      context: z.string().optional(),
       course: z.string().optional(),
       team: z.string().optional(),
       role: z.string(),
@@ -38,7 +40,7 @@ const projects = defineCollection({
       tags: z.array(z.enum(TAGS)).min(1),
       stack: z.array(z.string()),
       featured: z.boolean().default(false),
-      /** Reading order: relevance to hypersonic CFD, 1 = most relevant. */
+      /** Reading order: relevance to hypersonic CFD combined with complexity and recency, 1 = first. */
       order: z.number(),
       /** Heading this project is listed under in the ordered reading list. */
       group: z.string().optional(),

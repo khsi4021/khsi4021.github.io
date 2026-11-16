@@ -4,6 +4,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import Figure from "@/components/Figure.astro";
 import Lightbox from "@/components/Lightbox.astro";
 import ProjectRow from "@/components/ProjectRow.astro";
+import PackReveal from "@/components/PackReveal.astro";
 import { site, hasEmail, hasLinkedIn } from "@/data/site";
 
 const all = (await getCollection("projects")).map((p) => p.data).sort((a, b) => a.order - b.order);
@@ -58,7 +59,7 @@ const results = [
     slug: "debrisolver",
     name: "DebriSolver",
     tab: "results",
-    type: "Competition",
+    type: "Personal · competition entry",
   },
   {
     value: metric("debrisolver", "propagated maneuvers"),
@@ -66,7 +67,7 @@ const results = [
     slug: "debrisolver",
     name: "DebriSolver",
     tab: "results",
-    type: "Competition",
+    type: "Personal · competition entry",
   },
   {
     value: metric("sim6dof", "ω_n error vs analytic model"),
@@ -101,6 +102,13 @@ const hyper = bySlug["hypersonic-solver"];
             GitHub
           </a>
         </li>
+        {hasLinkedIn && (
+          <li>
+            <a href={site.linkedin} rel="me">
+              LinkedIn
+            </a>
+          </li>
+        )}
         <li>
           <a href="/cv/">Curriculum vitae</a>
         </li>
@@ -134,9 +142,9 @@ const hyper = bySlug["hypersonic-solver"];
           carries over.
         </p>
         {groups.map((g) => (
-          <div class="mt-8">
+          <div class="mt-5">
             <h3 class="font-sans text-[0.9375rem] font-semibold tracking-normal">{g.name}</h3>
-            <ol class="mt-2 list-none border-b border-line p-0">
+            <ol class="path-list mt-2 list-none border-b border-line p-0">
               {g.items.map((d) => (
                 <ProjectRow d={d} n={`2.${all.indexOf(d) + 1}`} />
               ))}
@@ -215,46 +223,25 @@ const hyper = bySlug["hypersonic-solver"];
           ASEN 4018 Senior Design: <a href="/projects/aircraft-design-toolbox/">capstone UAV sizing</a> and the
           <a href="/projects/sim6dof/">Sim6DOF flight simulator</a>
         </li>
-        <li>ATLS 5151 Flow Visualization (graduate)</li>
-      </ul>
-    </section>
-
-    <section class="sec" aria-labelledby="sec-contact">
-      <h2 id="sec-contact" class="sec-label">
-        <span class="n">5</span>CV and contact
-      </h2>
-      <ul class="term list-none p-0 font-sans text-[0.9375rem]">
         <li>
-          <a href="/cv/">Curriculum vitae</a> (<a href={site.cvPath}>PDF</a>)
-        </li>
-        {hasEmail && (
-          <li>
-            Email: <a href={`mailto:${site.email}`}>{site.email}</a>
-          </li>
-        )}
-        <li>
-          GitHub:{" "}
-          <a href={site.github} rel="me">
-            {site.githubUser}
-          </a>
-        </li>
-        {hasLinkedIn && (
-          <li>
-            <a href={site.linkedin} rel="me">
-              LinkedIn
-            </a>
-          </li>
-        )}
-        <li>
-          <a href="/contact/">All contact options</a>
+          <a href="/flow-vis/">ATLS 5151 Flow Visualization</a> (graduate)
         </li>
       </ul>
     </section>
   </div>
+  <PackReveal />
   <Lightbox />
 </BaseLayout>
 
 <style>
+  /* Two projects per row on wide screens, to halve the length of the list. */
+  @media (min-width: 1024px) {
+    .path-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 2rem;
+    }
+  }
   .results-scroll {
     overflow-x: auto;
   }
@@ -271,7 +258,7 @@ const hyper = bySlug["hypersonic-solver"];
     font-weight: 600;
     color: var(--text-muted);
     padding: 0 1rem 0.5rem 0;
-    border-bottom: 2px solid var(--text);
+    border-bottom: 2px solid var(--accent);
   }
   .results td {
     vertical-align: top;

@@ -14,20 +14,20 @@ const { items } = Astro.props;
 
 <ol class="border-t border-line">
   {items.map((it) => (
-    <li class="grid gap-x-6 gap-y-1 border-b border-line py-3 sm:grid-cols-[11rem_minmax(0,1fr)]">
+    <li class="grid gap-x-6 gap-y-0.5 border-b border-line py-2 sm:grid-cols-[9.5rem_minmax(0,1fr)]">
       <p class="font-sans text-sm text-faint tabular-nums sm:pt-[0.2rem]">{it.when}</p>
       <div>
         <p>
           {it.href ? (
-            <a href={it.href} class="underline decoration-line-strong underline-offset-2 hover:text-flow">
+            <a href={it.href} class="text-flow underline decoration-1 underline-offset-[3px] hover:decoration-2">
               {it.title}
             </a>
           ) : (
             it.title
           )}
-          {it.todo && <span class="ml-2 font-sans text-sm text-warn">(to confirm)</span>}
+          {it.todo && <span class="ml-2 font-sans text-sm text-accent">(to confirm)</span>}
         </p>
-        {it.body && <p class="mt-1 font-sans text-sm text-muted">{it.body}</p>}
+        {it.body && <p class="mt-0.5 font-sans text-sm text-muted">{it.body}</p>}
       </div>
     </li>
   ))}

@@ -12,13 +12,13 @@ import newtonSphere from "@/assets/projects/newtonian/sphere_cp.png";
 import heat from "@/assets/coursework/heat_conduction.png";
 import clarky from "@/assets/coursework/clarky_cp.png";
 
-// Hypersonics first: the page is ordered toward the research direction.
+// Ordered by relevance to hypersonic CFD combined with complexity and recency.
 const sections = [
   { id: "hypersonics", title: "Hypersonics (in progress)" },
   { id: "computational-aero", title: "Computational aerodynamics" },
   { id: "numerical-methods", title: "Numerical methods" },
-  { id: "experimental", title: "Experimental" },
   { id: "flight-dynamics", title: "Flight dynamics and control" },
+  { id: "experimental", title: "Experimental" },
   { id: "more", title: "More courses" },
 ];
 ---
@@ -204,9 +204,39 @@ const sections = [
       </div>
     </section>
 
+    <section id="flight-dynamics" class="sec" aria-labelledby="flight-dynamics-label">
+      <h2 id="flight-dynamics-label" class="sec-label">
+        <span class="n">4</span>Flight dynamics and control
+      </h2>
+      <div class="cw-grid">
+        <div class="prose">
+          <h3>ASEN 3801: Aircraft Dynamics</h3>
+          <p>
+            Lab 4 was a quadrotor: full 12-state nonlinear equations of motion, a motor-to-force/moment mixing matrix, a
+            linearised model, and inner-loop rate feedback plus outer-loop velocity feedback, compared in simulation
+            (team lab). Lab 5 extended the equations of motion to a fixed-wing aircraft with aerodynamic forces and
+            moments. Earlier labs covered rotation matrices and Euler angles from experimental tracking data.
+            {/* TODO(Khalil): your part of lab 4; a figure from your runs would help. */}
+          </p>
+          <p>
+            The same ideas, at a larger scale, are in <a href="/projects/sim6dof/">Sim6DOF</a>.
+          </p>
+        </div>
+        <div class="border-t border-line pt-4">
+          <p class="font-sans text-sm font-semibold">Quadrotor equations of motion (lab 4)</p>
+          <Equation
+            tex={String.raw`\dot{\boldsymbol\omega} = I^{-1}\big(\mathbf G_c - \boldsymbol\omega \times I\boldsymbol\omega\big),\qquad \dot{\mathbf v}^B = \mathbf v^B\times\boldsymbol\omega + R^{\mathsf T}\mathbf g + \tfrac{1}{m}\big(\mathbf F_\text{aero} + \mathbf F_c\big)`}
+          />
+          <p class="font-sans text-sm text-muted">
+            The control forces and moments come from the four rotor thrusts through a mixing matrix.
+          </p>
+        </div>
+      </div>
+    </section>
+
     <section id="experimental" class="sec" aria-labelledby="experimental-label">
       <h2 id="experimental-label" class="sec-label">
-        <span class="n">4</span>Experimental
+        <span class="n">5</span>Experimental
       </h2>
       <div class="cw-grid">
         <div class="prose">
@@ -242,36 +272,6 @@ const sections = [
       </div>
     </section>
 
-    <section id="flight-dynamics" class="sec" aria-labelledby="flight-dynamics-label">
-      <h2 id="flight-dynamics-label" class="sec-label">
-        <span class="n">5</span>Flight dynamics and control
-      </h2>
-      <div class="cw-grid">
-        <div class="prose">
-          <h3>ASEN 3801: Aircraft Dynamics</h3>
-          <p>
-            Lab 4 was a quadrotor: full 12-state nonlinear equations of motion, a motor-to-force/moment mixing matrix, a
-            linearised model, and inner-loop rate feedback plus outer-loop velocity feedback, compared in simulation
-            (team lab). Lab 5 extended the equations of motion to a fixed-wing aircraft with aerodynamic forces and
-            moments. Earlier labs covered rotation matrices and Euler angles from experimental tracking data.
-            {/* TODO(Khalil): your part of lab 4; a figure from your runs would help. */}
-          </p>
-          <p>
-            The same ideas, at a larger scale, are in <a href="/projects/sim6dof/">Sim6DOF</a>.
-          </p>
-        </div>
-        <div class="border-t border-line pt-4">
-          <p class="font-sans text-sm font-semibold">Quadrotor equations of motion (lab 4)</p>
-          <Equation
-            tex={String.raw`\dot{\boldsymbol\omega} = I^{-1}\big(\mathbf G_c - \boldsymbol\omega \times I\boldsymbol\omega\big),\qquad \dot{\mathbf v}^B = \mathbf v^B\times\boldsymbol\omega + R^{\mathsf T}\mathbf g + \tfrac{1}{m}\big(\mathbf F_\text{aero} + \mathbf F_c\big)`}
-          />
-          <p class="font-sans text-sm text-muted">
-            The control forces and moments come from the four rotor thrusts through a mixing matrix.
-          </p>
-        </div>
-      </div>
-    </section>
-
     <section id="more" class="sec" aria-labelledby="more-label">
       <h2 id="more-label" class="sec-label">
         <span class="n">6</span>More courses
@@ -281,29 +281,23 @@ const sections = [
           <p class="font-medium">ASEN 4018 Senior Design</p>
           <p class="font-sans text-sm text-muted">
             The capstone weight model, flap model and design trades, and the 6-DOF simulator. See the{" "}
-            <a class="text-flow underline decoration-1 underline-offset-2" href="/projects/aircraft-design-toolbox/">
-              capstone weight-model page
-            </a>
-            .
+            <a href="/projects/aircraft-design-toolbox/">capstone weight-model page</a>.
           </p>
         </li>
         <li>
           <p class="font-medium">ATLS 5151 Flow Visualization (graduate)</p>
           <p class="font-sans text-sm text-muted">
-            Marangoni flow in milk and dye, Chladni plates, a crème brûlée torch flame and a copper-coloured green flame. See the{" "}
-            <a class="text-flow underline decoration-1 underline-offset-2" href="/flow-vis/">
-              gallery
-            </a>
-            .
+            Marangoni flow in milk and dye, Chladni plates, a crème brûlée torch flame and a copper-coloured green
+            flame. See the <a href="/flow-vis/">gallery</a>.
           </p>
-        </li>
-        <li>
-          <p class="font-medium">ASEN 3200 Orbital Mechanics</p>
-          <p class="font-sans text-sm text-muted">Orbital mechanics homework.</p>
         </li>
         <li>
           <p class="font-medium">ASEN 3711 / 3712 / 3713</p>
           <p class="font-sans text-sm text-muted">Aerodynamics, structures, and thermodynamics &amp; heat transfer.</p>
+        </li>
+        <li>
+          <p class="font-medium">ASEN 3200 Orbital Mechanics</p>
+          <p class="font-sans text-sm text-muted">Orbital mechanics homework.</p>
         </li>
         <li>
           <p class="font-medium">ASEN 3300 Aerospace Electronics</p>

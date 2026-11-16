@@ -44,7 +44,7 @@ const components = { TabPanel, Figure, Equation, CodeSnippet, Callout, Video, En
     <header class="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
       <div class="tile flex flex-col justify-between gap-6 md:!p-8">
         <p class="flex flex-wrap items-center gap-x-3 gap-y-1 font-sans text-sm text-muted">
-          <TypeBadge type={d.type} />
+          <TypeBadge type={d.type} context={d.context} />
           {d.course && <span>{d.course}</span>}
           <span>{d.dates}</span>
         </p>

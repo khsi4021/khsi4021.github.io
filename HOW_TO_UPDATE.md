@@ -10,11 +10,12 @@ All edits are made locally, previewed with `npm run dev`, and published with a `
    - the site's series colours (blue `#1b3f7a`, orange `#a8410e`, green `#17703f`, purple `#6b3fa8`),
    - a plain white background. Figures are shown on a white plate in both themes; dark mode only dims them slightly and never inverts their colours.
 3. **Fill in the frontmatter.**
-   - `type` must be one of Personal / Course / Team / Competition.
+   - `type` must be one of Personal / Course / Team. It is also the Type filter on the projects page.
+   - `context` (optional) is a short second label printed after the type, for work that also belongs somewhere else. DebriSolver is `type: Personal` with `context: competition entry`, so it reads "Personal · competition entry". When `context` is set on a project that is not a course project, the `course` line is labelled "Built for" in the project details.
    - `tags` must come from the list in the template.
    - `tldr` should be 40 words or fewer.
-   - `order` is the reading order on the home page and the projects page: 1 is the most relevant to hypersonic CFD.
-   - `group` (optional) is the heading the project is listed under on the home page, for example `Hypersonics` or `Numerical methods`. Consecutive projects with the same `group` share one heading; without it the project falls under "Other work".
+   - `order` is the reading order on the home page and the projects page, lowest first. It ranks relevance to hypersonic CFD together with complexity and recency. Current order: 1 hypersonic-solver, 2 newtonian-aero, 3 sim6dof, 4 debrisolver, 5 reserved for the heat-diffusion project, 6 aircraft-design-toolbox, 7 tsunami-simulation, 8 target-shooting, 9 bottle-rocket, 10 tcas-simulation, 11 cpp-rpg, 12 candy-land. To insert a project, renumber the ones after it.
+   - `group` (optional) is the heading the project is listed under on the home page. The groups in use are `Hypersonics`, `Simulation and verification`, `Numerical methods`, `Earlier coursework` and `Software fundamentals`. Headings are printed in order of first appearance, so keep the projects of one group next to each other in `order`; without `group` the project falls under "Other work".
    - `contribution` (optional) is one sentence on what the project contributes toward hypersonic CFD. It is printed under the project in the home-page list. Say so plainly when the link is loose.
    - `featured` is still in the schema but no longer decides what the home page shows.
 4. **Write the tabs.** Each `<TabPanel id="…">` becomes a tab. Delete tabs you don't need, and list the remaining ones in `tabs:`. These components are available without importing:
@@ -39,9 +40,9 @@ All edits are made locally, previewed with `npm run dev`, and published with a `
 | Email, LinkedIn, degree wording | `src/data/site.ts` |
 | CV | Save as `public/cv/Khalil-Sidani-CV.pdf`. The CV page and download button appear automatically. |
 | Headshot | Put it in `src/assets/headshot.jpg` and replace the placeholder block in `src/pages/about.astro`. |
-| Flow Vis images | Put images in `src/assets/flow-vis/`, then set `file:`, `technique:`, `caption:` and `alt:` for each entry in `src/data/flowvis.ts`. |
+| Flow Vis pieces | Put the image in `src/assets/flowvis/` and add or edit the entry in `src/data/flowvis.ts` (`slug`, `media`, `brief` for the card text, `technique`, `caption`, `alt`). The card on `/flow-vis/` and the page at `/flow-vis/<slug>/` are generated from that entry. |
 | Skills matrix | `src/data/skills.ts`. Each skill links to the project where it was used. |
-| Home, About, Research text | `src/pages/index.astro`, `about.astro`, `research.astro`. Copy that is waiting for your own wording sits in a `<div class="placeholder">` block (amber left rule, labelled "Placeholder text"). Replace the sentence inside and remove the `placeholder` class. |
+| Home, About, Research text | `src/pages/index.astro`, `about.astro`, `research.astro`. Copy that is waiting for your own wording sits in a `<div class="placeholder">` block (pale blue block with an accent left rule, labelled "Placeholder text"). Replace the sentence inside and remove the `placeholder` class. |
 | Colours, fonts, spacing | `src/styles/global.css` (tokens) and `DESIGN_SPEC.md` |
 | Favicon and link-preview image | Edit `scripts/make-brand-assets.mjs`, then run `node scripts/make-brand-assets.mjs`. |
 

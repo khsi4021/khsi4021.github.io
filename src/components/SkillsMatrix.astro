@@ -3,17 +3,17 @@ import { skillMatrix } from "@/data/skills";
 ---
 
 <div class="overflow-x-auto">
-  <table class="w-full border-collapse border-t border-line-strong text-left font-sans text-sm">
+  <table class="table-tint w-full border-collapse border-t-2 border-accent text-left font-sans text-sm">
     <caption class="sr-only">Skills by group, with links to the pages where each one is shown</caption>
     <thead>
       <tr class="border-b border-line-strong">
-        <th scope="col" class="py-2 pr-4 font-semibold">
+        <th scope="col" class="px-3 py-1.5 font-semibold">
           Group
         </th>
-        <th scope="col" class="py-2 pr-4 font-semibold">
+        <th scope="col" class="px-3 py-1.5 font-semibold">
           Skill
         </th>
-        <th scope="col" class="py-2 font-semibold">
+        <th scope="col" class="px-3 py-1.5 font-semibold">
           Where it is shown
         </th>
       </tr>
@@ -23,20 +23,13 @@ import { skillMatrix } from "@/data/skills";
         {g.skills.map((s, i) => (
           <tr class="border-b border-line last:border-b-0">
             {i === 0 && (
-              <th scope="rowgroup" rowspan={g.skills.length} class="py-2 pr-4 align-top font-semibold">
+              <th scope="rowgroup" rowspan={g.skills.length} class="px-3 py-1.5 align-top font-semibold text-accent">
                 {g.group}
               </th>
             )}
-            <td class="py-2 pr-4 align-top">{s.name}</td>
-            <td class="py-2 align-top">
-              {s.where.map((w, j) => (
-                <>
-                  {j > 0 && <span class="text-faint">, </span>}
-                  <a href={w.href} class="underline decoration-line-strong underline-offset-2 hover:text-flow">
-                    {w.label}
-                  </a>
-                </>
-              ))}
+            <td class="px-3 py-1.5 align-top">{s.name}</td>
+            <td class="px-3 py-1.5 align-top">
+              {s.where.map((w, j) => [j > 0 ? ", " : "", <a href={w.href}>{w.label}</a>])}
             </td>
           </tr>
         ))}

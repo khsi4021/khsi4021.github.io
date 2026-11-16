@@ -1,14 +1,18 @@
 ---
 // Project type as a small sans label with a hairline box. One neutral style
-// for all four types: the type is a category, not a status.
+// for every type: the type is a category, not a status. An optional context
+// (e.g. "competition entry") follows the type after a middle dot.
+import type { TYPES } from "@/content.config";
+
 interface Props {
-  type: "Personal" | "Course" | "Team" | "Competition";
+  type: (typeof TYPES)[number];
+  context?: string;
   class?: string;
 }
-const { type, class: cls } = Astro.props;
+const { type, context, class: cls } = Astro.props;
 ---
 
-<span class:list={["type-badge", cls]}>{type}</span>
+<span class:list={["type-badge", cls]}>{context ? `${type} · ${context}` : type}</span>
 
 <style>
   .type-badge {

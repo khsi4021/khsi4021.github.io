@@ -8,7 +8,7 @@ const hasCv = existsSync(new URL("../../public/cv/Khalil-Sidani-CV.pdf", import.
 
 <BaseLayout title="CV" description="Curriculum vitae of Khalil Sidani.">
   <section class="wrap pt-10 md:pt-14">
-    <div class="flex flex-wrap items-end justify-between gap-4 border-b-2 border-ink pb-6">
+    <div class="flex flex-wrap items-end justify-between gap-4 border-b-2 border-accent pb-4">
       <h1 class="text-[clamp(1.75rem,4vw,2.375rem)]">Curriculum vitae</h1>
       {hasCv && (
         <a class="btn btn-primary" href={site.cvPath} download>
@@ -20,19 +20,15 @@ const hasCv = existsSync(new URL("../../public/cv/Khalil-Sidani-CV.pdf", import.
       <object
         data={site.cvPath}
         type="application/pdf"
-        class="mt-8 h-[80vh] w-full rounded-[var(--radius-sm)] border border-line bg-paper"
+        class="mt-5 h-[80vh] w-full rounded-[var(--radius-sm)] border border-line bg-paper"
         aria-label="Embedded CV (PDF)"
       >
         <p class="p-6">
-          Your browser can't display the PDF here.{" "}
-          <a href={site.cvPath} class="text-flow underline underline-offset-2">
-            Download the CV
-          </a>
-          .
+          Your browser can't display the PDF here. <a href={site.cvPath}>Download the CV</a>.
         </p>
       </object>
     ) : (
-      <div class="mt-8">
+      <div class="mt-5">
         <div class="placeholder max-w-[60ch]">
           <p>
             The PDF will appear here. In the meantime, the{" "}

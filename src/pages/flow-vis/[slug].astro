@@ -1,0 +1,280 @@
+---
+import { Image, getImage } from "astro:assets";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Lightbox from "@/components/Lightbox.astro";
+import { flowVis, type FlowVisEntry } from "@/data/flowvis";
+
+export function getStaticPaths() {
+  return flowVis.map((entry, index) => ({ params: { slug: entry.slug }, props: { entry, index } }));
+}
+
+interface Props {
+  entry: FlowVisEntry;
+  index: number;
+}
+
+const { entry: p, index } = Astro.props;
+const m = p.media;
+const full = (await getImage({ src: m.image, width: Math.min(m.image.width, 2000), format: "webp" })).src;
+const prev = index > 0 ? flowVis[index - 1] : undefined;
+const next = index < flowVis.length - 1 ? flowVis[index + 1] : undefined;
+const widths = [640, 960, 1280, Math.min(m.image.width, 2000)];
+const sizes = "(min-width: 1280px) 1100px, 100vw";
+---
+
+<BaseLayout title={`${p.label} · Flow Visualization`} description={p.brief} ogImage={m.image} ogAlt={p.alt}>
+  <article class="wrap pt-8 pb-16 md:pt-10">
+    <nav aria-label="Breadcrumb" class="font-sans text-sm">
+      <a class="text-flow underline" href="/flow-vis/">
+        ← Flow Visualization
+      </a>
+    </nav>
+
+    <header class="pt-5 pb-6">
+      <p class="eyebrow">
+        ATLS 5151 · {p.assignment} · <time datetime={p.dateISO}>{p.date}</time>
+      </p>
+      <h1 class="mt-2 max-w-[32ch] text-[clamp(1.625rem,3.6vw,2.25rem)]">{p.title}</h1>
+    </header>
+
+    <figure class="max-w-[1100px]">
+      <div class="photo-plate">
+        {m.kind === "photo" && (
+          <button
+            type="button"
+            class="block w-full cursor-zoom-in"
+            data-lightbox={full}
+            data-lightbox-alt={p.alt}
+            aria-label={`Enlarge image: ${p.title}`}
+          >
+            <Image
+              src={m.image}
+              alt={p.alt}
+              widths={widths}
+              sizes={sizes}
+              format="webp"
+              class="block h-auto w-full"
+              loading="eager"
+            />
+          </button>
+        )}
+        {m.kind === "video" && (
+          <video
+            class="block h-auto w-full"
+            src={m.src}
+            poster={full}
+            width={m.image.width}
+            height={m.image.height}
+            controls
+            playsinline
+            preload="none"
+            aria-label={p.alt}
+          >
+            <p>
+              {p.alt} <a href={p.post}>Watch the video on flowvis.org</a>.
+            </p>
+          </video>
+        )}
+        {m.kind === "link" && (
+          <a class="block" href={p.post} aria-label={`${m.linkText}: ${p.title}`}>
+            <Image
+              src={m.image}
+              alt={p.alt}
+              widths={widths}
+              sizes={sizes}
+              format="webp"
+              class="block h-auto w-full"
+              loading="eager"
+            />
+          </a>
+        )}
+      </div>
+      <figcaption class="mt-2 font-sans text-sm text-muted">
+        {p.caption}
+        {m.kind === "link" && (
+          <>
+            {" "}
+            <a href={p.post}>{m.linkText}</a>.
+          </>
+        )}
+      </figcaption>
+    </figure>
+
+    <div class="detail mt-8">
+      <div class="min-w-0 max-w-[68ch] space-y-4">
+        {p.description.map((para) => (
+          <p>{para}</p>
+        ))}
+        {p.pending && (
+          <div class="placeholder" data-placeholder>
+            <p>{p.pending}</p>
+          </div>
+        )}
+        {p.credit && <p class="font-sans text-sm text-muted">{p.credit}</p>}
+        <p class="font-sans text-sm">
+          <a class="text-flow underline" href={p.post}>
+            {p.label}: my post on flowvis.org
+          </a>
+        </p>
+      </div>
+
+      <table class="technique">
+        <caption>Technique</caption>
+        <tbody>
+          {p.technique.map((t) => (
+            <tr>
+              <th scope="row">{t.field}</th>
+              <td>{t.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <nav class="pager mt-10" aria-label="Other flow visualization pieces">
+      <div>
+        {prev && (
+          <a href={`/flow-vis/${prev.slug}/`} rel="prev">
+            <span class="pager-dir">← Previous</span>
+            <span class="pager-name">{prev.label}</span>
+          </a>
+        )}
+      </div>
+      <div class="pager-all">
+        <a href="/flow-vis/">
+          <span class="pager-dir">Showcase</span>
+          <span class="pager-name">All pieces</span>
+        </a>
+      </div>
+      <div class="pager-next">
+        {next && (
+          <a href={`/flow-vis/${next.slug}/`} rel="next">
+            <span class="pager-dir">Next →</span>
+            <span class="pager-name">{next.label}</span>
+          </a>
+        )}
+      </div>
+    </nav>
+  </article>
+  <Lightbox />
+</BaseLayout>
+
+<style>
+  /* Photographs keep their true colours in both themes: a dark surround, no
+     dimming or re-inking (so this is not a .figure-ground plate). */
+  .photo-plate {
+    background: #101113;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 2px);
+    overflow: hidden;
+  }
+  .photo-plate :global(img),
+  .photo-plate video {
+    filter: none;
+    mix-blend-mode: normal;
+  }
+  .photo-plate button:focus-visible,
+  .photo-plate a:focus-visible {
+    outline-offset: -3px;
+  }
+
+  /* Description beside the technique table on wide screens. */
+  .detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    max-width: 1100px;
+  }
+  @media (min-width: 1024px) {
+    .detail {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      column-gap: 3rem;
+      align-items: start;
+    }
+  }
+
+  .technique {
+    width: 100%;
+    max-width: 68ch;
+    border-collapse: collapse;
+    border-top: 2px solid var(--accent);
+    border-bottom: 1px solid var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    line-height: 1.45;
+  }
+  .technique caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text);
+    padding-bottom: 0.4rem;
+  }
+  .technique th,
+  .technique td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .technique tr:first-child th,
+  .technique tr:first-child td {
+    border-top: 0;
+  }
+  .technique th {
+    width: 7.5rem;
+    padding-right: 1rem;
+    font-weight: 500;
+    color: var(--text-faint);
+  }
+  .technique td {
+    color: var(--text);
+    font-variant-numeric: lining-nums;
+  }
+  @media (max-width: 479px) {
+    .technique th {
+      width: 6.25rem;
+      padding-right: 0.75rem;
+    }
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    max-width: 1100px;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-sans);
+  }
+  .pager a {
+    display: inline-block;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .pager-dir {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+  }
+  .pager-name {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--flow);
+  }
+  .pager a:hover .pager-name {
+    text-decoration: underline;
+  }
+  .pager-all {
+    text-align: center;
+  }
+  .pager-next {
+    text-align: right;
+  }
+  @media print {
+    .pager {
+      display: none;
+    }
+  }
+</style>

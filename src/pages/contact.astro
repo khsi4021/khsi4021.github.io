@@ -6,11 +6,11 @@ import { site, hasEmail, hasLinkedIn } from "@/data/site";
 <BaseLayout title="Contact" description="Contact details for Khalil Sidani: email, GitHub and CV.">
   <section class="wrap pt-10 md:pt-14">
     <h1 class="text-[clamp(1.75rem,4vw,2.375rem)]">Contact</h1>
-    <div class="placeholder mt-5 max-w-[60ch]">
+    <div class="placeholder mt-4 max-w-[60ch]">
       <p>A short note on what I would like to be contacted about will go here.</p>
     </div>
     {/* TODO(Khalil): write the note above; set LinkedIn in src/data/site.ts (the row appears once it is set). */}
-    <dl class="contact-list mt-8 max-w-2xl">
+    <dl class="contact-list mt-5 max-w-2xl">
       <div>
         <dt>Email</dt>
         <dd>
@@ -53,7 +53,7 @@ import { site, hasEmail, hasLinkedIn } from "@/data/site";
 
 <style>
   .contact-list {
-    border-top: 2px solid var(--text);
+    border-top: 2px solid var(--accent);
   }
   .contact-list > div {
     display: grid;
@@ -61,7 +61,7 @@ import { site, hasEmail, hasLinkedIn } from "@/data/site";
     column-gap: 1.5rem;
     align-items: baseline;
     border-bottom: 1px solid var(--border);
-    padding-block: 0.8rem;
+    padding-block: 0.55rem;
   }
   .contact-list dt {
     font-family: var(--font-sans);

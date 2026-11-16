@@ -2,12 +2,32 @@
 // Every description, number and technique detail below is taken from my own
 // reports and flowvis.org posts for each assignment. Do not add physics or
 // numbers that are not in those reports. Media lives in src/assets/flowvis/
-// (images, video posters) and public/media/ (video); the page maps `id` to
-// the files.
+// (images, video posters) and public/media/ (video). The showcase
+// (/flow-vis/) and the detail pages (/flow-vis/<slug>/) both read from here.
+import type { ImageMetadata } from "astro";
+import milkDye from "@/assets/flowvis/flowvis-milk-dye.jpg";
+import chladniPoster from "@/assets/flowvis/flowvis-chladni-poster.jpg";
+import cremeBrulee from "@/assets/flowvis/flowvis-creme-brulee.png";
+import greenFlamePoster from "@/assets/flowvis/flowvis-green-flame-poster.jpg";
+
+// How each piece is shown on its detail page:
+//  photo: resized image, opens in the lightbox.
+//  video: poster frame plus a video file in /public/media (loaded only on play).
+//  link:  poster frame that links to the flowvis.org post.
+export type FlowVisMedia =
+  | { kind: "photo"; image: ImageMetadata }
+  | { kind: "video"; image: ImageMetadata; src: string }
+  | { kind: "link"; image: ImageMetadata; linkText: string };
+
 export type FlowVisId = "milk-dye" | "chladni" | "creme-brulee" | "green-flame";
 
 export type FlowVisEntry = {
   id: FlowVisId;
+  /** URL segment of the detail page: /flow-vis/<slug>/. */
+  slug: string;
+  media: FlowVisMedia;
+  /** One or two sentences for the showcase card, taken from the text below. */
+  brief: string;
   /** Short name shown in the section label column. */
   label: string;
   title: string;
@@ -30,6 +50,10 @@ export type FlowVisEntry = {
 export const flowVis: FlowVisEntry[] = [
   {
     id: "milk-dye",
+    slug: "milk-and-dye",
+    media: { kind: "photo", image: milkDye },
+    brief:
+      "Blue food dye on whole milk after a drop of dish detergent touches the surface. The surrounding surface pulls outward from that point, dragging the dye with it into radial filaments.",
     label: "Milk and dye",
     title: "Surfactant-driven Marangoni flow in a milk pool",
     assignment: "Get Wet, first individual image",
@@ -67,6 +91,13 @@ export const flowVis: FlowVisEntry[] = [
   },
   {
     id: "chladni",
+    slug: "chladni-plates",
+    // TODO(Khalil): the Chladni video is 50 MB, too large to host here. Once ffmpeg is
+    // installed (winget install Gyan.FFmpeg) a compressed copy can go in
+    // public/media/flowvis-chladni.mp4 and this entry can become kind: "video".
+    media: { kind: "link", image: chladniPoster, linkText: "Watch the video on flowvis.org" },
+    brief:
+      "A video of sand on a 30 × 30 cm plate driven at seven frequencies between 209 Hz and 1774 Hz. The sand collects along the lines where there is very little movement.",
     label: "Chladni plates",
     title: "Chladni patterns: sand on a vibrating plate",
     assignment: "Team First",
@@ -95,6 +126,10 @@ export const flowVis: FlowVisEntry[] = [
   },
   {
     id: "creme-brulee",
+    slug: "creme-brulee",
+    media: { kind: "photo", image: cremeBrulee },
+    brief:
+      "A handheld torch flame strikes a shallow layer of granulated sugar on a dish of crème brûlée. The image holds two coupled flows: the hot gas jet of the flame and the slow, viscous motion of the molten sugar beneath it.",
     label: "Crème brûlée",
     title: "A torch flame impinging on a crème brûlée",
     assignment: "Team Second",
@@ -138,6 +173,10 @@ export const flowVis: FlowVisEntry[] = [
   },
   {
     id: "green-flame",
+    slug: "green-flame",
+    media: { kind: "video", image: greenFlamePoster, src: "/media/flowvis-green-flame.mp4" },
+    brief:
+      "Burning isopropyl alcohol with crushed copper sulphate thrown in to change the color of the flame to green.",
     label: "Green flame",
     title: "Green flame from copper sulphate in burning isopropyl alcohol",
     assignment: "Team Third",
