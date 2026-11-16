@@ -2,7 +2,6 @@
 // One row of the ordered reading list: number, title link, facts line and the
 // one-sentence contribution from the project's frontmatter.
 import type { CollectionEntry } from "astro:content";
-import { isPack } from "@/scripts/pack-reveal";
 
 interface Props {
   d: CollectionEntry<"projects">["data"];
@@ -10,11 +9,14 @@ interface Props {
   n: string;
 }
 const { d, n } = Astro.props;
-const facts = [d.dates, `${d.type} project`, d.course, d.status === "in progress" ? "In progress" : undefined].filter(
-  Boolean,
-);
-// Pack projects open with the card-pack reveal (PackReveal.astro) on a plain click.
-const pack = isPack(d);
+// The optional frontmatter `context` (e.g. "Competition") follows the type as its own item.
+const facts = [
+  d.dates,
+  `${d.type} project`,
+  d.context,
+  d.course,
+  d.status === "in progress" ? "In progress" : undefined,
+].filter(Boolean);
 ---
 
 <li class="row">
@@ -23,19 +25,7 @@ const pack = isPack(d);
   </span>
   <div class="min-w-0">
     <h4 class="title">
-      <a href={`/projects/${d.slug}/`} data-pack={pack ? d.slug : undefined}>
-        {d.title}
-        {pack && <span class="sr-only"> (opens as a card pack)</span>}
-      </a>
-      {pack && (
-        <span class="pack-mark" aria-hidden="true">
-          <svg viewBox="0 0 12 16" width="8" height="11">
-            <path d="M1 3.2h10V15H1z" fill="currentColor" opacity="0.9" />
-            <path d="M1 1l1.25 1.2L3.5 1l1.25 1.2L6 1l1.25 1.2L8.5 1l1.25 1.2L11 1v1.6H1z" fill="currentColor" />
-          </svg>
-          Card pack
-        </span>
-      )}
+      <a href={`/projects/${d.slug}/`}>{d.title}</a>
     </h4>
     <p class="facts">{facts.join(" · ")}</p>
     {d.team && <p class="facts">{d.team}</p>}
@@ -63,22 +53,6 @@ const pack = isPack(d);
     font-weight: 600;
     line-height: 1.35;
     letter-spacing: 0;
-  }
-  .pack-mark {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    margin-left: 0.4rem;
-    padding: 0.1rem 0.45rem 0.1rem 0.35rem;
-    border-radius: var(--radius);
-    background: linear-gradient(100deg, #14315f, #1b3f7a 45%, #2a59a6);
-    color: #ffffff;
-    font-family: var(--font-sans);
-    font-size: 0.6875rem;
-    font-weight: 600;
-    line-height: 1.4;
-    vertical-align: 0.15em;
-    white-space: nowrap;
   }
   .facts {
     margin-top: 0.15rem;

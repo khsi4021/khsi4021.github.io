@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ProjectGrid from "@/components/ProjectGrid.astro";
-import PackReveal from "@/components/PackReveal.astro";
 
 const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
 ---
@@ -14,7 +13,7 @@ const projects = (await getCollection("projects")).sort((a, b) => a.data.order -
   <header class="wrap pt-10 pb-8 md:pt-14">
     <h1 class="text-[clamp(1.75rem,4vw,2.375rem)]">Projects</h1>
     <p class="mt-4 max-w-[60ch] text-lg text-muted">
-      Each project page has the same tabs: <strong class="text-ink">Overview</strong>,{" "}
+      Most project pages have the same tabs: <strong class="text-ink">Overview</strong>,{" "}
       <strong class="text-ink">Technical</strong>, <strong class="text-ink">Results</strong>,{" "}
       <strong class="text-ink">Reflection</strong> and <strong class="text-ink">Code</strong>. The label on each card
       says whether it was personal, course or team work.
@@ -23,5 +22,4 @@ const projects = (await getCollection("projects")).sort((a, b) => a.data.order -
   <section class="wrap pb-8">
     <ProjectGrid projects={projects} />
   </section>
-  <PackReveal />
 </BaseLayout>

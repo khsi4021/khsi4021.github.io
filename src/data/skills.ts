@@ -34,7 +34,7 @@ export const skillMatrix: SkillGroup[] = [
         name: "Finite differences (wave, heat)",
         where: [p("tsunami-simulation", "Tsunami"), c("numerical-methods", "APPM 3050")],
       },
-      { name: "Panel methods & lifting line", where: [c("computational-aero", "ASEN 3802")] },
+      { name: "Panel methods & lifting line", where: [c("asen-3802", "ASEN 3802")] },
       { name: "Newtonian impact theory on surface grids", where: [p("newtonian-aero", "Newtonian aero")] },
       { name: "Simulink 6-DOF", where: [p("sim6dof", "Sim6DOF")] },
       {
@@ -42,7 +42,7 @@ export const skillMatrix: SkillGroup[] = [
         where: [p("target-shooting", "Target sim"), p("bottle-rocket", "Bottle rocket")],
       },
       { name: "Orbit propagation (2-body + J2), STMs", where: [p("debrisolver", "DebriSolver")] },
-      { name: "ANSYS (structural)", where: [beyond("NASA RASC-AL")] },
+      { name: "ANSYS", where: [p("rasc-al-regenesis", "NASA RASC-AL")] },
       { name: "OpenRocket", where: [beyond("High-power rocketry")] },
     ],
   },
@@ -76,9 +76,9 @@ export const skillMatrix: SkillGroup[] = [
   {
     group: "Lab & Experimental",
     skills: [
-      { name: "Wind-tunnel pressure measurements", where: [c("experimental", "ASEN 2802")] },
-      { name: "Thermocouple data reduction", where: [c("experimental", "ASEN 3802")] },
-      { name: "Vacuum-chamber testing (LN₂ cooling)", where: [beyond("CubeSat payload")] },
+      { name: "Wind-tunnel pressure measurements", where: [c("wind-tunnel", "ASEN 2802")] },
+      { name: "Thermocouple data reduction", where: [c("asen-3802", "ASEN 3802")] },
+      { name: "Vacuum-chamber testing (LN₂ cooling)", where: [p("regen-power-cubesat", "CubeSat payload")] },
       { name: "Flow visualisation (photography)", where: [{ label: "Flow Vis", href: "/flow-vis/" }] },
     ],
   },

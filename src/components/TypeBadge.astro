@@ -1,7 +1,9 @@
 ---
 // Project type as a small sans label with a hairline box. One neutral style
 // for every type: the type is a category, not a status. An optional context
-// (e.g. "competition entry") follows the type after a middle dot.
+// (e.g. "Competition") is printed as a second badge of the same size next to
+// it, tinted with the accent so it reads as a secondary tag. The context is a
+// label only; it is not a filter.
 import type { TYPES } from "@/content.config";
 
 interface Props {
@@ -12,9 +14,23 @@ interface Props {
 const { type, context, class: cls } = Astro.props;
 ---
 
-<span class:list={["type-badge", cls]}>{context ? `${type} · ${context}` : type}</span>
+{context ? (
+  <span class:list={["type-badges", cls]}>
+    <span class="type-badge">{type}</span>
+    <span class="sr-only">, </span>
+    <span class="type-badge type-badge-context">{context}</span>
+  </span>
+) : (
+  <span class:list={["type-badge", cls]}>{type}</span>
+)}
 
 <style>
+  .type-badges {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem;
+  }
   .type-badge {
     display: inline-block;
     border: 1px solid var(--border-strong);
@@ -28,5 +44,10 @@ const { type, context, class: cls } = Astro.props;
     letter-spacing: 0.01em;
     color: var(--text-muted);
     white-space: nowrap;
+  }
+  .type-badge-context {
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+    background: var(--glow);
+    color: var(--accent);
   }
 </style>

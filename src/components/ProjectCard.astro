@@ -3,7 +3,6 @@ import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import TypeBadge from "./TypeBadge.astro";
 import { nbHyphen } from "@/utils/text";
-import { isPack } from "@/scripts/pack-reveal";
 
 interface Props {
   project: CollectionEntry<"projects">;
@@ -13,23 +12,12 @@ interface Props {
 const { project, headingLevel = "h3", eager = false } = Astro.props;
 const d = project.data;
 const H = headingLevel;
-// Pack projects open with the card-pack reveal (PackReveal.astro) on a plain click.
-const pack = isPack(d);
 ---
 
-<article class:list={["project-card", pack && "has-pack"]} data-project data-tags={d.tags.join("|")} data-type={d.type}>
+<article class="project-card" data-project data-tags={d.tags.join("|")} data-type={d.type}>
   {/* The thumbnail is scaled to fit the white plate (never cropped), so plot axes stay visible. */}
   <div class="figure-ground thumb">
     <Image src={d.thumbnail} alt={d.thumbnailAlt} width={640} loading={eager ? "eager" : "lazy"} />
-    {pack && (
-      <span class="pack-mark" aria-hidden="true">
-        <svg viewBox="0 0 12 16" width="9" height="12">
-          <path d="M1 3.2h10V15H1z" fill="currentColor" opacity="0.9" />
-          <path d="M1 1l1.25 1.2L3.5 1l1.25 1.2L6 1l1.25 1.2L8.5 1l1.25 1.2L11 1v1.6H1z" fill="currentColor" />
-        </svg>
-        Card pack
-      </span>
-    )}
   </div>
   <div class="flex flex-1 flex-col px-4 pt-3.5 pb-4">
     <p class="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-sans text-xs text-faint">
@@ -37,9 +25,8 @@ const pack = isPack(d);
       <span>{d.dates}</span>
     </p>
     <H class="mt-2 text-lg leading-snug">
-      <a href={`/projects/${d.slug}/`} class="card-link" data-pack={pack ? d.slug : undefined}>
+      <a href={`/projects/${d.slug}/`} class="card-link">
         {nbHyphen(d.title)}
-        {pack && <span class="sr-only"> (opens as a card pack)</span>}
       </a>
     </H>
     <p class="mt-1.5 text-[0.9375rem] leading-normal text-muted">{d.hook}</p>
@@ -79,38 +66,6 @@ const pack = isPack(d);
     height: calc(100% - 1rem);
     object-fit: contain;
     object-position: center;
-  }
-  /* Corner mark on pack projects: a small foil tag with one slow sheen. */
-  .pack-mark {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    overflow: hidden;
-    padding: 0.2rem 0.5rem 0.2rem 0.4rem;
-    border-radius: var(--radius);
-    background: linear-gradient(100deg, #14315f, #1b3f7a 45%, #2a59a6);
-    color: #ffffff;
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    font-weight: 600;
-    line-height: 1.3;
-    pointer-events: none;
-  }
-  .pack-mark::after {
-    content: "";
-    position: absolute;
-    inset: 0 -60%;
-    background: linear-gradient(104deg, transparent 42%, rgb(255 255 255 / 0.45) 50%, transparent 58%);
-    transform: translateX(-75%);
-  }
-  .has-pack:hover .pack-mark::after,
-  .has-pack:has(.card-link:focus-visible) .pack-mark::after {
-    transform: translateX(75%);
-    transition: transform 700ms var(--ease-out-soft);
   }
   .card-link {
     color: var(--text);

@@ -12,7 +12,12 @@ export const site = {
   github: "https://github.com/khsi4021",
   githubUser: "khsi4021",
   cvPath: "/cv/Khalil-Sidani-CV.pdf",
-  degree: "B.S. Aerospace Engineering Sciences, University of Colorado Boulder, expected May 2027",
+  // The plain statement of the degree, used everywhere except the Home header.
+  degree: "B.S. Aerospace Engineering Sciences, University of Colorado Boulder",
+  // Home header only: the degree with the graduation date.
+  degreeWithDate: "B.S. Aerospace Engineering Sciences, University of Colorado Boulder, expected May 2027",
+  // From the CV.
+  gpa: { cumulative: "3.274", major: "3.515" },
   minors: "Dual minor in Applied Mathematics and Engineering Management",
   applying: "Applying to aerospace MS/PhD programs for Fall 2027 (CFD and hypersonics).",
 };

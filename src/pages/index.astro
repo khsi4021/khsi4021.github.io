@@ -4,7 +4,6 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import Figure from "@/components/Figure.astro";
 import Lightbox from "@/components/Lightbox.astro";
 import ProjectRow from "@/components/ProjectRow.astro";
-import PackReveal from "@/components/PackReveal.astro";
 import { site, hasEmail, hasLinkedIn } from "@/data/site";
 
 const all = (await getCollection("projects")).map((p) => p.data).sort((a, b) => a.order - b.order);
@@ -59,7 +58,7 @@ const results = [
     slug: "debrisolver",
     name: "DebriSolver",
     tab: "results",
-    type: "Personal · competition entry",
+    type: "Personal · Competition",
   },
   {
     value: metric("debrisolver", "propagated maneuvers"),
@@ -67,7 +66,7 @@ const results = [
     slug: "debrisolver",
     name: "DebriSolver",
     tab: "results",
-    type: "Personal · competition entry",
+    type: "Personal · Competition",
   },
   {
     value: metric("sim6dof", "ω_n error vs analytic model"),
@@ -89,7 +88,7 @@ const hyper = bySlug["hypersonic-solver"];
     <header class="pt-10 pb-10">
       <h1 class="text-[clamp(1.875rem,1.5rem+1.4vw,2.375rem)] leading-tight tracking-[-0.01em]">{site.name}</h1>
       <p class="mt-3 max-w-[62ch] font-sans text-[0.9375rem] leading-relaxed text-muted">
-        {site.degree}. {site.minors}.
+        {site.degreeWithDate}. {site.minors}.
       </p>
       <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-sans text-[0.9375rem]">
         {hasEmail && (
@@ -138,8 +137,8 @@ const hyper = bySlug["hypersonic-solver"];
       </h2>
       <div>
         <p class="max-w-[68ch]">
-          Ordered by relevance to hypersonic CFD, not by date. Later groups are in other fields; each line says what
-          carries over.
+          Hypersonics first, then the larger projects, then smaller coursework; not in date order. Outside hypersonics,
+          each line says what carries over.
         </p>
         {groups.map((g) => (
           <div class="mt-5">
@@ -152,7 +151,7 @@ const hyper = bySlug["hypersonic-solver"];
             {g.name === "Numerical methods" && (
               <p class="mt-3 font-sans text-[0.8125rem] text-muted">
                 See also the{" "}
-                <a href="/coursework/#computational-aero">
+                <a href="/coursework/#asen-3802">
                   vortex panel method and lifting-line theory lab (ASEN 3802, team lab)
                 </a>{" "}
                 under Coursework.
@@ -229,7 +228,6 @@ const hyper = bySlug["hypersonic-solver"];
       </ul>
     </section>
   </div>
-  <PackReveal />
   <Lightbox />
 </BaseLayout>
 

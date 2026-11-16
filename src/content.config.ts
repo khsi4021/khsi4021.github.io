@@ -10,6 +10,7 @@ export const TAGS = [
   "Orbital/SSA",
   "Aircraft Design",
   "Machine Learning",
+  "Space Systems",
   "Experimental",
   "Software",
 ] as const;
@@ -29,7 +30,7 @@ const projects = defineCollection({
       /** TL;DR, 40 words or fewer. */
       tldr: z.string(),
       type: z.enum(TYPES),
-      /** Short secondary label shown after the type, e.g. "competition entry". */
+      /** Short secondary label shown after the type, e.g. "Competition". */
       context: z.string().optional(),
       course: z.string().optional(),
       team: z.string().optional(),

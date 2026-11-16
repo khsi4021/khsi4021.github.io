@@ -93,14 +93,14 @@ Page titles use `clamp(1.75rem, 4vw, 2.375rem)`: 28 px on a phone, 38 px at most
 
 ## Motion
 
-Colour and border-colour transitions of 120 ms on hover; nothing moves on hover. The only moving content is simulation video on project pages: it plays only while on screen, has a visible Play/Pause button and never autoplays under `prefers-reduced-motion: reduce` (the poster shows instead). Reduced motion also disables every transition.
+Colour and border-colour transitions of 120 ms on hover; nothing moves on hover, with one exception: a Flow Vis card unfolds its description downward in 200 ms. The only other moving content is simulation video on project pages: it plays only while on screen, has a visible Play/Pause button and never autoplays under `prefers-reduced-motion: reduce` (the poster shows instead). Reduced motion also disables every transition.
 
 ## Components
 
 - **Cards and tiles (`.card`, `.tile`):** a white plate (`--surface`) with a 1 px hairline and 4 px radius. A linked card darkens its border to `--border-strong` on hover; no lift.
 - **Project card (Projects page):** the thumbnail scaled to fit a white plate (`object-fit: contain`, never cropped, so plot axes stay visible), then type label and dates, serif title, hook, and the topics as plain sans text. The whole card is the link.
 - **Filters:** plain text buttons in two rows (Topic, Type). The selected one is ink, semibold and underlined in the accent.
-- **Type label (`TypeBadge`):** small sans text in a hairline box, one neutral style for every type (Personal, Course, Team). An optional frontmatter `context` is appended after a middle dot, as in "Personal · competition entry".
+- **Type label (`TypeBadge`):** small sans text in a hairline box, one neutral style for every type (Personal, Course, Team). An optional frontmatter `context` (for example `Competition`) is printed as a second badge of the same size directly after the type badge, tinted with the accent (`--accent` text on `--glow`) so it reads as a secondary tag. The context is a label only and is not a filter. Plain-text lists (the Home reading list, the project details sidebar) print it after a middle dot, as in "Personal · Competition".
 - **Project header:** type label, course and dates in sans; serif h1 at the page-title size; the hook; the TL;DR in a second plate.
 - **Key numbers (`Readouts`):** one ruled row (2 px accent rule above, hairline below, hairlines between cells) with serif numerals over sans labels. Two per row on phones. Values come only from frontmatter `metrics`.
 - **Project details (`MetaSidebar`):** an unboxed definition list under a 2 px accent rule, hairline between rows; topics are comma-separated links to the filtered Projects page.
@@ -111,9 +111,8 @@ Colour and border-colour transitions of 120 ms on hover; nothing moves on hover.
 - **Buttons:** `.btn` is a 1 px `--border-strong` outline, 3 px radius, sans semibold. `.btn-primary` is filled with the accent; use at most one per page. Everything else is a text link.
 - **Text links:** an anchor with no class of its own inside a `p`, `dd`, `td`, `li` or `figcaption` in `main` is `--flow` blue with a 1 px underline (2 px on hover). Cards, buttons and nav items carry classes and are not affected.
 - **Tables:** head cells sit on `--glow` (all `.prose` tables, and any table with the class `table-tint`). The skills matrix has a 2 px accent rule on top and its group names in the accent.
-- **Path flowchart (`PathFlow`, Research page):** an ordered list drawn as blocks joined by arrows, three per row when the chart is at least 38rem wide and one column with down arrows below that. Colour states the kind: a neutral top rule for coursework, an accent top rule on a `--glow` wash for a personal project, and an accent fill for the goal. A legend sits underneath. No motion and no client JS.
-- **Flow Vis showcase:** one row of image cards (4 across from 1024 px, 2 from 600 px, 1 below). The short description appears over the image on hover or keyboard focus and sits under the title on touch screens; each card links to `/flow-vis/<slug>/`.
-- **Card pack (`PackReveal`):** projects marked as a pack in `src/scripts/pack-reveal.ts` open with a pack-opening reveal on a plain click from the Home and Projects pages. With reduced motion, without JS, or on a modified click the link behaves normally.
+- **Path flowchart (`PathFlow`, Research page):** an ordered list drawn as blocks joined by arrows, three per row when the chart is at least 38rem wide and one column with down arrows below that. Each block has a date line, a title (a link where a page exists) and a one-sentence note on what the step adds. Colour states the kind: a neutral top rule for coursework, an accent top rule on a plain surface for a team project, an accent top rule on a `--glow` wash for a personal project, and an accent fill for the goal. A legend sits underneath. No motion and no client JS.
+- **Flow Vis showcase:** one row of image cards (4 across from 1024 px, 2 from 600 px, 1 below). Each card is a square image with a caption bar (assignment and title), a hairline border and `--radius` corners. On hover or keyboard focus the card grows downward into a vertical rectangle with the short description under the image; nothing covers the photograph and nothing else on the page moves (the extension is absolutely positioned, with 11rem reserved under the grid). On touch screens and below 600 px the description is always shown in the card. Each card links to `/flow-vis/<slug>/`.
 - **Focus:** a 2 px `--flow` outline with a 2 px offset on every interactive element.
 
 ## Figures

@@ -3,42 +3,76 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PathFlow from "@/components/PathFlow.astro";
 import type { PathFlowItem } from "@/components/PathFlow.astro";
 
-// Title, link and date only. The descriptive sentences were removed with the rest of the draft prose.
-// kind drives the block colour: course = neutral, personal = accent wash, goal = accent fill.
+// Steps toward graduate research in CFD for hypersonic flows, ordered by start date.
+// Each note is one sentence on what the step adds, taken from the page it links to
+// (frontmatter metrics for the numbers) or from the CV. Do not add claims here that
+// the linked page does not make.
+// kind drives the block colour: course = neutral, team = accent rule, personal = accent wash, goal = accent fill.
+// TODO(Khalil): confirm the choice of steps. Sim6DOF and the capstone weight model are left out
+// to keep eight steps; swap one in if you would rather show it here.
+// TODO(Khalil): the CubeSat payload is coloured as a team project, as on its project page. The CV does not say
+// whether it was a team, a course or a personal project; confirm, and change `kind` here if it was not a team.
 const path: PathFlowItem[] = [
   {
-    when: "Fall 2024 · ASEN 2012",
-    title: "First simulations: ODE models with uncertainty",
-    href: "/projects/bottle-rocket/",
+    when: "Jan – May 2024 · Suborbital payload",
+    title: "Regenerative-power CubeSat experiment",
+    note: "Ground-test predictions checked against flight data: vacuum-chamber results overlaid on post-flight telemetry.",
+    href: "/projects/regen-power-cubesat/",
+    kind: "team",
+  },
+  {
+    when: "2025 – Oct 2026 · Personal, competition",
+    title: "DebriSolver conjunction-risk pipeline",
+    note: "Every stage validated against an independent reference. Collision probability matches NASA CARA to 8.9e−8.",
+    href: "/projects/debrisolver/",
+    kind: "personal",
+  },
+  {
+    when: "Aug 2025 – Apr 2026 · Team lead",
+    title: "NASA RASC-AL: Project REGENESIS",
+    note: "ANSYS simulations of launchpad durability under lander plume and landing loads, while leading a 16-member team.",
+    href: "/projects/rasc-al-regenesis/",
+    kind: "team",
+  },
+  {
+    when: "Oct – Dec 2025 · APPM 4350",
+    title: "Heat diffusion in 3-D geometries",
+    note: "Analytical heat-equation solutions compared with numerical simulations and measured temperatures.",
+    href: "/about/#beyond",
     kind: "course",
   },
   {
     when: "Spring 2026 · APPM 3050",
-    title: "Finite differences for PDEs",
+    title: "2-D tsunami over variable bathymetry",
+    note: "A finite-difference PDE solver I wrote, run at a Courant number of 0.56, inside its stability limit.",
     href: "/projects/tsunami-simulation/",
-    kind: "course",
-  },
-  {
-    when: "Spring 2026 · ASEN 3802",
-    title: "Panel methods and lifting-line theory",
-    href: "/coursework/#computational-aero",
     kind: "course",
   },
   {
     when: "Aug 2026 · Personal",
     title: "Hypersonic boundary-layer and transition solver",
+    note: "A compressible boundary-layer and roughness-transition solver. Stagnation heating matches Fay–Riddell to −1.45 %; the gap to the published benchmark is reported.",
     href: "/projects/hypersonic-solver/",
     kind: "personal",
   },
   {
-    when: "Fall 2026 · ASEN 5131",
-    title: "Graduate hypersonic aerodynamics",
+    when: "Fall 2026 · ASEN 5131 (graduate)",
+    title: "Hypersonic aerodynamics",
+    note: "Entry trajectories, stagnation heating and a Newtonian panel solver checked against exact results.",
     href: "/coursework/#hypersonics",
+    kind: "course",
+  },
+  {
+    when: "Fall 2026 · ATLS 5151 (graduate)",
+    title: "Flow visualization",
+    note: "Photographs and videos of real flows, with CFD models developed for the same projects.",
+    href: "/flow-vis/",
     kind: "course",
   },
   {
     when: "Fall 2027 · Goal",
     title: "Graduate research in CFD for hypersonic flows",
+    note: "Applying to aerospace MS/PhD programs, with a focus on CFD and hypersonics.",
     kind: "goal",
     todo: true,
   },
@@ -89,10 +123,7 @@ const path: PathFlowItem[] = [
         <span class="n">3</span>How the projects build toward it
       </h2>
       <div>
-        <PathFlow items={path} label="Steps from early coursework to the graduate research goal" />
-        <div class="placeholder mt-6 max-w-[68ch]" data-placeholder>
-          <p>A sentence on what each step added will go with each block above.</p>
-        </div>
+        <PathFlow items={path} label="Steps toward the graduate research goal, in order of start date" />
         <p class="mt-6 font-sans text-sm">
           <a href="/projects/">All projects</a>
         </p>

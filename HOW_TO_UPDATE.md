@@ -11,7 +11,7 @@ All edits are made locally, previewed with `npm run dev`, and published with a `
    - a plain white background. Figures are shown on a white plate in both themes; dark mode only dims them slightly and never inverts their colours.
 3. **Fill in the frontmatter.**
    - `type` must be one of Personal / Course / Team. It is also the Type filter on the projects page.
-   - `context` (optional) is a short second label printed after the type, for work that also belongs somewhere else. DebriSolver is `type: Personal` with `context: competition entry`, so it reads "Personal · competition entry". When `context` is set on a project that is not a course project, the `course` line is labelled "Built for" in the project details.
+   - `context` (optional) is a short second label shown as its own small badge next to the type badge, for work that also belongs somewhere else. DebriSolver is `type: Personal` with `context: Competition`, so its card shows "Personal" and "Competition" side by side. The context is not a filter on the Projects page. When `context` is set on a project that is not a course project, the `course` line is labelled "Built for" in the project details.
    - `tags` must come from the list in the template.
    - `tldr` should be 40 words or fewer.
    - `order` is the reading order on the home page and the projects page, lowest first. It ranks relevance to hypersonic CFD together with complexity and recency. Current order: 1 hypersonic-solver, 2 newtonian-aero, 3 sim6dof, 4 debrisolver, 5 reserved for the heat-diffusion project, 6 aircraft-design-toolbox, 7 tsunami-simulation, 8 target-shooting, 9 bottle-rocket, 10 tcas-simulation, 11 cpp-rpg, 12 candy-land. To insert a project, renumber the ones after it.
@@ -35,16 +35,16 @@ All edits are made locally, previewed with `npm run dev`, and published with a `
 
 ## Common edits
 
-| What | Where |
-|---|---|
-| Email, LinkedIn, degree wording | `src/data/site.ts` |
-| CV | Save as `public/cv/Khalil-Sidani-CV.pdf`. The CV page and download button appear automatically. |
-| Headshot | Put it in `src/assets/headshot.jpg` and replace the placeholder block in `src/pages/about.astro`. |
-| Flow Vis pieces | Put the image in `src/assets/flowvis/` and add or edit the entry in `src/data/flowvis.ts` (`slug`, `media`, `brief` for the card text, `technique`, `caption`, `alt`). The card on `/flow-vis/` and the page at `/flow-vis/<slug>/` are generated from that entry. |
-| Skills matrix | `src/data/skills.ts`. Each skill links to the project where it was used. |
-| Home, About, Research text | `src/pages/index.astro`, `about.astro`, `research.astro`. Copy that is waiting for your own wording sits in a `<div class="placeholder">` block (pale blue block with an accent left rule, labelled "Placeholder text"). Replace the sentence inside and remove the `placeholder` class. |
-| Colours, fonts, spacing | `src/styles/global.css` (tokens) and `DESIGN_SPEC.md` |
-| Favicon and link-preview image | Edit `scripts/make-brand-assets.mjs`, then run `node scripts/make-brand-assets.mjs`. |
+| What                                 | Where                                                                                                                                                                                                                                                                                    |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Email, LinkedIn, degree wording, GPA | `src/data/site.ts`. `degree` is the plain statement used across the site; `degreeWithDate` (with the graduation date) is used only in the Home header; `gpa` is shown under Education on the About page.                                                                                 |
+| CV                                   | Save as `public/cv/Khalil-Sidani-CV.pdf`. The CV page and download button appear automatically.                                                                                                                                                                                          |
+| Headshot                             | Put it in `src/assets/headshot.jpg` and replace the placeholder block in `src/pages/about.astro`.                                                                                                                                                                                        |
+| Flow Vis pieces                      | Put the image in `src/assets/flowvis/` and add or edit the entry in `src/data/flowvis.ts` (`slug`, `media`, `brief` for the card text, `technique`, `caption`, `alt`). The card on `/flow-vis/` and the page at `/flow-vis/<slug>/` are generated from that entry.                       |
+| Skills matrix                        | `src/data/skills.ts`. Each skill links to the project where it was used.                                                                                                                                                                                                                 |
+| Home, About, Research text           | `src/pages/index.astro`, `about.astro`, `research.astro`. Copy that is waiting for your own wording sits in a `<div class="placeholder">` block (pale blue block with an accent left rule, labelled "Placeholder text"). Replace the sentence inside and remove the `placeholder` class. |
+| Colours, fonts, spacing              | `src/styles/global.css` (tokens) and `DESIGN_SPEC.md`                                                                                                                                                                                                                                    |
+| Favicon and link-preview image       | Edit `scripts/make-brand-assets.mjs`, then run `node scripts/make-brand-assets.mjs`.                                                                                                                                                                                                     |
 
 ## Regenerating figures
 

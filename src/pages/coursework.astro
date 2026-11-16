@@ -11,27 +11,34 @@ import entry from "@/assets/coursework/entry_trajectory.png";
 import newtonSphere from "@/assets/projects/newtonian/sphere_cp.png";
 import heat from "@/assets/coursework/heat_conduction.png";
 import clarky from "@/assets/coursework/clarky_cp.png";
+import geometryTrade from "@/assets/projects/aircraft/geometry_trade.png";
+import eigenvalues from "@/assets/projects/sim6dof/1_eigenvalues.png";
 
-// Ordered by relevance to hypersonic CFD combined with complexity and recency.
+// Ordered by relevance to hypersonic CFD and by the size of the work, one course per section:
+// hypersonics first, then the senior-design capstone, numerical methods and flight dynamics.
+// The lab courses come last: the ASEN 2802 wind-tunnel test, then ASEN 3802 (heat conduction
+// first, vortex panel and lifting-line last, since it is the furthest from that goal).
 const sections = [
   { id: "hypersonics", title: "Hypersonics (in progress)" },
-  { id: "computational-aero", title: "Computational aerodynamics" },
+  { id: "senior-design", title: "Senior design capstone" },
   { id: "numerical-methods", title: "Numerical methods" },
   { id: "flight-dynamics", title: "Flight dynamics and control" },
-  { id: "experimental", title: "Experimental" },
+  { id: "wind-tunnel", title: "Wind-tunnel test" },
+  { id: "asen-3802", title: "ASEN 3802 labs" },
   { id: "more", title: "More courses" },
 ];
 ---
 
 <BaseLayout
   title="Coursework"
-  description="Coursework highlights: vortex panel and lifting-line methods, PDE solvers, entry aerothermodynamics, flight dynamics and wind-tunnel and heat-transfer labs."
+  description="Coursework highlights: hypersonic entry and Newtonian aerodynamics, the senior-design capstone, PDE solvers, flight dynamics, a Clark Y-14 wind-tunnel test, and heat-conduction and panel-method labs."
 >
   <header class="wrap pt-10 pb-8 md:pt-14">
     <h1 class="text-[clamp(1.75rem,4vw,2.375rem)]">Coursework highlights</h1>
     <p class="mt-4 max-w-[60ch] text-lg text-muted">
-      A figure and a few sentences for each, grouped by theme. These are graded assignments, so the source isn't
-      published. Every figure was regenerated for this page from the course code and lab data.
+      A figure and a few sentences for each, grouped by course. These are graded assignments, so the source isn't
+      published. The figures were regenerated for this page from the course code and lab data, except the two
+      senior-design figures, which are the project's own outputs.
     </p>
     <nav aria-label="On this page" class="mt-5 font-sans text-sm">
       <span class="text-faint">On this page: </span>
@@ -133,41 +140,46 @@ const sections = [
       </div>
     </section>
 
-    <section id="computational-aero" class="sec" aria-labelledby="computational-aero-label">
-      <h2 id="computational-aero-label" class="sec-label">
-        <span class="n">2</span>Computational aerodynamics
+    <section id="senior-design" class="sec" aria-labelledby="senior-design-label">
+      <h2 id="senior-design-label" class="sec-label">
+        <span class="n">2</span>Senior design capstone
       </h2>
       <div class="cw-grid">
         <div class="prose">
-          <h3>ASEN 3802: vortex panel method and lifting-line theory</h3>
+          <h3>ASEN 4018: capstone UAV sizing, weight model and design trades</h3>
           <p>
-            A team lab (four students). We built a NACA 4-digit airfoil generator, a Kuethe–Chow constant-strength
-            vortex panel method with the Kutta condition, and a Prandtl lifting-line solver using odd Fourier terms. The
-            panel method shows what thin-airfoil theory leaves out: thickness raises the lift slope above 2π, and camber
-            shifts the zero-lift angle.
-            {/* TODO(Khalil): which tasks were yours? */}
+            A team project (in progress). The course professors gave us the AES Aircraft Design Toolbox, a MATLAB sizing
+            code, to modify and extend for our 55 lb electric UAV; the base toolbox is theirs. I added a survey-based
+            empty-weight model, a single-slotted flap model, design-space sweeps, and mission-envelope and sensitivity
+            studies. On a blind benchmark against an aircraft held out of the fit, the survey model predicts empty
+            weight to +1.7 %, where the toolbox's Raymer fit is off by +29.4 %. Full write-up:{" "}
+            <a href="/projects/aircraft-design-toolbox/">capstone UAV sizing, weight model and design trades</a>.
           </p>
-          <p class="text-sm text-muted">
-            The figure was regenerated with the airfoil points ordered clockwise from the trailing edge, which the
-            archived panel routine expects. With that ordering it gives c<sub>l,α</sub> = 0.120/deg for NACA 0012
-            (thin-airfoil theory: 0.110/deg) and c<sub>l</sub> = 0.26 at α = 0 for NACA 2412.
+          <h3>ASEN 4018: Sim6DOF flight simulator</h3>
+          <p>
+            A two-person effort within the capstone, and I did the majority of the work. The Simulink 6-DOF model is
+            generated from a script and verified on a Boeing 747 benchmark by linearising the full nonlinear model about
+            trim and comparing its eigenvalues with an analytic linear model built from the same derivatives. All five
+            modes match to within 0.09 % in natural frequency, and elevator and rudder doublet responses agree to
+            0.5–0.9 % NRMSE. Full write-up: <a href="/projects/sim6dof/">Sim6DOF</a>.
           </p>
         </div>
         <div class="cw-figs">
           <Figure
-            src={clAlpha}
-            alt="Sectional lift coefficient against angle of attack from minus 8 to 12 degrees for NACA 0006, 0012, 0018 and 2412 from the vortex panel method, with the thin-airfoil line 2 pi alpha. Thicker sections have slightly steeper slopes; the cambered 2412 is shifted up by about 0.26."
-            source="courses/ASEN3802/aero-lab (Vortex_Panel.m, NACAGenerator.m)"
+            src={geometryTrade}
+            alt="Heat map of sized gross takeoff weight over wing area and aspect ratio; six check-marked feasible designs at 8 to 9 square feet; hatched cells did not converge."
+            source="aircraft-design-toolbox/MAIN/Output Excel Sheets/Geometry tradeFinal.png"
           >
-            Vortex panel method, 100 panels per surface, against thin-airfoil theory.
+            The geometry trade at the design mission. 49 of 54 geometries close the energy budget, but only 6 meet every
+            constraint and MTOW, all at S = 8–9 ft².
           </Figure>
           <Figure
-            src={pllt}
-            alt="Induced-drag factor delta against taper ratio from 0 to 1 for aspect ratios 4, 6, 8 and 10; each curve has a minimum near a taper ratio of 0.35 to 0.4 and rises toward both ends."
-            source="courses/ASEN3802/aero-lab (PLLT.m)"
+            src={eigenvalues}
+            alt="Five pole-map panels (short period, phugoid, Dutch roll, roll subsidence, spiral). Sim6DOF markers overlap the analytic model and Etkin values; last year's simulator (triangles) is far off for short period and Dutch roll."
+            source="sim6dof-simulator/results/1_eigenvalues.png"
           >
-            Lifting-line theory: δ = 1/e − 1 for untwisted tapered wings. The minimum near λ ≈ 0.35–0.4 is the classic
-            result.
+            Simulator vs analytic model on the same data: Δω<sub>n</sub> = 0.09 % (short period), 0.02 % (phugoid), 0.01
+            % (Dutch roll). Triangles are last year's simulator.
           </Figure>
         </div>
       </div>
@@ -234,26 +246,43 @@ const sections = [
       </div>
     </section>
 
-    <section id="experimental" class="sec" aria-labelledby="experimental-label">
-      <h2 id="experimental-label" class="sec-label">
-        <span class="n">5</span>Experimental
+    <section id="wind-tunnel" class="sec" aria-labelledby="wind-tunnel-label">
+      <h2 id="wind-tunnel-label" class="sec-label">
+        <span class="n">5</span>Wind-tunnel test
       </h2>
       <div class="cw-grid">
         <div class="prose">
-          <h3>ASEN 3802: heat conduction in metal rods</h3>
-          <p>
-            Eight thermocouples along aluminium, brass and steel rods heated at one end. We compared the measured
-            temperature histories with an analytic Fourier-series solution, including a convergence study in the number
-            of modes. The end-of-test gradient separates the materials clearly: about 287 K/m for steel at 22 V, against
-            79 K/m for aluminium at 30 V, even though the steel heater ran at lower power.
-          </p>
           <h3>ASEN 2802: Clark Y-14 wind-tunnel test</h3>
           <p>
             Surface-pressure ports on a Clark Y-14 wing in the wind tunnel, reduced to pressure coefficient and
             integrated for sectional lift and drag, plus a hot-air-balloon altitude and density model.
           </p>
         </div>
-        <div class="cw-figs">
+        <Figure
+          src={clarky}
+          alt="Pressure coefficient against chordwise position for a Clark Y-14 at 10 degrees angle of attack: a suction peak near minus 2.6 close to the leading edge on one surface, and near-zero to slightly positive values on the other."
+          source="courses/ASEN2802/milestone3/aero (FullSpanTest.csv)"
+        >
+          Clark Y-14 surface pressure at α = 10° and 29.9 m/s, at a mid-span station.
+        </Figure>
+      </div>
+    </section>
+
+    <section id="asen-3802" class="sec" aria-labelledby="asen-3802-label">
+      <h2 id="asen-3802-label" class="sec-label">
+        <span class="n">6</span>ASEN 3802 labs
+      </h2>
+      <div class="cw-stack">
+        <div class="cw-grid">
+          <div class="prose">
+            <h3>ASEN 3802: heat conduction in metal rods</h3>
+            <p>
+              Eight thermocouples along aluminium, brass and steel rods heated at one end. We compared the measured
+              temperature histories with an analytic Fourier-series solution, including a convergence study in the
+              number of modes. The end-of-test gradient separates the materials clearly: about 287 K/m for steel at 22
+              V, against 79 K/m for aluminium at 30 V, even though the steel heater ran at lower power.
+            </p>
+          </div>
           <Figure
             src={heat}
             alt="Left, eight thermocouple temperature histories for an aluminium rod at 25 V, rising over about 25 minutes to steady values between 19 and 24 degrees C. Right, end-of-test temperature against position for five rod and voltage cases, each with a straight-line fit; steel has the steepest slope."
@@ -261,29 +290,49 @@ const sections = [
           >
             Measured thermocouple data and end-of-test profiles with linear fits.
           </Figure>
-          <Figure
-            src={clarky}
-            alt="Pressure coefficient against chordwise position for a Clark Y-14 at 10 degrees angle of attack: a suction peak near minus 2.6 close to the leading edge on one surface, and near-zero to slightly positive values on the other."
-            source="courses/ASEN2802/milestone3/aero (FullSpanTest.csv)"
-          >
-            Clark Y-14 surface pressure at α = 10° and 29.9 m/s, at a mid-span station.
-          </Figure>
+        </div>
+        <div class="cw-grid cw-next">
+          <div class="prose">
+            <h3>ASEN 3802: vortex panel method and lifting-line theory</h3>
+            <p>
+              A team lab (four students). We built a NACA 4-digit airfoil generator, a Kuethe–Chow constant-strength
+              vortex panel method with the Kutta condition, and a Prandtl lifting-line solver using odd Fourier terms.
+              The panel method shows what thin-airfoil theory leaves out: thickness raises the lift slope above 2π, and
+              camber shifts the zero-lift angle.
+              {/* TODO(Khalil): which tasks were yours? */}
+            </p>
+            <p class="text-sm text-muted">
+              The figure was regenerated with the airfoil points ordered clockwise from the trailing edge, which the
+              archived panel routine expects. With that ordering it gives c<sub>l,α</sub> = 0.120/deg for NACA 0012
+              (thin-airfoil theory: 0.110/deg) and c<sub>l</sub> = 0.26 at α = 0 for NACA 2412.
+            </p>
+          </div>
+          <div class="cw-figs">
+            <Figure
+              src={clAlpha}
+              alt="Sectional lift coefficient against angle of attack from minus 8 to 12 degrees for NACA 0006, 0012, 0018 and 2412 from the vortex panel method, with the thin-airfoil line 2 pi alpha. Thicker sections have slightly steeper slopes; the cambered 2412 is shifted up by about 0.26."
+              source="courses/ASEN3802/aero-lab (Vortex_Panel.m, NACAGenerator.m)"
+            >
+              Vortex panel method, 100 panels per surface, against thin-airfoil theory.
+            </Figure>
+            <Figure
+              src={pllt}
+              alt="Induced-drag factor delta against taper ratio from 0 to 1 for aspect ratios 4, 6, 8 and 10; each curve has a minimum near a taper ratio of 0.35 to 0.4 and rises toward both ends."
+              source="courses/ASEN3802/aero-lab (PLLT.m)"
+            >
+              Lifting-line theory: δ = 1/e − 1 for untwisted tapered wings. The minimum near λ ≈ 0.35–0.4 is the classic
+              result.
+            </Figure>
+          </div>
         </div>
       </div>
     </section>
 
     <section id="more" class="sec" aria-labelledby="more-label">
       <h2 id="more-label" class="sec-label">
-        <span class="n">6</span>More courses
+        <span class="n">7</span>More courses
       </h2>
       <ul class="cw-more">
-        <li>
-          <p class="font-medium">ASEN 4018 Senior Design</p>
-          <p class="font-sans text-sm text-muted">
-            The capstone weight model, flap model and design trades, and the 6-DOF simulator. See the{" "}
-            <a href="/projects/aircraft-design-toolbox/">capstone weight-model page</a>.
-          </p>
-        </li>
         <li>
           <p class="font-medium">ATLS 5151 Flow Visualization (graduate)</p>
           <p class="font-sans text-sm text-muted">
@@ -323,6 +372,15 @@ const sections = [
   }
   .cw-grid > * {
     min-width: 0;
+  }
+  /* Two labs from one course: keeps both in the section's content column. */
+  .cw-stack {
+    min-width: 0;
+  }
+  .cw-next {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
   }
   .cw-figs {
     display: grid;
