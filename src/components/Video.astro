@@ -1,9 +1,8 @@
 ---
 // Looping simulation video. Plays when scrolled into view (never with
-// prefers-reduced-motion) and pauses when hidden. In dark mode the frames are
-// re-inked like figures (unless keepInk is set, for colour-mapped videos);
-// native controls would be inverted too, so a small Play/Pause button
-// (outside the filtered element) replaces them.
+// prefers-reduced-motion) and pauses when hidden. The frames keep their
+// original colours on a white plate in both themes (dark mode only dims the
+// plate, like figures). A small Play/Pause button replaces the native controls.
 import { getImage } from "astro:assets";
 import type { ImageMetadata } from "astro";
 
@@ -13,23 +12,18 @@ interface Props {
   alt: string;
   source?: string;
   id?: string;
-  /** Colour-mapped video: keep the original colours on a paper card in dark mode. */
+  /** No longer has any effect (videos are never colour-inverted). Kept so
+      existing content that passes it still type-checks. */
   keepInk?: boolean;
 }
-const { src, poster, alt, source, id, keepInk = false } = Astro.props;
+const { src, poster, alt, source, id } = Astro.props;
 const p = await getImage({ src: poster, width: Math.min(poster.width, 1280), format: "webp" });
 ---
 
 <figure class="figure wide my-8" id={id}>
-  <div
-    class:list={[
-      "figure-ground relative overflow-hidden rounded-[var(--radius-lg)] border border-line",
-      keepInk && "keep-ink",
-    ]}
-    data-video
-  >
+  <div class="figure-ground relative overflow-hidden rounded-[var(--radius-sm)] border border-line" data-video>
     <video
-      class:list={[!keepInk && "reink", "block h-auto w-full"]}
+      class="block h-auto w-full"
       src={src}
       poster={p.src}
       muted
@@ -43,21 +37,36 @@ const p = await getImage({ src: poster, width: Math.min(poster.width, 1280), for
     </video>
     <button
       type="button"
-      class="js-only absolute right-3 bottom-3 rounded-full border border-line bg-surface-2/90 px-3 py-1 font-mono text-xs text-ink backdrop-blur hover:border-accent"
+      class="js-only absolute right-3 bottom-3 rounded-[var(--radius-sm)] border border-line-strong bg-surface px-3 py-1 font-sans text-xs font-medium text-ink hover:border-ink"
       data-video-toggle
       aria-label="Play video"
     >
       Play
     </button>
   </div>
-  <figcaption class="mt-3 text-sm leading-relaxed text-muted">
-    <span class="fig-num font-mono text-xs tracking-wide text-accent"></span>
+  <figcaption class="mt-3 max-w-[68ch] font-sans text-sm leading-normal text-muted">
+    <span class="fig-num"></span>
     <slot />
-    {source && <span class="mono-label mt-1 block">Source: {source}</span>}
+    {source && <span class="fig-source">Source: {source}</span>}
   </figcaption>
 </figure>
 
 <style>
+  /* Same caption treatment as Figure.astro: number in bold ink sans. */
+  .fig-num {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    color: var(--text);
+  }
+  .fig-source {
+    display: block;
+    margin-top: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--text-faint);
+    overflow-wrap: anywhere;
+  }
   figcaption :global(> p) {
     display: inline;
   }

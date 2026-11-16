@@ -22,7 +22,7 @@ export default defineConfig({
       rehypePlugins: [[rehypeKatex, { strict: "ignore", output: "html" }]],
     }),
     shikiConfig: {
-      themes: { light: "github-light", dark: "github-dark-dimmed" },
+      themes: { light: "github-light-high-contrast", dark: "github-dark-default" },
       defaultColor: false,
       wrap: false,
     },

@@ -1,5 +1,5 @@
 // Skills matrix. Every entry links to where it is used, so a reader can check
-// the claim. Sources: the project folders and Lilo's CV (Oct 2026).
+// the claim. Sources: the project folders and my CV (Oct 2026).
 export type Skill = { name: string; where: { label: string; href: string }[] };
 export type SkillGroup = { group: string; skills: Skill[] };
 

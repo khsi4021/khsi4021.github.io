@@ -4,18 +4,18 @@ const cases = data.cases;
 ---
 
 <div
-  class="island encounter-viewer my-8 overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface"
+  class="island encounter-viewer my-8 overflow-hidden rounded-[var(--radius-sm)] border border-line bg-surface"
   data-encounter-viewer
 >
   <div class="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3">
-    <div class="flex flex-wrap gap-1.5" role="group" aria-label="Showcase event">
+    <div class="flex flex-wrap gap-y-1" role="group" aria-label="Showcase event">
       {cases.map((c, i) => (
         <button type="button" class="seg" data-case={c.id} aria-pressed={i === 0 ? "true" : "false"}>
-          C2 #{c.id} <span class="hidden text-faint sm:inline">· {c.label}</span>
+          C2 #{c.id} <span class="hidden font-normal text-faint sm:inline">· {c.label}</span>
         </button>
       ))}
     </div>
-    <div class="flex gap-1.5" role="group" aria-label="View">
+    <div class="flex" role="group" aria-label="View">
       <button type="button" class="seg" data-view="orbit" aria-pressed="true">
         Orbits
       </button>
@@ -59,17 +59,17 @@ const cases = data.cases;
       <b data-ro="missPost">–</b>
     </div>
   </div>
-  <div class="space-y-1 border-t border-line px-4 py-3 text-sm text-muted">
+  <div class="space-y-1 border-t border-line px-4 py-3 font-sans text-sm text-muted">
     <p data-legend="orbit">
       <span class="text-accent">━ primary</span> · <span class="text-viz-2">━ secondary</span> · ring = TCA point. Drag
       to rotate, scroll or pinch to zoom.
     </p>
     <p data-legend="encounter" hidden>
       <span class="text-flow">Ellipsoids</span>: combined position covariance, 1σ (solid) and 3σ (wire); dot at origin =
-      hard-body sphere. <span class="text-accent">Orange</span>: relative path before the burn.{" "}
+      hard-body sphere. <span class="text-viz-2">Orange</span>: relative path before the burn.{" "}
       <span class="text-ok">Green</span>: after the burn. Disc = encounter plane.
     </p>
-    <p class="mono-label">
+    <p class="text-xs text-faint">
       Illustration: two-body propagation in the browser from the TCA states. The Pc and ΔV values above come from the
       project's two-body + J2 propagation (not recomputed here).
     </p>
@@ -77,23 +77,26 @@ const cases = data.cases;
 </div>
 
 <style>
+  /* Plain text buttons; the selected one is underlined in the accent. */
   .seg {
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.25rem 0.7rem;
-    font-size: 0.8125rem;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    margin-right: 0.75rem;
+    padding: 0.15rem 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
     color: var(--text-muted);
-    background: transparent;
+    background: none;
     cursor: pointer;
   }
   .seg:hover {
     color: var(--text);
-    border-color: var(--border-strong);
   }
   .seg[aria-pressed="true"] {
     color: var(--text);
-    border-color: var(--flow);
-    background: color-mix(in srgb, var(--flow) 12%, transparent);
+    font-weight: 600;
+    border-bottom-color: var(--accent);
   }
   .ro {
     display: flex;

@@ -139,12 +139,15 @@ export function boot(root: HTMLElement, cases: Encounter[]) {
   let needsRender = true;
 
   const colors = () => ({
-    primary: cssColor("--accent", "#4c8dff"),
-    secondary: cssColor("--viz-2", "#ffb547"),
-    ok: cssColor("--ok", "#4ade9c"),
-    line: cssColor("--border-strong", "#354055"),
-    faint: cssColor("--text-faint", "#7c879a"),
-    surface: cssColor("--surface", "#151b26"),
+    // Fallbacks are the light-theme token values (light is the default).
+    primary: cssColor("--accent", "#1b3f7a"),
+    secondary: cssColor("--viz-2", "#a8410e"),
+    ok: cssColor("--ok", "#17663a"),
+    line: cssColor("--border-strong", "#8c887e"),
+    faint: cssColor("--text-faint", "#5c616c"),
+    // Earth is filled one step off the panel ground (--surface), so the globe
+    // reads as a disc on white as well as on the dark panel.
+    surface: cssColor("--surface-2", "#f1efe9"),
   });
 
   const lineFrom = (pts: THREE.Vector3[], color: THREE.Color, opacity = 1, dashed = false) => {
@@ -171,7 +174,7 @@ export function boot(root: HTMLElement, cases: Encounter[]) {
     const col = colors();
     const S = 1 / 1e6; // 1 unit = 1000 km
     const g = new THREE.Group();
-    // Earth: dark sphere + graticule
+    // Earth: flat-shaded sphere + graticule
     g.add(
       new THREE.Mesh(new THREE.SphereGeometry(RE * S, 48, 32), new THREE.MeshBasicMaterial({ color: col.surface })),
     );
@@ -200,7 +203,7 @@ export function boot(root: HTMLElement, cases: Encounter[]) {
     g.add(
       new THREE.LineSegments(
         new THREE.BufferGeometry().setFromPoints(grat),
-        new THREE.LineBasicMaterial({ color: col.line, transparent: true, opacity: 0.6 }),
+        new THREE.LineBasicMaterial({ color: col.line, transparent: true, opacity: 0.75 }),
       ),
     );
     const period = (r: V3, v: V3) => {
@@ -275,7 +278,7 @@ export function boot(root: HTMLElement, cases: Encounter[]) {
     );
     for (const [k, op] of [
       [1, 0.28],
-      [3, 0.1],
+      [3, 0.16],
     ] as const) {
       const e = new THREE.Mesh(
         new THREE.SphereGeometry(1, 48, 24),
@@ -304,7 +307,7 @@ export function boot(root: HTMLElement, cases: Encounter[]) {
       new THREE.MeshBasicMaterial({
         color: col.faint,
         transparent: true,
-        opacity: 0.08,
+        opacity: 0.12,
         side: THREE.DoubleSide,
         depthWrite: false,
       }),

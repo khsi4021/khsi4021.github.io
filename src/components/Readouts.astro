@@ -1,4 +1,6 @@
 ---
+// Key numbers as one ruled row: serif numerals, sans labels, no boxes.
+// Values come only from frontmatter `metrics` (or the MDX that passes them).
 interface Props {
   items: { value: string; label: string; href?: string }[];
   class?: string;
@@ -6,19 +8,65 @@ interface Props {
 const { items, class: cls } = Astro.props;
 ---
 
-<dl class:list={["readouts flex flex-wrap gap-2.5", cls]}>
+<dl class:list={["readouts", cls]}>
   {items.map((m) => (
-    <div class="flex flex-[1_1_150px] flex-col-reverse justify-end rounded-[var(--radius)] border border-line bg-surface px-4 py-3.5 shadow-[var(--shadow-card)]">
-      <dt class="mono-label mt-1.5 leading-snug">{m.label}</dt>
-      <dd class="text-[1.625rem] leading-none font-semibold tracking-[-0.03em] text-ink tabular-nums">
-        {m.href ? (
-          <a href={m.href} class="no-underline hover:text-accent">
-            {m.value}
-          </a>
-        ) : (
-          m.value
-        )}
-      </dd>
+    <div class="readout">
+      <dt>{m.label}</dt>
+      <dd>{m.href ? <a href={m.href}>{m.value}</a> : m.value}</dd>
     </div>
   ))}
 </dl>
+
+<style>
+  .readouts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: hidden;
+    border-top: 2px solid var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+  /* Each cell draws its own top and left hairline, pulled 1px outside the
+     clipped grid, so only the rules between cells show at any column count. */
+  .readout {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    margin: -1px 0 0 -1px;
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+    padding: 0.9rem 1rem;
+  }
+  @media (min-width: 640px) {
+    .readouts {
+      grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+    }
+  }
+  .readout dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.625rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    font-variant-numeric: lining-nums tabular-nums;
+    color: var(--text);
+  }
+  .readout dt {
+    margin-top: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+  .readout dd a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--border-strong);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .readout dd a:hover {
+    color: var(--flow);
+    text-decoration-color: currentColor;
+  }
+</style>

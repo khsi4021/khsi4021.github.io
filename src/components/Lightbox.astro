@@ -1,18 +1,19 @@
 ---
 // One shared <dialog> for every figure on the page. Native dialog gives us
-// focus trapping, Esc to close and focus return.
+// focus trapping, Esc to close and focus return. The image is always shown
+// undimmed on a white plate, in both themes.
 ---
 
 <dialog class="lightbox" data-lightbox-dialog aria-label="Enlarged figure">
   <form method="dialog" class="flex justify-end">
     <button class="btn h-9 px-3 py-1 text-sm" aria-label="Close enlarged figure">
-      Close ✕
+      Close
     </button>
   </form>
-  <div class="paper mt-3 overflow-auto rounded-[var(--radius-lg)] p-3">
+  <div class="lightbox-plate mt-3 overflow-auto border border-line p-3">
     <img alt="" data-lightbox-img class="mx-auto h-auto max-h-[80vh] w-auto max-w-full" />
   </div>
-  <p class="mt-3 text-sm text-muted" data-lightbox-caption></p>
+  <p class="mt-3 max-w-[90ch] font-sans text-sm text-muted" data-lightbox-caption></p>
 </dialog>
 
 <style>
@@ -23,21 +24,25 @@
     margin: auto;
     padding: 1rem;
     border: 1px solid var(--border-strong);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-sm);
     background: var(--bg-raised);
     color: var(--text);
   }
   .lightbox::backdrop {
-    background: rgb(5 7 11 / 0.82);
-    backdrop-filter: blur(4px);
+    background: rgb(12 14 18 / 0.72);
+  }
+  /* Always pure white, also in dark mode: the enlarged figure is the original. */
+  .lightbox-plate {
+    border-radius: var(--radius-sm);
+    background: #ffffff;
+    color: #1a1a1a;
   }
   .lightbox[open] {
-    animation: lb-in 250ms var(--ease-out-soft);
+    animation: lb-in 150ms ease-out;
   }
   @keyframes lb-in {
     from {
       opacity: 0;
-      transform: translateY(8px) scale(0.99);
     }
   }
 </style>

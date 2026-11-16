@@ -1,13 +1,13 @@
 ---
 import "@/styles/global.css";
-import { site, nav } from "@/data/site";
+import { site, nav, hasEmail, hasLinkedIn } from "@/data/site";
 import ThemeToggle from "@/components/ThemeToggle.astro";
 import { getImage } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import defaultOg from "@/assets/og-default.png";
 // Preload the two fonts visible above the fold to limit font-swap layout shift.
-import geistWoff2 from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
-import geistMonoWoff2 from "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url";
+import serifWoff2 from "@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url";
+import sansWoff2 from "@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url";
 
 interface Props {
   title?: string;
@@ -34,7 +34,7 @@ const isActive = (href: string) => path.startsWith(href);
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -42,15 +42,14 @@ const isActive = (href: string) => path.startsWith(href);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="author" content={site.name} />
-    <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" content="#070b14" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f4f7fc" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#faf9f6" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="preload" href={geistWoff2} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={geistMonoWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={serifWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansWoff2} as="font" type="font/woff2" crossorigin />
 
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
@@ -65,9 +64,9 @@ const isActive = (href: string) => path.startsWith(href);
 
     <script is:inline>
       (() => {
-        let t = "dark";
+        let t = "light";
         try {
-          const s = localStorage.getItem("theme");
+          const s = localStorage.getItem("theme2");
           if (s === "light" || s === "dark") t = s;
         } catch {}
         const d = document.documentElement;
@@ -90,21 +89,55 @@ const isActive = (href: string) => path.startsWith(href);
       Skip to content
     </a>
 
-    <header class="site-header sticky top-0 z-40 bg-bg/80 backdrop-blur-md">
-      <div class="wrap flex h-[4.5rem] items-center justify-between gap-4">
-        <a href="/" class="flex items-baseline gap-2 no-underline">
-          <span class="text-[1.05rem] font-semibold tracking-[-0.01em]">{site.name}</span>
-          <span class="font-mono text-xs text-faint">Lilo</span>
-        </a>
-        <nav aria-label="Main" class="hidden lg:block">
-          <ul class="flex items-center gap-1 rounded-full border border-line bg-surface p-[5px]">
+    <header class="site-header">
+      <div class="wrap">
+        <div class="flex items-center justify-between gap-6 border-b border-line py-5">
+          <a href="/" class="no-underline">
+            <span class="block font-serif text-[1.1875rem] leading-tight font-semibold">{site.name}</span>
+            <span class="mt-0.5 hidden text-[0.8125rem] text-muted sm:block">
+              Aerospace Engineering Sciences, University of Colorado Boulder
+            </span>
+          </a>
+          <div class="flex items-center gap-5">
+            <nav aria-label="Main" class="hidden lg:block">
+              <ul class="flex items-center gap-6">
+                {nav.map((n) => (
+                  <li>
+                    <a
+                      href={n.href}
+                      class:list={[
+                        "site-nav-link block py-1 text-[0.9375rem] no-underline hover:text-ink",
+                        isActive(n.href) ? "is-current font-semibold text-ink" : "text-muted",
+                      ]}
+                      aria-current={isActive(n.href) ? "page" : undefined}
+                    >
+                      {n.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <ThemeToggle />
+            <button
+              type="button"
+              class="rounded-[var(--radius)] border border-line-strong px-3 py-1.5 text-[0.9375rem] text-ink lg:hidden"
+              aria-controls="mobile-nav"
+              aria-expanded="false"
+              data-menu-button
+            >
+              Menu
+            </button>
+          </div>
+        </div>
+        <nav id="mobile-nav" aria-label="Main" class="hidden border-b border-line lg:hidden" data-menu>
+          <ul>
             {nav.map((n) => (
-              <li>
+              <li class="border-t border-line first:border-t-0">
                 <a
                   href={n.href}
                   class:list={[
-                    "block rounded-full px-3.5 py-1.5 text-sm no-underline transition-colors hover:bg-surface-2 hover:text-ink",
-                    isActive(n.href) ? "bg-surface-2 text-ink" : "text-muted",
+                    "block py-3 text-base no-underline",
+                    isActive(n.href) ? "font-semibold text-ink" : "text-muted",
                   ]}
                   aria-current={isActive(n.href) ? "page" : undefined}
                 >
@@ -114,79 +147,64 @@ const isActive = (href: string) => path.startsWith(href);
             ))}
           </ul>
         </nav>
-        <div class="flex items-center gap-2">
-          <ThemeToggle />
-          <button
-            type="button"
-            class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-muted hover:text-ink lg:hidden"
-            aria-controls="mobile-nav"
-            aria-expanded="false"
-            data-menu-button
-          >
-            <span class="sr-only">Menu</span>
-            <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
-            </svg>
-          </button>
-        </div>
       </div>
-      <nav id="mobile-nav" aria-label="Main" class="hidden lg:hidden" data-menu>
-        <ul class="wrap grid grid-cols-2 gap-1.5 pb-4">
-          {nav.map((n) => (
-            <li>
-              <a
-                href={n.href}
-                class:list={[
-                  "block rounded-full border px-4 py-2.5 no-underline",
-                  isActive(n.href) ? "border-accent bg-surface-2 text-ink" : "border-line bg-surface text-muted",
-                ]}
-                aria-current={isActive(n.href) ? "page" : undefined}
-              >
-                {n.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
     </header>
 
     <main id="main" class="flex-1">
       <slot />
     </main>
 
-    <footer class="site-footer wrap mt-24 pb-6">
-      <div class="flex flex-col gap-6 rounded-[var(--radius-lg)] border border-line bg-surface p-6 text-sm text-muted md:flex-row md:items-end md:justify-between md:p-8">
+    <footer class="site-footer wrap mt-24">
+      <div class="grid gap-8 border-t-2 border-ink py-10 text-[0.9375rem] text-muted md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <p class="text-base font-semibold text-ink">{site.name}</p>
-          <p class="mt-1">{site.positioning}</p>
-          <p class="mono-label mt-3">{site.location}</p>
+          <p class="font-serif text-base font-semibold text-ink">{site.name}</p>
+          <p class="mt-1 max-w-[40ch]">{site.degree}</p>
         </div>
-        <ul class="flex flex-wrap gap-x-5 gap-y-2">
-          <li>
-            <a class="hover:text-ink" href={site.github} rel="me">
-              GitHub
-            </a>
-          </li>
-          <li>
-            <a class="hover:text-ink" href="/cv/">
-              CV
-            </a>
-          </li>
-          <li>
-            <a class="hover:text-ink" href="/contact/">
-              Contact
-            </a>
-          </li>
-          <li>
-            <a class="hover:text-ink" href="/sitemap-index.xml">
-              Sitemap
-            </a>
-          </li>
-        </ul>
-        <p class="mono-label">
-          © {new Date().getFullYear()} {site.name} · Built with Astro
-        </p>
+        <div>
+          <p class="font-semibold text-ink">Contents</p>
+          <ul class="mt-2 space-y-1">
+            {nav.map((n) => (
+              <li>
+                <a class="hover:text-ink" href={n.href}>
+                  {n.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p class="font-semibold text-ink">Contact</p>
+          <ul class="mt-2 space-y-1">
+            {hasEmail && (
+              <li>
+                <a class="hover:text-ink" href={`mailto:${site.email}`}>
+                  {site.email}
+                </a>
+              </li>
+            )}
+            <li>
+              <a class="hover:text-ink" href={site.github} rel="me">
+                GitHub
+              </a>
+            </li>
+            {hasLinkedIn && (
+              <li>
+                <a class="hover:text-ink" href={site.linkedin} rel="me">
+                  LinkedIn
+                </a>
+              </li>
+            )}
+            <li>
+              <a class="hover:text-ink" href="/cv/">
+                Curriculum vitae
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
+      <p class="border-t border-line py-4 text-[0.8125rem] text-faint">
+        © {new Date().getFullYear()} {site.name}
+      </p>
     </footer>
 
     <script>

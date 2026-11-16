@@ -12,6 +12,8 @@ tags: [Hypersonics, CFD/Numerical, Aerodynamics]
 stack: [Python, NumPy, SciPy solve_bvp, Matplotlib, pytest]
 featured: true
 order: 1
+group: Hypersonics
+contribution: "A compressible similarity boundary-layer solver with local-similarity marching and roughness-transition correlations on a Mach-6 cylinder, checked against Fay–Riddell, Falkner–Skan and the Crocco–Busemann relation, with its gap to the published benchmark reported."
 tier: flagship
 heroImage: ../../assets/projects/hypersonic/heat_flux_transition.png
 heroAlt: Two-panel plot. Top, laminar wall heat flux along a Mach-6 cylinder from 0 to 45 degrees for two energy-equation forms, with transition onset lines for three roughness heights. Bottom, the PANT-RT parameter rising with angle and crossing the threshold of 434.
@@ -25,7 +27,7 @@ metrics:
 links: {}
 status: complete
 ---
-{/* TODO(Lilo): add links.repo if github.com/khsi4021/Hypersonic-Solver is public. */}
+{/* TODO(Khalil): add links.repo if github.com/khsi4021/Hypersonic-Solver is public. */}
 import heat from "../../assets/projects/hypersonic/heat_flux_transition.png";
 import geom from "../../assets/projects/hypersonic/geometry_profile.png";
 import rhs from "../../snippets/hyp_rhs.py?raw";

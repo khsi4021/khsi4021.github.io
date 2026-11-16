@@ -1,0 +1,63 @@
+---
+// One row of the ordered reading list: number, title link, facts line and the
+// one-sentence contribution from the project's frontmatter.
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  d: CollectionEntry<"projects">["data"];
+  /** Position in the list, e.g. "2.1". */
+  n: string;
+}
+const { d, n } = Astro.props;
+const facts = [d.dates, `${d.type} project`, d.course, d.status === "in progress" ? "In progress" : undefined].filter(
+  Boolean,
+);
+---
+
+<li class="row">
+  <span class="num" aria-hidden="true">
+    {n}
+  </span>
+  <div class="min-w-0">
+    <h4 class="title">
+      <a href={`/projects/${d.slug}/`}>{d.title}</a>
+    </h4>
+    <p class="facts">{facts.join(" · ")}</p>
+    {d.team && <p class="facts">{d.team}</p>}
+    {d.contribution && <p class="contribution">{d.contribution}</p>}
+  </div>
+</li>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    padding-block: 0.875rem;
+    border-top: 1px solid var(--border);
+  }
+  .num {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-faint);
+    padding-top: 0.15rem;
+  }
+  .title {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+  .facts {
+    margin-top: 0.15rem;
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+  .contribution {
+    margin-top: 0.4rem;
+    max-width: var(--container-prose);
+    line-height: 1.55;
+  }
+</style>

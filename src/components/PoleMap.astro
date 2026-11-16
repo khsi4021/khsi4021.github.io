@@ -7,10 +7,10 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
 ---
 
 <div
-  class="island pole-map my-8 overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface"
+  class="island pole-map my-8 overflow-hidden rounded-[var(--radius-sm)] border border-line bg-surface"
   data-pole-map
 >
-  <div class="flex flex-wrap gap-1.5 border-b border-line px-4 py-3" role="group" aria-label="Mode">
+  <div class="flex flex-wrap gap-y-1 border-b border-line px-4 py-2.5" role="group" aria-label="Mode">
     {modes.map((m, i) => (
       <button type="button" class="seg" data-mode={m} aria-pressed={i === 0 ? "true" : "false"}>
         {m}
@@ -23,13 +23,13 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
       <caption class="sr-only">Eigenvalues by mode and source</caption>
       <thead>
         <tr class="text-left">
-          <th class="mono-label px-4 py-2 font-normal">Source</th>
-          <th class="mono-label px-3 py-2 font-normal">Re (1/s)</th>
-          <th class="mono-label px-3 py-2 font-normal">Im (rad/s)</th>
-          <th class="mono-label px-3 py-2 font-normal">
+          <th class="mono-label px-4 py-2 !text-ink">Source</th>
+          <th class="mono-label px-3 py-2 !text-ink">Re (1/s)</th>
+          <th class="mono-label px-3 py-2 !text-ink">Im (rad/s)</th>
+          <th class="mono-label px-3 py-2 !text-ink">
             ω<sub>n</sub> (rad/s)
           </th>
-          <th class="mono-label px-3 py-2 font-normal">ζ</th>
+          <th class="mono-label px-3 py-2 !text-ink">ζ</th>
         </tr>
       </thead>
       {modes.map((m, i) => (
@@ -49,22 +49,26 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
       ))}
     </table>
   </div>
-  <p class="mono-label border-t border-line px-4 py-2">
+  <p class="border-t border-line px-4 py-2 font-sans text-xs text-faint">
     Source: projects/sim6dof-simulator/results/benchmark_summary.csv. "Last year's sim" has no roll or spiral entries.
   </p>
 </div>
 
 <style>
   [data-plot] {
-    --plot-background: var(--surface-2);
+    --plot-background: var(--surface);
   }
+  /* Plain text buttons; the selected one is underlined in the accent. */
   .seg {
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.25rem 0.7rem;
-    font-size: 0.8125rem;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    margin-right: 0.75rem;
+    padding: 0.15rem 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
     color: var(--text-muted);
-    background: transparent;
+    background: none;
     cursor: pointer;
   }
   .seg:hover {
@@ -72,8 +76,8 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
   }
   .seg[aria-pressed="true"] {
     color: var(--text);
-    border-color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    font-weight: 600;
+    border-bottom-color: var(--accent);
   }
 </style>
 
@@ -124,7 +128,7 @@ const fmt = (n: number, d = 4) => (Number.isFinite(n) ? n.toFixed(d) : "–");
         style: {
           background: "transparent",
           color: ink,
-          fontFamily: "Geist Variable, sans-serif",
+          fontFamily: "Source Sans 3 Variable, Arial, sans-serif",
           fontSize: "13px",
         },
         x: { label: "Real (1/s) →", domain: pad(xs), grid: true, tickFormat: (d: number) => d.toPrecision(2) },

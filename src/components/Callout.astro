@@ -1,24 +1,20 @@
 ---
+// A left-ruled note. The label text states the tone, so colour is not the only cue.
 interface Props {
   tone?: "note" | "honest" | "todo";
   title?: string;
 }
 const { tone = "note", title } = Astro.props;
 const styles = {
-  note: { bar: "var(--flow)", label: "Note" },
-  honest: { bar: "var(--accent)", label: "Known gap" },
+  note: { bar: "var(--border-strong)", label: "Note" },
+  honest: { bar: "var(--text)", label: "Known gap" },
   todo: { bar: "var(--warn)", label: "To confirm" },
 }[tone];
 ---
 
-<aside
-  class="callout my-6 rounded-r-[var(--radius)] border border-l-2 border-line bg-surface px-4 py-3 text-[0.9375rem]"
-  style={`border-left-color:${styles.bar}`}
->
-  <p class="mono-label mb-1" style={`color:${styles.bar}`}>
-    {title ?? styles.label}
-  </p>
-  <div class="text-muted [&>*+*]:mt-2 [&_strong]:text-ink">
+<aside class="callout my-6 border-l-2 py-1 pl-4" style={`border-left-color:${styles.bar}`}>
+  <p class="font-sans text-[0.8125rem] font-semibold text-ink">{title ?? styles.label}</p>
+  <div class="mt-1 font-sans text-[0.9375rem] leading-normal text-muted [&_strong]:text-ink [&>*+*]:mt-2">
     <slot />
   </div>
 </aside>

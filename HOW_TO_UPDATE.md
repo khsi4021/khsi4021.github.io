@@ -7,16 +7,19 @@ All edits are made locally, previewed with `npm run dev`, and published with a `
 1. **Copy the template.** Copy `templates/project-template.mdx` to `src/content/projects/<slug>.mdx`. The slug becomes the URL, `/projects/<slug>/`.
 2. **Add images.** Create `src/assets/projects/<slug>/` and put your figures there as PNG or JPG. Wide figures at about 2000 px are ideal; Astro converts and resizes them automatically. Aim for:
    - axes labelled with units,
-   - the site palette (blue `#2B7BD6`, orange `#E8673A`, green `#16A37B`, purple `#7B4FC4`),
-   - a light `#FAFAF8` background.
+   - the site's series colours (blue `#1b3f7a`, orange `#a8410e`, green `#17703f`, purple `#6b3fa8`),
+   - a plain white background. Figures are shown on a white plate in both themes; dark mode only dims them slightly and never inverts their colours.
 3. **Fill in the frontmatter.**
    - `type` must be one of Personal / Course / Team / Competition.
    - `tags` must come from the list in the template.
    - `tldr` should be 40 words or fewer.
-   - Set `featured: true` to show the project on the home page (four fit best).
-   - `order` controls the position in lists.
+   - `order` is the reading order on the home page and the projects page: 1 is the most relevant to hypersonic CFD.
+   - `group` (optional) is the heading the project is listed under on the home page, for example `Hypersonics` or `Numerical methods`. Consecutive projects with the same `group` share one heading; without it the project falls under "Other work".
+   - `contribution` (optional) is one sentence on what the project contributes toward hypersonic CFD. It is printed under the project in the home-page list. Say so plainly when the link is loose.
+   - `featured` is still in the schema but no longer decides what the home page shows.
 4. **Write the tabs.** Each `<TabPanel id="…">` becomes a tab. Delete tabs you don't need, and list the remaining ones in `tabs:`. These components are available without importing:
-   - `<Figure src={img} alt="…" source="…">caption</Figure>`, numbered automatically, with a lightbox.
+   - `<Figure src={img} alt="…" source="…">caption</Figure>`, numbered automatically ("Fig. 1", "Fig. 2"…), with a lightbox.
+   - `<Readouts items={[{ value: "…", label: "…" }]} />`, a ruled row of key numbers.
    - `<Equation tex={String.raw`…`} label="3" />`, rendered with KaTeX at build time.
    - `<CodeSnippet code={snip} lang="python" title="…" source="…">why it matters</CodeSnippet>`. Put the excerpt in `src/snippets/` and import it with `?raw`. Keep it under 40 lines.
    - `<Callout tone="note|honest|todo" title="…">…</Callout>`.
@@ -38,8 +41,9 @@ All edits are made locally, previewed with `npm run dev`, and published with a `
 | Headshot | Put it in `src/assets/headshot.jpg` and replace the placeholder block in `src/pages/about.astro`. |
 | Flow Vis images | Put images in `src/assets/flow-vis/`, then set `file:`, `technique:`, `caption:` and `alt:` for each entry in `src/data/flowvis.ts`. |
 | Skills matrix | `src/data/skills.ts`. Each skill links to the project where it was used. |
-| Home, About, Research text | `src/pages/index.astro`, `about.astro`, `research.astro`. The `draft` badges show only in `npm run dev`. |
+| Home, About, Research text | `src/pages/index.astro`, `about.astro`, `research.astro`. Copy that is waiting for your own wording sits in a `<div class="placeholder">` block (amber left rule, labelled "Placeholder text"). Replace the sentence inside and remove the `placeholder` class. |
 | Colours, fonts, spacing | `src/styles/global.css` (tokens) and `DESIGN_SPEC.md` |
+| Favicon and link-preview image | Edit `scripts/make-brand-assets.mjs`, then run `node scripts/make-brand-assets.mjs`. |
 
 ## Regenerating figures
 

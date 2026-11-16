@@ -2,26 +2,45 @@
 import { skillMatrix } from "@/data/skills";
 ---
 
-<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-  {skillMatrix.map((g) => (
-    <section class="card p-5" aria-labelledby={`skills-${g.group.replace(/\W+/g, "-")}`}>
-      <h3 id={`skills-${g.group.replace(/\W+/g, "-")}`} class="eyebrow !font-mono !text-xs">
-        {g.group}
-      </h3>
-      <ul class="mt-3 divide-y divide-line">
-        {g.skills.map((s) => (
-          <li class="py-2.5">
-            <p class="font-medium">{s.name}</p>
-            <p class="mt-0.5 flex flex-wrap gap-x-3 gap-y-1 text-sm">
-              {s.where.map((w) => (
-                <a href={w.href} class="text-faint underline decoration-line-strong underline-offset-2 hover:text-flow">
-                  {w.label}
-                </a>
+<div class="overflow-x-auto">
+  <table class="w-full border-collapse border-t border-line-strong text-left font-sans text-sm">
+    <caption class="sr-only">Skills by group, with links to the pages where each one is shown</caption>
+    <thead>
+      <tr class="border-b border-line-strong">
+        <th scope="col" class="py-2 pr-4 font-semibold">
+          Group
+        </th>
+        <th scope="col" class="py-2 pr-4 font-semibold">
+          Skill
+        </th>
+        <th scope="col" class="py-2 font-semibold">
+          Where it is shown
+        </th>
+      </tr>
+    </thead>
+    {skillMatrix.map((g) => (
+      <tbody class="border-b border-line-strong">
+        {g.skills.map((s, i) => (
+          <tr class="border-b border-line last:border-b-0">
+            {i === 0 && (
+              <th scope="rowgroup" rowspan={g.skills.length} class="py-2 pr-4 align-top font-semibold">
+                {g.group}
+              </th>
+            )}
+            <td class="py-2 pr-4 align-top">{s.name}</td>
+            <td class="py-2 align-top">
+              {s.where.map((w, j) => (
+                <>
+                  {j > 0 && <span class="text-faint">, </span>}
+                  <a href={w.href} class="underline decoration-line-strong underline-offset-2 hover:text-flow">
+                    {w.label}
+                  </a>
+                </>
               ))}
-            </p>
-          </li>
+            </td>
+          </tr>
         ))}
-      </ul>
-    </section>
-  ))}
+      </tbody>
+    ))}
+  </table>
 </div>

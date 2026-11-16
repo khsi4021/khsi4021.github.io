@@ -1,13 +1,12 @@
-// Site-wide facts. Placeholders are marked TODO(Lilo); see TODO_FOR_LILO.md §3.
+// Site-wide facts. Placeholders are marked TODO(Khalil).
 export const site = {
   name: "Khalil Sidani",
-  nickname: "Lilo",
   title: "Khalil Sidani · Aerospace engineering, hypersonics & CFD",
   description:
-    "Engineering portfolio of Khalil (Lilo) Sidani: hypersonic boundary-layer and heating solvers, conjunction-risk analysis, flight simulation and aircraft design. CU Boulder aerospace engineering.",
+    "Portfolio of Khalil Sidani: hypersonic boundary-layer and heating solvers, conjunction-risk analysis, flight simulation and aircraft design. CU Boulder aerospace engineering.",
   positioning: "Aerospace engineer building simulation tools for hypersonic flight.",
   location: "Boulder, Colorado · from Bahrain",
-  // TODO(Lilo): LinkedIn URL.
+  // TODO(Khalil): LinkedIn URL.
   email: "khsi4021@colorado.edu",
   linkedin: "TODO_LINKEDIN",
   github: "https://github.com/khsi4021",
@@ -22,10 +21,10 @@ export const hasEmail = !site.email.startsWith("TODO");
 export const hasLinkedIn = !site.linkedin.startsWith("TODO");
 
 export const nav = [
+  { href: "/research/", label: "Research" },
   { href: "/projects/", label: "Projects" },
   { href: "/coursework/", label: "Coursework" },
-  { href: "/research/", label: "Research" },
-  { href: "/flow-vis/", label: "Flow Vis" },
+  { href: "/flow-vis/", label: "Flow Visualization" },
   { href: "/about/", label: "About" },
   { href: "/cv/", label: "CV" },
   { href: "/contact/", label: "Contact" },

@@ -12,28 +12,23 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<ol class="relative ml-2 border-l border-line">
+<ol class="border-t border-line">
   {items.map((it) => (
-    <li class="relative pb-7 pl-6 last:pb-0">
-      <span
-        class:list={[
-          "absolute top-[0.45rem] -left-[5px] h-[9px] w-[9px] rounded-full border",
-          it.todo ? "border-warn bg-bg" : "border-accent bg-accent",
-        ]}
-        aria-hidden="true"
-      />
-      <p class="mono-label">{it.when}</p>
-      <p class="mt-0.5 font-medium">
-        {it.href ? (
-          <a href={it.href} class="underline decoration-line-strong underline-offset-2 hover:text-flow">
-            {it.title}
-          </a>
-        ) : (
-          it.title
-        )}
-        {it.todo && <span class="draft-badge ml-2">to confirm</span>}
-      </p>
-      {it.body && <p class="mt-1 text-sm text-muted">{it.body}</p>}
+    <li class="grid gap-x-6 gap-y-1 border-b border-line py-3 sm:grid-cols-[11rem_minmax(0,1fr)]">
+      <p class="font-sans text-sm text-faint tabular-nums sm:pt-[0.2rem]">{it.when}</p>
+      <div>
+        <p>
+          {it.href ? (
+            <a href={it.href} class="underline decoration-line-strong underline-offset-2 hover:text-flow">
+              {it.title}
+            </a>
+          ) : (
+            it.title
+          )}
+          {it.todo && <span class="ml-2 font-sans text-sm text-warn">(to confirm)</span>}
+        </p>
+        {it.body && <p class="mt-1 font-sans text-sm text-muted">{it.body}</p>}
+      </div>
     </li>
   ))}
 </ol>

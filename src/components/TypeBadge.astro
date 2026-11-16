@@ -1,24 +1,28 @@
 ---
-// Project type as a pill. Sits on figures too, so it always has its own ground.
+// Project type as a small sans label with a hairline box. One neutral style
+// for all four types: the type is a category, not a status.
 interface Props {
   type: "Personal" | "Course" | "Team" | "Competition";
   class?: string;
 }
 const { type, class: cls } = Astro.props;
-const tone = {
-  Personal: "text-flow border-flow/45",
-  Competition: "text-accent border-accent/45",
-  Team: "text-ink border-line-strong",
-  Course: "text-muted border-line-strong",
-}[type];
 ---
 
-<span
-  class:list={[
-    "inline-block rounded-full border bg-surface-2 px-2 py-0.5 font-mono text-[0.6875rem] leading-tight tracking-[0.02em]",
-    tone,
-    cls,
-  ]}
->
-  {type}
-</span>
+<span class:list={["type-badge", cls]}>{type}</span>
+
+<style>
+  .type-badge {
+    display: inline-block;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 0 0.4rem;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+</style>

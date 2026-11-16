@@ -14,7 +14,7 @@ const html = katex.renderToString(tex, { displayMode: true, throwOnError: false,
 
 <div class="equation my-6 flex items-center gap-4" id={id}>
   <div class="min-w-0 flex-1 overflow-x-auto" set:html={html} />
-  {label && <span class="shrink-0 font-mono text-xs text-faint">({label})</span>}
+  {label && <span class="shrink-0 font-sans text-sm text-muted tabular-nums">({label})</span>}
 </div>
 
 <style>

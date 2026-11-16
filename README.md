@@ -1,6 +1,6 @@
 # khsi4021.github.io
 
-Source for **Khalil (Lilo) Sidani's engineering portfolio**: hypersonic boundary-layer and heating solvers, conjunction-risk analysis, flight simulation and aircraft design.
+Source for **Khalil Sidani's engineering portfolio**: hypersonic boundary-layer and heating solvers, conjunction-risk analysis, flight simulation and aircraft design.
 
 Live site: <https://khsi4021.github.io> (once deployed)
 
@@ -11,7 +11,8 @@ Live site: <https://khsi4021.github.io> (once deployed)
 - KaTeX, rendered at build time, for equations.
 - Astro `<Image>` for responsive WebP output.
 - three.js for the DebriSolver 3D encounter viewer and Observable Plot for the Sim6DOF pole map. Both are lazy-loaded islands. Everything else is plain HTML with a little vanilla JS: tabs, filters, lightbox and theme toggle.
-- Self-hosted fonts: Space Grotesk, Inter and JetBrains Mono.
+- Self-hosted fonts: Source Serif 4 (reading text and headings), Source Sans 3 (interface text) and Geist Mono (code).
+- Light by default, with a dark toggle. The look is described in `DESIGN_SPEC.md`.
 
 ## Develop
 
@@ -33,14 +34,15 @@ npm run format     # Prettier
 src/
   content/projects/   one .mdx per project (template: templates/project-template.mdx)
   pages/              home, projects, coursework, research, flow-vis, about, cv, contact
-  components/         ProjectCard, ProjectGrid, ProjectTabs, TabPanel, MetaSidebar, Figure,
-                      Equation, CodeSnippet, SkillsMatrix, Timeline, Gallery, EncounterViewer, PoleMap…
+  components/         ProjectCard, ProjectGrid, ProjectRow, ProjectTabs, TabPanel, MetaSidebar, Readouts,
+                      Figure, Video, Equation, CodeSnippet, Callout, SkillsMatrix, Timeline,
+                      EncounterViewer, PoleMap…
   assets/             figures (optimised at build time)
   snippets/           curated code excerpts imported with ?raw
   data/               site facts, skills, encounter and pole-map data
 public/               favicon, robots.txt, media/ (videos), cv/ (PDF)
 scripts/              brand-asset and thumbnail generators (node scripts/<name>.mjs)
-design-explorations/  three static design mockups (A, B, C; C is built)
+design-explorations/  earlier static design mockups, kept for comparison (none is the current design)
 ```
 
 ## Deploy (GitHub Pages)
@@ -64,4 +66,4 @@ If you use a different repo name (a "project site"), the site is served from `ht
 
 ## Content rules
 
-Every number on the site comes from the projects' own code, results or reports. Unknowns are marked `TODO(Lilo)` in the source. Graded coursework is shown as short excerpts only, and teammates are described by role.
+Every number on the site comes from the projects' own code, results or reports. Unknowns are marked `TODO(Khalil)` in the source, and copy that is waiting for my own wording sits in a visible "Placeholder text" block. Graded coursework is shown as short excerpts only, and teammates are described by role.

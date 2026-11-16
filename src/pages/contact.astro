@@ -3,45 +3,82 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { site, hasEmail, hasLinkedIn } from "@/data/site";
 ---
 
-<BaseLayout
-  title="Contact"
-  description="Get in touch with Khalil Sidani about graduate research, internships or engineering roles."
->
-  <section class="wrap pt-12 md:pt-16">
-    <p class="eyebrow">Contact</p>
-    <h1 class="mt-3 text-[clamp(2rem,4.5vw,3rem)]">Get in touch</h1>
-    <p class="mt-4 max-w-[60ch] text-lg text-muted">
-      I'm applying to graduate programs for Fall 2027 and I'm open to internships and industry roles in aerodynamics,
-      hypersonics and simulation. Email is the best way to reach me.
-    </p>
-    <ul class="mt-10 grid max-w-3xl gap-4 sm:grid-cols-3">
-      <li class="card p-5">
-        <p class="mono-label">Email</p>
-        {hasEmail ? (
-          <a class="mt-1 block break-all text-flow underline underline-offset-2" href={`mailto:${site.email}`}>
-            {site.email}
+<BaseLayout title="Contact" description="Contact details for Khalil Sidani: email, GitHub and CV.">
+  <section class="wrap pt-10 md:pt-14">
+    <h1 class="text-[clamp(1.75rem,4vw,2.375rem)]">Contact</h1>
+    <div class="placeholder mt-5 max-w-[60ch]">
+      <p>A short note on what I would like to be contacted about will go here.</p>
+    </div>
+    {/* TODO(Khalil): write the note above; set LinkedIn in src/data/site.ts (the row appears once it is set). */}
+    <dl class="contact-list mt-8 max-w-2xl">
+      <div>
+        <dt>Email</dt>
+        <dd>
+          {hasEmail ? (
+            <a class="break-all" href={`mailto:${site.email}`}>
+              {site.email}
+            </a>
+          ) : (
+            <span class="text-muted">Address to be added</span>
+          )}
+        </dd>
+      </div>
+      {hasLinkedIn && (
+        <div>
+          <dt>LinkedIn</dt>
+          <dd>
+            <a href={site.linkedin} rel="me">
+              LinkedIn profile
+            </a>
+          </dd>
+        </div>
+      )}
+      <div>
+        <dt>GitHub</dt>
+        <dd>
+          <a href={site.github} rel="me">
+            github.com/{site.githubUser}
           </a>
-        ) : (
-          <p class="mt-1 text-muted">Address coming soon</p>
-        )}
-      </li>
-      <li class="card p-5">
-        <p class="mono-label">LinkedIn</p>
-        {hasLinkedIn ? (
-          <a class="mt-1 block text-flow underline underline-offset-2" href={site.linkedin} rel="me">
-            Profile ↗
-          </a>
-        ) : (
-          <p class="mt-1 text-muted">Link coming soon</p>
-        )}
-      </li>
-      <li class="card p-5">
-        <p class="mono-label">GitHub</p>
-        <a class="mt-1 block text-flow underline underline-offset-2" href={site.github} rel="me">
-          @{site.githubUser} ↗
-        </a>
-      </li>
-    </ul>
-    {/* TODO(Lilo): set email and LinkedIn in src/data/site.ts */}
+        </dd>
+      </div>
+      <div>
+        <dt>CV</dt>
+        <dd>
+          <a href="/cv/">Curriculum vitae</a>
+        </dd>
+      </div>
+    </dl>
   </section>
 </BaseLayout>
+
+<style>
+  .contact-list {
+    border-top: 2px solid var(--text);
+  }
+  .contact-list > div {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    column-gap: 1.5rem;
+    align-items: baseline;
+    border-bottom: 1px solid var(--border);
+    padding-block: 0.8rem;
+  }
+  .contact-list dt {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-faint);
+  }
+  .contact-list dd {
+    margin: 0;
+  }
+  .contact-list a {
+    color: var(--flow);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .contact-list a:hover {
+    text-decoration-thickness: 2px;
+  }
+</style>

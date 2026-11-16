@@ -14,16 +14,20 @@ const lines = trimmed.split("\n").length;
 ---
 
 <div class="code-snippet my-6 max-w-[880px]">
-  <div class="flex flex-wrap items-center justify-between gap-2 rounded-t-[var(--radius)] border border-line bg-surface px-4 py-2">
+  <div class="flex flex-wrap items-baseline justify-between gap-2 border-t-2 border-ink pt-2 pb-2 font-sans">
     <div class="min-w-0">
-      <p class="text-sm font-medium">{title}</p>
-      {source && <p class="mono-label truncate">{source}</p>}
+      <p class="text-sm font-semibold">{title}</p>
+      {source && <p class="truncate font-mono text-xs text-faint">{source}</p>}
     </div>
     <div class="flex items-center gap-3">
       <span class="mono-label">
-        {lang} · {lines} lines
+        {lang}, {lines} lines
       </span>
-      <button type="button" class="js-only mono-label rounded border border-line px-2 py-0.5 hover:text-ink" data-copy>
+      <button
+        type="button"
+        class="js-only mono-label rounded-[var(--radius-sm)] border border-line-strong px-2 py-0.5 hover:border-ink hover:text-ink"
+        data-copy
+      >
         Copy
       </button>
     </div>
@@ -31,15 +35,26 @@ const lines = trimmed.split("\n").length;
   <Code
     code={trimmed}
     lang={lang === "text" ? "plaintext" : lang}
-    themes={{ light: "github-light", dark: "github-dark-dimmed" }}
+    themes={{ light: "github-light-high-contrast", dark: "github-dark-default" }}
     defaultColor={false}
   />
   {Astro.slots.has("default") && (
-    <div class="mt-3 text-[0.9375rem] text-muted">
+    <div class="mt-3 max-w-[68ch] font-sans text-[0.9375rem] leading-normal text-muted">
       <slot />
     </div>
   )}
 </div>
+
+<style>
+  /* Code sits on the plain surface (white in light mode), square, with a
+     hairline. Both Shiki themes were checked on that ground: the weakest token
+     (comments) is 5.0:1 in light and 5.6:1 in dark. */
+  .code-snippet :global(.astro-code) {
+    border: 1px solid var(--border);
+    border-radius: 0;
+    background-color: var(--surface);
+  }
+</style>
 
 <script>
   document.addEventListener("click", async (e) => {

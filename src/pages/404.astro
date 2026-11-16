@@ -2,20 +2,21 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Not found" description="Page not found.">
-  <section class="wrap grid min-h-[55vh] place-items-center py-20 text-center">
-    <div>
-      <p class="eyebrow">404</p>
-      <h1 class="mt-3 text-4xl">This trajectory didn't converge.</h1>
-      <p class="mt-4 text-muted">The page you're looking for isn't here.</p>
-      <div class="mt-8 flex justify-center gap-3">
-        <a href="/" class="btn btn-primary">
-          Home
-        </a>
-        <a href="/projects/" class="btn">
-          Projects
-        </a>
-      </div>
-    </div>
+<BaseLayout title="Page not found" description="Page not found.">
+  <section class="wrap min-h-[45vh] pt-10 md:pt-14">
+    <p class="mono-label">Error 404</p>
+    <h1 class="mt-2 text-[clamp(1.75rem,4vw,2.375rem)]">Page not found</h1>
+    <p class="mt-4 max-w-[60ch] text-lg text-muted">The page you're looking for isn't here.</p>
+    <p class="mt-6 font-sans">
+      <a href="/" class="text-flow underline decoration-1 underline-offset-[3px] hover:decoration-2">
+        Go to the home page
+      </a>
+      <span aria-hidden="true" class="px-2 text-faint">
+        ·
+      </span>
+      <a href="/projects/" class="text-flow underline decoration-1 underline-offset-[3px] hover:decoration-2">
+        Browse the projects
+      </a>
+    </p>
   </section>
 </BaseLayout>

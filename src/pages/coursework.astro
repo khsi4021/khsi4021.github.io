@@ -12,13 +12,14 @@ import newtonSphere from "@/assets/projects/newtonian/sphere_cp.png";
 import heat from "@/assets/coursework/heat_conduction.png";
 import clarky from "@/assets/coursework/clarky_cp.png";
 
+// Hypersonics first: the page is ordered toward the research direction.
 const sections = [
-  { id: "computational-aero", n: "01", title: "Computational aerodynamics" },
-  { id: "numerical-methods", n: "02", title: "Numerical methods" },
-  { id: "hypersonics", n: "03", title: "Hypersonics (in progress)" },
-  { id: "flight-dynamics", n: "04", title: "Flight dynamics & control" },
-  { id: "experimental", n: "05", title: "Experimental" },
-  { id: "more", n: "06", title: "More courses" },
+  { id: "hypersonics", title: "Hypersonics (in progress)" },
+  { id: "computational-aero", title: "Computational aerodynamics" },
+  { id: "numerical-methods", title: "Numerical methods" },
+  { id: "experimental", title: "Experimental" },
+  { id: "flight-dynamics", title: "Flight dynamics and control" },
+  { id: "more", title: "More courses" },
 ];
 ---
 
@@ -26,97 +27,31 @@ const sections = [
   title="Coursework"
   description="Coursework highlights: vortex panel and lifting-line methods, PDE solvers, entry aerothermodynamics, flight dynamics and wind-tunnel and heat-transfer labs."
 >
-  <section class="wrap pt-12 pb-6 md:pt-16">
-    <p class="eyebrow">Coursework</p>
-    <h1 class="mt-3 text-[clamp(2rem,4.5vw,3rem)]">Coursework highlights</h1>
-    <p class="mt-4 max-w-[64ch] text-lg text-muted">
+  <header class="wrap pt-10 pb-8 md:pt-14">
+    <h1 class="text-[clamp(1.75rem,4vw,2.375rem)]">Coursework highlights</h1>
+    <p class="mt-4 max-w-[60ch] text-lg text-muted">
       A figure and a few sentences for each, grouped by theme. These are graded assignments, so the source isn't
-      published. Every figure was regenerated for this page from my course code, in the site's figure style.
+      published. Every figure was regenerated for this page from the course code and lab data.
     </p>
-    <nav aria-label="On this page" class="mt-6 flex flex-wrap gap-2">
-      {sections.map((s) => (
-        <a class="chip no-underline hover:text-ink" href={`#${s.id}`}>
-          {s.title}
-        </a>
-      ))}
+    <nav aria-label="On this page" class="mt-5 font-sans text-sm">
+      <span class="text-faint">On this page: </span>
+      <ul class="inline">
+        {sections.map((s, i) => (
+          <li class="inline">
+            {i > 0 && <span aria-hidden="true"> · </span>}
+            <a class="text-flow underline decoration-1 underline-offset-2 hover:decoration-2" href={`#${s.id}`}>
+              {s.title}
+            </a>
+          </li>
+        ))}
+      </ul>
     </nav>
-  </section>
+  </header>
 
   <div class="wrap">
-    <section id="computational-aero" class="cw-section">
-      <h2>
-        <span>01</span> Computational aerodynamics
-      </h2>
-      <div class="cw-grid">
-        <div class="prose">
-          <h3>ASEN 3802: vortex panel method and lifting-line theory</h3>
-          <p>
-            A team lab (four students). We built a NACA 4-digit airfoil generator, a Kuethe–Chow constant-strength
-            vortex panel method with the Kutta condition, and a Prandtl lifting-line solver using odd Fourier terms. The
-            panel method shows what thin-airfoil theory leaves out: thickness raises the lift slope above 2π, and camber
-            shifts the zero-lift angle. This is the most direct CFD precursor in my coursework.
-            <!-- TODO(Lilo): which tasks were yours? -->
-          </p>
-          <p class="text-sm text-muted">
-            To regenerate the figure I reordered the airfoil points clockwise from the trailing edge, which the archived
-            panel routine expects. With that ordering it gives c<sub>l,α</sub> = 0.120/deg for NACA 0012 (thin-airfoil
-            theory: 0.110/deg) and c<sub>l</sub> = 0.26 at α = 0 for NACA 2412.
-          </p>
-        </div>
-        <div>
-          <Figure
-            src={clAlpha}
-            alt="Sectional lift coefficient against angle of attack from minus 8 to 12 degrees for NACA 0006, 0012, 0018 and 2412 from the vortex panel method, with the thin-airfoil line 2 pi alpha. Thicker sections have slightly steeper slopes; the cambered 2412 is shifted up by about 0.26."
-            source="courses/ASEN3802/aero-lab (Vortex_Panel.m, NACAGenerator.m)"
-          >
-            Vortex panel method, 100 panels per surface, against thin-airfoil theory.
-          </Figure>
-          <Figure
-            src={pllt}
-            alt="Induced-drag factor delta against taper ratio from 0 to 1 for aspect ratios 4, 6, 8 and 10; each curve has a minimum near a taper ratio of 0.35 to 0.4 and rises toward both ends."
-            source="courses/ASEN3802/aero-lab (PLLT.m)"
-          >
-            Lifting-line theory: δ = 1/e − 1 for untwisted tapered wings. The minimum near λ ≈ 0.35–0.4 is the classic
-            result.
-          </Figure>
-        </div>
-      </div>
-    </section>
-
-    <section id="numerical-methods" class="cw-section">
-      <h2>
-        <span>02</span> Numerical methods
-      </h2>
-      <div class="cw-grid">
-        <div class="prose">
-          <h3>APPM 3050: Scientific Computing</h3>
-          <p>
-            Root finding (bisection, Newton, secant), Taylor-series error, Euler, RK2 and RK4 integrators, an iterative
-            finite-difference boundary-value problem, a Monte Carlo random-walk escape probability, and explicit
-            finite-difference solvers for the 2-D wave and heat equations. Two projects grew into full pages:
-          </p>
-          <ul>
-            <li>
-              <a href="/projects/tsunami-simulation/">2-D tsunami over variable bathymetry</a> (with animation)
-            </li>
-            <li>
-              <a href="/projects/target-shooting/">Shooting method with event detection</a>
-            </li>
-          </ul>
-        </div>
-        <Figure
-          src={wave}
-          alt="Four 3D snapshots of a vibrating square membrane from t = 0 to about 1, starting as a single positive dome, flattening, inverting and returning."
-          source="courses/APPM3050/wave-2d (scheme re-run, vectorised)"
-        >
-          2-D wave equation on a fixed-edge square membrane, explicit central differences, λ = (cΔt/Δx)² = 0.25.
-        </Figure>
-      </div>
-    </section>
-
-    <section id="hypersonics" class="cw-section">
-      <h2>
-        <span>03</span> Hypersonics (in progress)
+    <section id="hypersonics" class="sec" aria-labelledby="hypersonics-label">
+      <h2 id="hypersonics-label" class="sec-label">
+        <span class="n">1</span>Hypersonics (in progress)
       </h2>
       <div class="cw-grid">
         <div class="prose">
@@ -179,7 +114,7 @@ const sections = [
             <a href="/projects/newtonian-aero/">Newtonian hypersonic aerodynamics</a>.
           </p>
         </div>
-        <div>
+        <div class="cw-figs">
           <Figure
             src={entry}
             alt="Left, altitude against velocity for ballistic and full-equation entries with analytic peak-deceleration and peak-heating points on the ballistic curve. Right, Sutton-Graves stagnation heat flux against altitude peaking near 15 km at about 19 and 21 MW per square metre."
@@ -189,7 +124,6 @@ const sections = [
           </Figure>
           <Figure
             src={newtonSphere}
-            keepInk
             alt="Left, a sphere coloured by Newtonian pressure coefficient, 2 at the stagnation point falling to zero at 90 degrees. Right, the pressure coefficient of every panel against its angle from the stagnation point, lying on the exact curve 2 cos squared phi."
             source="courses/ASEN5131/HW4 (re-run)"
           >
@@ -199,40 +133,80 @@ const sections = [
       </div>
     </section>
 
-    <section id="flight-dynamics" class="cw-section">
-      <h2>
-        <span>04</span> Flight dynamics & control
+    <section id="computational-aero" class="sec" aria-labelledby="computational-aero-label">
+      <h2 id="computational-aero-label" class="sec-label">
+        <span class="n">2</span>Computational aerodynamics
       </h2>
       <div class="cw-grid">
         <div class="prose">
-          <h3>ASEN 3801: Aircraft Dynamics</h3>
+          <h3>ASEN 3802: vortex panel method and lifting-line theory</h3>
           <p>
-            Lab 4 was a quadrotor: full 12-state nonlinear equations of motion, a motor-to-force/moment mixing matrix, a
-            linearised model, and inner-loop rate feedback plus outer-loop velocity feedback, compared in simulation
-            (team lab). Lab 5 extended the equations of motion to a fixed-wing aircraft with aerodynamic forces and
-            moments. Earlier labs covered rotation matrices and Euler angles from experimental tracking data.
-            <!-- TODO(Lilo): your part of lab 4; a figure from your runs would help. -->
+            A team lab (four students). We built a NACA 4-digit airfoil generator, a Kuethe–Chow constant-strength
+            vortex panel method with the Kutta condition, and a Prandtl lifting-line solver using odd Fourier terms. The
+            panel method shows what thin-airfoil theory leaves out: thickness raises the lift slope above 2π, and camber
+            shifts the zero-lift angle.
+            {/* TODO(Khalil): which tasks were yours? */}
           </p>
-          <p>
-            The same ideas, at a larger scale, are in <a href="/projects/sim6dof/">Sim6DOF</a>.
+          <p class="text-sm text-muted">
+            The figure was regenerated with the airfoil points ordered clockwise from the trailing edge, which the
+            archived panel routine expects. With that ordering it gives c<sub>l,α</sub> = 0.120/deg for NACA 0012
+            (thin-airfoil theory: 0.110/deg) and c<sub>l</sub> = 0.26 at α = 0 for NACA 2412.
           </p>
         </div>
-        <div class="card p-5">
-          <p class="mono-label">Quadrotor equations of motion (lab 4)</p>
-          <Equation
-            tex={String.raw`\dot{\boldsymbol\omega} = I^{-1}\big(\mathbf G_c - \boldsymbol\omega \times I\boldsymbol\omega\big),\qquad \dot{\mathbf v}^B = \mathbf v^B\times\boldsymbol\omega + R^{\mathsf T}\mathbf g + \tfrac{1}{m}\big(\mathbf F_\text{aero} + \mathbf F_c\big)`}
-          />
-          <p class="text-sm text-muted">
-            The control forces and moments come from the four rotor thrusts through a mixing matrix. The figure is still
-            to come.
-          </p>
+        <div class="cw-figs">
+          <Figure
+            src={clAlpha}
+            alt="Sectional lift coefficient against angle of attack from minus 8 to 12 degrees for NACA 0006, 0012, 0018 and 2412 from the vortex panel method, with the thin-airfoil line 2 pi alpha. Thicker sections have slightly steeper slopes; the cambered 2412 is shifted up by about 0.26."
+            source="courses/ASEN3802/aero-lab (Vortex_Panel.m, NACAGenerator.m)"
+          >
+            Vortex panel method, 100 panels per surface, against thin-airfoil theory.
+          </Figure>
+          <Figure
+            src={pllt}
+            alt="Induced-drag factor delta against taper ratio from 0 to 1 for aspect ratios 4, 6, 8 and 10; each curve has a minimum near a taper ratio of 0.35 to 0.4 and rises toward both ends."
+            source="courses/ASEN3802/aero-lab (PLLT.m)"
+          >
+            Lifting-line theory: δ = 1/e − 1 for untwisted tapered wings. The minimum near λ ≈ 0.35–0.4 is the classic
+            result.
+          </Figure>
         </div>
       </div>
     </section>
 
-    <section id="experimental" class="cw-section">
-      <h2>
-        <span>05</span> Experimental
+    <section id="numerical-methods" class="sec" aria-labelledby="numerical-methods-label">
+      <h2 id="numerical-methods-label" class="sec-label">
+        <span class="n">3</span>Numerical methods
+      </h2>
+      <div class="cw-grid">
+        <div class="prose">
+          <h3>APPM 3050: Scientific Computing</h3>
+          <p>
+            Root finding (bisection, Newton, secant), Taylor-series error, Euler, RK2 and RK4 integrators, an iterative
+            finite-difference boundary-value problem, a Monte Carlo random-walk escape probability, and explicit
+            finite-difference solvers for the 2-D wave and heat equations. Two projects grew into full pages:
+          </p>
+          <ul>
+            <li>
+              <a href="/projects/tsunami-simulation/">2-D tsunami over variable bathymetry</a> (with animation)
+            </li>
+            <li>
+              <a href="/projects/target-shooting/">Shooting method with event detection</a>
+            </li>
+          </ul>
+        </div>
+        <Figure
+          src={wave}
+          alt="Four 3D snapshots of a vibrating square membrane from t = 0 to about 1, starting as a single positive dome, flattening, inverting and returning."
+          source="courses/APPM3050/wave-2d (scheme re-run, vectorised)"
+        >
+          2-D wave equation on a fixed-edge square membrane, explicit central differences, λ = (cΔt/Δx)² = 0.25.
+        </Figure>
+      </div>
+    </section>
+
+    <section id="experimental" class="sec" aria-labelledby="experimental-label">
+      <h2 id="experimental-label" class="sec-label">
+        <span class="n">4</span>Experimental
       </h2>
       <div class="cw-grid">
         <div class="prose">
@@ -249,7 +223,7 @@ const sections = [
             integrated for sectional lift and drag, plus a hot-air-balloon altitude and density model.
           </p>
         </div>
-        <div>
+        <div class="cw-figs">
           <Figure
             src={heat}
             alt="Left, eight thermocouple temperature histories for an aluminium rod at 25 V, rising over about 25 minutes to steady values between 19 and 24 degrees C. Right, end-of-test temperature against position for five rod and voltage cases, each with a straight-line fit; steel has the steepest slope."
@@ -268,46 +242,76 @@ const sections = [
       </div>
     </section>
 
-    <section id="more" class="cw-section">
-      <h2>
-        <span>06</span> More courses
+    <section id="flight-dynamics" class="sec" aria-labelledby="flight-dynamics-label">
+      <h2 id="flight-dynamics-label" class="sec-label">
+        <span class="n">5</span>Flight dynamics and control
       </h2>
-      <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <li class="card p-4">
+      <div class="cw-grid">
+        <div class="prose">
+          <h3>ASEN 3801: Aircraft Dynamics</h3>
+          <p>
+            Lab 4 was a quadrotor: full 12-state nonlinear equations of motion, a motor-to-force/moment mixing matrix, a
+            linearised model, and inner-loop rate feedback plus outer-loop velocity feedback, compared in simulation
+            (team lab). Lab 5 extended the equations of motion to a fixed-wing aircraft with aerodynamic forces and
+            moments. Earlier labs covered rotation matrices and Euler angles from experimental tracking data.
+            {/* TODO(Khalil): your part of lab 4; a figure from your runs would help. */}
+          </p>
+          <p>
+            The same ideas, at a larger scale, are in <a href="/projects/sim6dof/">Sim6DOF</a>.
+          </p>
+        </div>
+        <div class="border-t border-line pt-4">
+          <p class="font-sans text-sm font-semibold">Quadrotor equations of motion (lab 4)</p>
+          <Equation
+            tex={String.raw`\dot{\boldsymbol\omega} = I^{-1}\big(\mathbf G_c - \boldsymbol\omega \times I\boldsymbol\omega\big),\qquad \dot{\mathbf v}^B = \mathbf v^B\times\boldsymbol\omega + R^{\mathsf T}\mathbf g + \tfrac{1}{m}\big(\mathbf F_\text{aero} + \mathbf F_c\big)`}
+          />
+          <p class="font-sans text-sm text-muted">
+            The control forces and moments come from the four rotor thrusts through a mixing matrix.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="more" class="sec" aria-labelledby="more-label">
+      <h2 id="more-label" class="sec-label">
+        <span class="n">6</span>More courses
+      </h2>
+      <ul class="cw-more">
+        <li>
           <p class="font-medium">ASEN 4018 Senior Design</p>
-          <p class="mt-1 text-sm text-muted">
+          <p class="font-sans text-sm text-muted">
             The capstone weight model, flap model and design trades, and the 6-DOF simulator. See the{" "}
-            <a class="text-flow underline" href="/projects/aircraft-design-toolbox/">
+            <a class="text-flow underline decoration-1 underline-offset-2" href="/projects/aircraft-design-toolbox/">
               capstone weight-model page
             </a>
             .
           </p>
         </li>
-        <li class="card p-4">
+        <li>
           <p class="font-medium">ATLS 5151 Flow Visualization (graduate)</p>
-          <p class="mt-1 text-sm text-muted">
-            Marangoni flows, Chladni patterns and clouds. See the{" "}
-            <a class="text-flow underline" href="/flow-vis/">
+          <p class="font-sans text-sm text-muted">
+            Marangoni flow in milk and dye, Chladni plates, a crème brûlée torch flame and a copper-coloured green flame. See the{" "}
+            <a class="text-flow underline decoration-1 underline-offset-2" href="/flow-vis/">
               gallery
             </a>
             .
           </p>
         </li>
-        <li class="card p-4">
+        <li>
           <p class="font-medium">ASEN 3200 Orbital Mechanics</p>
-          <p class="mt-1 text-sm text-muted">Orbital mechanics homework, the background for DebriSolver.</p>
+          <p class="font-sans text-sm text-muted">Orbital mechanics homework.</p>
         </li>
-        <li class="card p-4">
+        <li>
           <p class="font-medium">ASEN 3711 / 3712 / 3713</p>
-          <p class="mt-1 text-sm text-muted">Aerodynamics, structures, and thermodynamics &amp; heat transfer.</p>
+          <p class="font-sans text-sm text-muted">Aerodynamics, structures, and thermodynamics &amp; heat transfer.</p>
         </li>
-        <li class="card p-4">
+        <li>
           <p class="font-medium">ASEN 3300 Aerospace Electronics</p>
-          <p class="mt-1 text-sm text-muted">Circuits labs and Arduino sensor work.</p>
+          <p class="font-sans text-sm text-muted">Circuits labs and Arduino sensor work.</p>
         </li>
-        <li class="card p-4">
+        <li>
           <p class="font-medium">APPM 2360 · ASEN 2012 · CSCI 1300</p>
-          <p class="mt-1 text-sm text-muted">
+          <p class="font-sans text-sm text-muted">
             Differential equations, experimental and computational methods, and C++ programming.
           </p>
         </li>
@@ -318,23 +322,7 @@ const sections = [
 </BaseLayout>
 
 <style>
-  .cw-section {
-    padding-block: 3.5rem;
-    border-top: 1px solid var(--border);
-    scroll-margin-top: 5rem;
-  }
-  .cw-section > h2 {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    font-size: var(--text-2xl);
-    margin-bottom: 1.5rem;
-  }
-  .cw-section > h2 span {
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-    color: var(--text-faint);
-  }
+  /* Inside a numbered section: reading text first, then its figures side by side. */
   .cw-grid {
     display: grid;
     gap: 2rem;
@@ -342,17 +330,38 @@ const sections = [
   .cw-grid > * {
     min-width: 0;
   }
-  @media (min-width: 1024px) {
-    .cw-grid {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-      gap: 3rem;
-      align-items: start;
+  .cw-figs {
+    display: grid;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media (min-width: 768px) {
+    .cw-figs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
+  .cw-grid > :global(.figure) {
+    max-width: 34rem;
+  }
   .cw-grid :global(.figure) {
-    margin-top: 0;
+    margin-block: 0;
   }
   .cw-grid .prose h3:first-child {
     margin-top: 0;
+  }
+  .cw-more {
+    border-top: 1px solid var(--border);
+  }
+  .cw-more > li {
+    display: grid;
+    gap: 0.15rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-block: 0.75rem;
+  }
+  @media (min-width: 640px) {
+    .cw-more > li {
+      grid-template-columns: 17rem minmax(0, 1fr);
+      align-items: baseline;
+    }
   }
 </style>

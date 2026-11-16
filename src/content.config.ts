@@ -38,7 +38,12 @@ const projects = defineCollection({
       tags: z.array(z.enum(TAGS)).min(1),
       stack: z.array(z.string()),
       featured: z.boolean().default(false),
+      /** Reading order: relevance to hypersonic CFD, 1 = most relevant. */
       order: z.number(),
+      /** Heading this project is listed under in the ordered reading list. */
+      group: z.string().optional(),
+      /** One sentence: what the project contributes toward hypersonic CFD. */
+      contribution: z.string().optional(),
       heroImage: image(),
       heroAlt: z.string(),
       thumbnail: image(),

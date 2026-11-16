@@ -1,295 +1,306 @@
 ---
 import { getCollection } from "astro:content";
-import { Image, getImage } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import ProjTile from "@/components/BentoProject.astro";
-import { site } from "@/data/site";
-import { skillStrip } from "@/data/skills";
-import tsunamiPoster from "@/assets/projects/tsunami/tsunami_poster.png";
-import apolloFig from "@/assets/projects/newtonian/apollo_thumb.png";
+import Figure from "@/components/Figure.astro";
+import Lightbox from "@/components/Lightbox.astro";
+import ProjectRow from "@/components/ProjectRow.astro";
+import { site, hasEmail, hasLinkedIn } from "@/data/site";
 
-const all = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
-const bySlug = Object.fromEntries(all.map((p) => [p.data.slug, p.data]));
-const dev = import.meta.env.DEV;
-const poster = await getImage({ src: tsunamiPoster, width: 1280, format: "webp" });
+const all = (await getCollection("projects")).map((p) => p.data).sort((a, b) => a.order - b.order);
+const bySlug = Object.fromEntries(all.map((d) => [d.slug, d]));
 
-// Featured tiles. Short titles/blurbs condense each project's own hook.
-const tiles = [
+// The path: projects in frontmatter `order`, under their frontmatter `group`.
+const groups: { name: string; items: typeof all }[] = [];
+for (const d of all) {
+  const name = d.group ?? "Other work";
+  const last = groups.at(-1);
+  if (last && last.name === name) last.items.push(d);
+  else groups.push({ name, items: [d] });
+}
+
+// Selected results. Values are read from each project's frontmatter `metrics`
+// (matched by label), so they cannot drift from the project pages.
+const metric = (slug: string, label: string) => {
+  const m = bySlug[slug]?.metrics.find((x) => x.label.startsWith(label));
+  if (!m) throw new Error(`Home: metric "${label}" not found on project "${slug}"`);
+  return m.value;
+};
+const results = [
   {
+    value: metric("hypersonic-solver", "vs Fay–Riddell"),
+    text: "Stagnation-line heating against the Fay–Riddell correlation.",
     slug: "hypersonic-solver",
-    title: "Hypersonic heating & transition solver",
-    blurb: "Similarity boundary layer, marching and PANT transition on a Mach-6 cylinder.",
-    size: "w2 h2",
-    pos: "center",
+    name: "Hypersonic solver",
+    tab: "technical",
+    type: "Personal",
   },
   {
+    // Not a frontmatter metric: copied from the benchmark table on the
+    // hypersonic-solver Results tab (PANT-RT row, reference roughness height).
+    value: "15.30° / 10.06°",
+    text: "Predicted transition onset against the source paper's Table 3, at the reference roughness height. The gap is examined on the page and is not closed.",
+    slug: "hypersonic-solver",
+    name: "Hypersonic solver",
+    tab: "results",
+    type: "Personal",
+  },
+  {
+    value: metric("newtonian-aero", "sphere C_D"),
+    text: "Sphere drag coefficient against the exact Newtonian value of 1.",
+    slug: "newtonian-aero",
+    name: "Newtonian aerodynamics",
+    tab: "technical",
+    type: "Course",
+  },
+  {
+    value: metric("debrisolver", "max rel. error vs NASA CARA"),
+    text: "Maximum relative error in collision probability against NASA CARA, over 977 cases.",
     slug: "debrisolver",
-    title: "DebriSolver",
-    blurb: "Conjunction messages in, verified avoidance burns out.",
-    size: "w2 h2",
-    pos: "center",
+    name: "DebriSolver",
+    tab: "results",
+    type: "Competition",
   },
   {
+    value: metric("debrisolver", "propagated maneuvers"),
+    text: "Propagated avoidance maneuvers that meet the collision-probability target.",
+    slug: "debrisolver",
+    name: "DebriSolver",
+    tab: "results",
+    type: "Competition",
+  },
+  {
+    value: metric("sim6dof", "ω_n error vs analytic model"),
+    text: "Natural-frequency error against the analytic model, all five Boeing 747 modes.",
     slug: "sim6dof",
-    title: "Sim6DOF",
-    blurb: "Script-built Simulink 6-DOF, verified on a 747.",
-    size: "h2",
-    pos: "center",
+    name: "Sim6DOF",
+    tab: "results",
+    type: "Team (two people)",
   },
-  {
-    slug: "aircraft-design-toolbox",
-    title: "Capstone UAV",
-    blurb: "Weight model, flaps and design sweeps.",
-    size: "h2",
-    pos: "center",
-  },
-].map((t) => ({ ...t, d: bySlug[t.slug] }));
-const [hyper, debri, sixdof, capstone] = tiles;
-const others = all.filter((p) => !p.data.featured).map((p) => p.data.title.split(/[:(]/)[0].trim());
-
-const metrics = [
-  {
-    label: "Fay–Riddell check · heating solver",
-    value: "−1.45",
-    unit: "%",
-    href: "/projects/hypersonic-solver/#technical",
-    accent: true,
-  },
-  { label: "Max Pc error vs NASA CARA", value: "8.9e−8", href: "/projects/debrisolver/#results" },
-  {
-    label: "Maneuvers meeting the Pc target",
-    value: "567",
-    unit: "/567",
-    href: "/projects/debrisolver/#results",
-    accent: true,
-  },
-  { label: "747 mode ω_n error · Sim6DOF", value: "≤0.09", unit: "%", href: "/projects/sim6dof/#results" },
 ];
+
+const hyper = bySlug["hypersonic-solver"];
 ---
 
 <BaseLayout>
-  <div class="wrap pt-2 pb-4">
-    <div class="bento">
-      <!-- DRAFT: Home copy. TODO(Lilo): rewrite the intro in your own voice. -->
-      <section class="tile tile-glow w2 h2 flex flex-col justify-between gap-8" aria-labelledby="intro">
-        <p class="mono-label">Aerospace Engineering Sciences · CU Boulder · 2027</p>
-        <div>
-          <h1 id="intro" class="text-[clamp(2.25rem,1.2rem+3vw,3.5rem)] leading-[1.02] tracking-[-0.035em]">
-            Simulation tools for <span class="text-accent">hypersonic</span> flight.
-          </h1>
-          <p class="mt-4 max-w-[46ch] text-muted">
-            I'm Khalil (Lilo) Sidani. I write solvers for boundary layers, heating and transition, and check them
-            against exact solutions and published data. Applying to MS/PhD programs for Fall 2027, and open to
-            internships.
-            {dev && <span class="draft-badge ml-1">draft</span>}
-          </p>
-          <div class="mt-5 flex flex-wrap gap-2">
-            <a class="btn btn-primary" href="/projects/">
-              See the work
-            </a>
-            <a class="btn" href="/research/">
-              Research interests
-            </a>
-            <a class="btn" href="/cv/">
-              CV
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section class="tile tile-media w2 h2" aria-labelledby="t-tsunami" data-tile-video>
-        <video
-          class="reink"
-          src="/media/tsunami.mp4"
-          poster={poster.src}
-          muted
-          loop
-          playsinline
-          preload="none"
-          aria-label="Simulated wave pulse crossing a basin and bending over a shoal"
-        ></video>
-        <div class="tile-cap flex items-end justify-between gap-3">
-          <div>
-            <h2 id="t-tsunami" class="text-[0.9375rem] font-semibold tracking-[-0.01em]">
-              <a class="stretched no-underline" href="/projects/tsunami-simulation/">
-                Tsunami over a shoal
-              </a>
-            </h2>
-            <p class="mono-label">Finite-difference shallow-water solver · APPM 3050</p>
-          </div>
-        </div>
-        <button
-          type="button"
-          class="js-only absolute top-3.5 right-3.5 z-[3] rounded-full border border-line bg-surface-2 px-3 py-1 font-mono text-xs text-ink hover:border-accent"
-          data-video-toggle
-          aria-label="Play animation"
-        >
-          Play
-        </button>
-      </section>
-
-      {metrics.slice(0, 2).map((m) => (
-        <a class="tile tile-metric" href={m.href}>
-          <span class="mono-label">{m.label}</span>
-          <b class:list={[m.accent && "text-accent"]}>
-            {m.value}
-            {m.unit && <small>{m.unit}</small>}
-          </b>
-        </a>
-      ))}
-
-      <ProjTile t={hyper} eager />
-
-      {metrics.slice(2).map((m) => (
-        <a class="tile tile-metric" href={m.href}>
-          <span class="mono-label">{m.label}</span>
-          <b class:list={[m.accent && "text-accent"]}>
-            {m.value}
-            {m.unit && <small>{m.unit}</small>}
-          </b>
-        </a>
-      ))}
-
-      <ProjTile t={debri} />
-      <ProjTile t={sixdof} />
-      <ProjTile t={capstone} />
-
-      <section class="tile h2" aria-labelledby="now">
-        <h2 id="now" class="mono-label !font-normal !tracking-[0.04em]">
-          Now
-        </h2>
-        <ul class="mt-3 text-sm">
-          <li class="border-b border-line py-2">
-            Senior design, ASEN 4018
-            <span class="block text-xs text-muted">Weight model, trade studies, 6-DOF simulator</span>
+  <!-- DRAFT: Home copy. TODO(Khalil): replace the placeholder block in section 1 with your own wording,
+       and check the one-sentence `contribution` lines in each project's frontmatter. -->
+  <div class="wrap">
+    <header class="pt-10 pb-10">
+      <h1 class="text-[clamp(1.875rem,1.5rem+1.4vw,2.375rem)] leading-tight tracking-[-0.01em]">{site.name}</h1>
+      <p class="mt-3 max-w-[62ch] font-sans text-[0.9375rem] leading-relaxed text-muted">
+        {site.degree}. {site.minors}.
+      </p>
+      <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-sans text-[0.9375rem]">
+        {hasEmail && (
+          <li>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
           </li>
-          <li class="border-b border-line py-2">
-            Hypersonic aerodynamics<span class="block text-xs text-muted">ASEN 5131 (graduate)</span>
-          </li>
-          <li class="border-b border-line py-2">
-            Flow visualization<span class="block text-xs text-muted">ATLS 5151 (graduate)</span>
-          </li>
-          <li class="py-2">
-            Grad applications<span class="block text-xs text-muted">Fall 2027 · CFD &amp; hypersonics</span>
-          </li>
-        </ul>
-      </section>
-
-      <section class="tile w2" aria-labelledby="tools">
-        <div class="flex items-baseline justify-between gap-3">
-          <h2 id="tools" class="mono-label !font-normal !tracking-[0.04em]">
-            Tools
-          </h2>
-          <a href="/about/#skills" class="text-xs text-flow underline underline-offset-2">
-            Skills matrix →
-          </a>
-        </div>
-        <ul class="mt-3 flex flex-wrap gap-1.5">
-          {skillStrip.map((s) => (
-            <li class="chip !px-2.5 !py-1 !font-sans !text-[0.8125rem] !text-ink">{s}</li>
-          ))}
-        </ul>
-      </section>
-
-      <a class="tile tile-glow-tr flex flex-col justify-end" href="/flow-vis/">
-        <span class="mono-label">Flow Vis · ATLS 5151</span>
-        <span class="mt-1.5 text-lg leading-snug font-semibold tracking-[-0.02em]">Marangoni, Chladni, clouds →</span>
-      </a>
-
-      <section class="tile tile-media w2" aria-labelledby="t-newton">
-        <div class="figure-ground keep-ink absolute inset-0">
-          <Image
-            src={apolloFig}
-            alt=""
-            widths={[480, 800, 1200]}
-            sizes="(min-width: 1024px) 620px, 100vw"
-            style="object-fit: contain; object-position: right center"
-            loading="lazy"
-          />
-        </div>
-        <div class="tile-cap">
-          <h2 id="t-newton" class="text-[0.9375rem] font-semibold tracking-[-0.01em]">
-            <a class="stretched no-underline" href="/projects/newtonian-aero/">
-              Newtonian pressure on the Apollo capsule
-            </a>
-          </h2>
-          <p class="mono-label">Hypersonic aerodynamics · ASEN 5131</p>
-        </div>
-      </section>
-
-      <a class="tile flex flex-col justify-between gap-4" href="/research/">
-        <span class="mono-label">For admissions</span>
-        <span class="text-lg leading-snug font-semibold tracking-[-0.02em]">
-          Where I'm headed: CFD for hypersonic boundary layers →
-        </span>
-      </a>
-
-      <section class="tile tile-contact w2 flex flex-col justify-between gap-4" aria-labelledby="contact">
-        <h2 id="contact" class="font-mono text-xs !font-normal tracking-[0.04em]">
-          Contact
-        </h2>
-        <a
-          href={`mailto:${site.email}`}
-          class="text-[clamp(1.25rem,0.9rem+1.4vw,1.625rem)] leading-tight font-semibold tracking-[-0.02em] break-all underline-offset-4 hover:underline"
-        >
-          {site.email}
-        </a>
-        <p class="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
-          <a href={site.github} rel="me" class="underline underline-offset-2">
+        )}
+        <li>
+          <a href={site.github} rel="me">
             GitHub
           </a>
-          <a href="/cv/" class="underline underline-offset-2">
-            CV
-          </a>
-          <a href="/contact/" class="underline underline-offset-2">
-            All contact options →
-          </a>
-        </p>
-      </section>
+        </li>
+        <li>
+          <a href="/cv/">Curriculum vitae</a>
+        </li>
+      </ul>
+    </header>
 
-      <a class="tile w2 flex flex-col justify-between gap-4" href="/projects/">
-        <span class="mono-label">More work</span>
-        <span>
-          <span class="block text-[clamp(1.25rem,0.9rem+1.4vw,1.625rem)] leading-tight font-semibold tracking-[-0.02em]">
-            All {all.length} projects →
-          </span>
-          <span class="mt-1.5 block text-sm text-muted">{others.join(" · ")}</span>
-        </span>
-      </a>
-    </div>
+    <section class="sec" aria-labelledby="sec-direction">
+      <h2 id="sec-direction" class="sec-label">
+        <span class="n">1</span>Research direction
+      </h2>
+      <div>
+        <div class="placeholder max-w-[68ch]">
+          <p>
+            My research interest is computational fluid dynamics for hypersonic flow. I am applying to MS/PhD programs
+            for Fall 2027. A paragraph in my own words on the research questions I want to work on will go here.
+          </p>
+        </div>
+        <p class="mt-4 font-sans text-[0.9375rem]">
+          <a href="/research/">Read the research page</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="sec-path">
+      <h2 id="sec-path" class="sec-label">
+        <span class="n">2</span>The path
+      </h2>
+      <div>
+        <p class="max-w-[68ch]">
+          Ordered by relevance to hypersonic CFD, not by date. Later groups are in other fields; each line says what
+          carries over.
+        </p>
+        {groups.map((g) => (
+          <div class="mt-8">
+            <h3 class="font-sans text-[0.9375rem] font-semibold tracking-normal">{g.name}</h3>
+            <ol class="mt-2 list-none border-b border-line p-0">
+              {g.items.map((d) => (
+                <ProjectRow d={d} n={`2.${all.indexOf(d) + 1}`} />
+              ))}
+            </ol>
+            {g.name === "Numerical methods" && (
+              <p class="mt-3 font-sans text-[0.8125rem] text-muted">
+                See also the{" "}
+                <a href="/coursework/#computational-aero">
+                  vortex panel method and lifting-line theory lab (ASEN 3802, team lab)
+                </a>{" "}
+                under Coursework.
+              </p>
+            )}
+          </div>
+        ))}
+        <p class="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-sans text-[0.9375rem]">
+          <a href="/projects/">All {all.length} projects</a>
+          <a href="/coursework/">Coursework highlights</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="sec-results">
+      <h2 id="sec-results" class="sec-label">
+        <span class="n">3</span>Selected results
+      </h2>
+      <div>
+        <p class="max-w-[68ch]">
+          Each number is taken from the project page it links to. Team and course work is marked as such.
+        </p>
+        <div class="results-scroll mt-5" role="region" aria-labelledby="sec-results" tabindex="0">
+          <table class="results">
+            <thead>
+              <tr>
+                <th scope="col">Result</th>
+                <th scope="col">Project</th>
+                <th scope="col">Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {results.map((r) => (
+                <tr>
+                  <td>
+                    <span class="val">{r.value}</span>
+                    <span class="what">{r.text}</span>
+                  </td>
+                  <td>
+                    <a href={`/projects/${r.slug}/#${r.tab}`}>
+                      {r.name}, {r.tab} tab
+                    </a>
+                  </td>
+                  <td>{r.type}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <Figure src={hyper.heroImage} alt={hyper.heroAlt} maxWidth={760}>
+          Laminar wall heat flux along a Mach-6 cylinder (top) and the roughness-transition parameter for three
+          roughness heights (bottom). Transition is predicted where each curve crosses the threshold of 434. From the
+          <a href="/projects/hypersonic-solver/">hypersonic heating and transition solver</a>.
+        </Figure>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="sec-term">
+      <h2 id="sec-term" class="sec-label">
+        <span class="n">4</span>Fall 2026
+      </h2>
+      <ul class="term list-none p-0 font-sans text-[0.9375rem]">
+        <li>
+          <a href="/coursework/#hypersonics">ASEN 5131 Hypersonic Aerodynamics</a> (graduate)
+        </li>
+        <li>
+          ASEN 4018 Senior Design: <a href="/projects/aircraft-design-toolbox/">capstone UAV sizing</a> and the
+          <a href="/projects/sim6dof/">Sim6DOF flight simulator</a>
+        </li>
+        <li>ATLS 5151 Flow Visualization (graduate)</li>
+      </ul>
+    </section>
+
+    <section class="sec" aria-labelledby="sec-contact">
+      <h2 id="sec-contact" class="sec-label">
+        <span class="n">5</span>CV and contact
+      </h2>
+      <ul class="term list-none p-0 font-sans text-[0.9375rem]">
+        <li>
+          <a href="/cv/">Curriculum vitae</a> (<a href={site.cvPath}>PDF</a>)
+        </li>
+        {hasEmail && (
+          <li>
+            Email: <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+        )}
+        <li>
+          GitHub:{" "}
+          <a href={site.github} rel="me">
+            {site.githubUser}
+          </a>
+        </li>
+        {hasLinkedIn && (
+          <li>
+            <a href={site.linkedin} rel="me">
+              LinkedIn
+            </a>
+          </li>
+        )}
+        <li>
+          <a href="/contact/">All contact options</a>
+        </li>
+      </ul>
+    </section>
   </div>
+  <Lightbox />
 </BaseLayout>
 
-<script>
-  // Tsunami tile: play while on screen (never under reduced motion), with a
-  // visible Play/Pause control (WCAG 2.2.2).
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  document.querySelectorAll<HTMLElement>("[data-tile-video]").forEach((box) => {
-    const v = box.querySelector("video")!;
-    const b = box.querySelector<HTMLButtonElement>("[data-video-toggle]")!;
-    let userPaused = reduce;
-    const sync = () => {
-      b.textContent = v.paused ? "Play" : "Pause";
-      b.setAttribute("aria-label", v.paused ? "Play animation" : "Pause animation");
-    };
-    v.addEventListener("play", sync);
-    v.addEventListener("pause", sync);
-    b.addEventListener("click", () => {
-      userPaused = !v.paused;
-      if (v.paused) v.play().catch(() => {});
-      else v.pause();
-    });
-    const start = () =>
-      new IntersectionObserver(
-        ([e]) => {
-          if (e.isIntersecting && !userPaused) v.play().catch(() => {});
-          else if (!e.isIntersecting) v.pause();
-        },
-        { threshold: 0.3 },
-      ).observe(v);
-    // Wait for the page to finish loading so the video never competes with it.
-    if (document.readyState === "complete") start();
-    else window.addEventListener("load", start, { once: true });
-    sync();
-  });
-</script>
+<style>
+  .results-scroll {
+    overflow-x: auto;
+  }
+  .results {
+    width: 100%;
+    min-width: 34rem;
+    border-collapse: collapse;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+  }
+  .results th {
+    text-align: left;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 0 1rem 0.5rem 0;
+    border-bottom: 2px solid var(--text);
+  }
+  .results td {
+    vertical-align: top;
+    padding: 0.75rem 1rem 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .results th:last-child,
+  .results td:last-child {
+    padding-right: 0;
+  }
+  .results .val {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+  }
+  .results .what {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--text-muted);
+    max-width: 46ch;
+  }
+  .term li {
+    padding-block: 0.6rem;
+    border-top: 1px solid var(--border);
+  }
+  .term li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+</style>
