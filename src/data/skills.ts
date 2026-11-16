@@ -34,6 +34,10 @@ export const skillMatrix: SkillGroup[] = [
         name: "Finite differences (wave, heat)",
         where: [p("tsunami-simulation", "Tsunami"), c("numerical-methods", "APPM 3050")],
       },
+      {
+        name: "Separation of variables & eigenfunction expansions",
+        where: [p("heat-diffusion-3d", "APPM 4350 heat diffusion")],
+      },
       { name: "Panel methods & lifting line", where: [c("asen-3802", "ASEN 3802")] },
       { name: "Newtonian impact theory on surface grids", where: [p("newtonian-aero", "Newtonian aero")] },
       { name: "Simulink 6-DOF", where: [p("sim6dof", "Sim6DOF")] },
@@ -69,6 +73,7 @@ export const skillMatrix: SkillGroup[] = [
         where: [p("hypersonic-solver", "Hypersonic solver"), p("debrisolver", "DebriSolver")],
       },
       { name: "Plotly", where: [p("debrisolver", "3D encounter scenes")] },
+      { name: "Mathematica", where: [p("heat-diffusion-3d", "APPM 4350 plots")] },
       { name: "Fusion 360 (CAD)", where: [beyond("High-power rocketry")] },
       { name: "Raspberry Pi", where: [cv] },
     ],

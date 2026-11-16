@@ -1,20 +1,20 @@
 ---
 title: Regenerative Power Generation CubeSat Experiment
 slug: regen-power-cubesat
-summary: A suborbital payload that reached the Kármán line to investigate regenerative power generation with Peltier coolers, tested in a vacuum chamber before launch and compared with post-flight telemetry afterwards.
-hook: A Peltier power-generation payload tested in a vacuum chamber, flown to the Kármán line, and compared with its own flight telemetry.
-tldr: I designed and developed a suborbital payload that reached the Kármán line to investigate regenerative power generation with Peltier coolers. I tested it in a liquid-nitrogen-cooled vacuum chamber, then overlaid the chamber results on post-flight telemetry.
-type: Team
-team: Project type and team to be confirmed
-role: Payload design, vacuum-chamber testing and flight-data comparison (to confirm)
+summary: A course team's suborbital payload that reached the Kármán line to test regenerative power generation with Peltier coolers. I predicted the power with a heat-transfer simulation, tested in a vacuum chamber, and compared both with flight telemetry.
+hook: Predict, test, fly, compare. A Peltier power payload simulated, vacuum-chamber tested, flown to the Kármán line, and checked against its own telemetry.
+tldr: On a course team, I worked on a suborbital Peltier power-generation payload that reached the Kármán line. I estimated its power with a heat-transfer simulation, ran liquid-nitrogen vacuum-chamber tests, and overlaid both on post-flight telemetry.
+type: Course
+team: Course team project; the course's payloads flew on the same launch day.
+role: Payload design and development, vacuum-chamber testing with liquid-nitrogen cooling, a CFD heat-transfer simulation to estimate the regenerative power, and the overlay of chamber and simulation results on flight telemetry
 dates: Jan – May 2024
 date: 2024-05-31
-tags: [Space Systems, Experimental]
-stack: [Peltier coolers, Vacuum-chamber testing, Liquid-nitrogen cooling, Flight telemetry]
+tags: [Space Systems, Experimental, CFD/Numerical]
+stack: [Peltier coolers, CFD heat-transfer simulation, Vacuum-chamber testing, Liquid-nitrogen cooling, Flight telemetry]
 featured: false
 order: 8
 group: Team leadership and flight hardware
-contribution: "A thermal power-generation experiment on a suborbital payload. The part that carries over is comparing ground-test predictions with flight data."
+contribution: "A full predict-test-fly-compare loop: a CFD heat-transfer estimate of the payload's power, vacuum-chamber tests, then both overlaid on post-flight telemetry."
 tier: supporting
 heroImage: ../../assets/projects/cubesat/placeholder.png
 heroAlt: Placeholder plate, not a project image. White card with a thin navy border and the words Regenerative Power CubeSat Experiment, image to come.
@@ -25,43 +25,52 @@ tabs: [overview]
 links: {}
 status: complete
 ---
-{/* TODO(Khalil): was this a team, a course or a personal project, and who flew the payload (programme, vehicle, launch date)? The page is tagged Team, with "to be confirmed" in the Team and Role fields, until you say. There is no source material for it on this machine, so everything below the CV facts is a placeholder. Replace the placeholder plate in src/assets/projects/cubesat/ with a real image. */}
+{/* TODO(Khalil): which course was this for (course number and name)? The "course" field is left unset until you say. Also: how many people were on the team, which parts of the payload design were yours alone, and who provided the launch (programme, vehicle, date)? Replace the placeholder plate in src/assets/projects/cubesat/ with a real image. */}
 
 <TabPanel id="overview">
 
-This experiment investigated regenerative power generation: using Peltier coolers and the temperature gradients found in space to produce electrical power. I designed and developed a suborbital payload to test the idea, and the payload reached the Kármán line.
+This was a course team project. We built a suborbital payload to test regenerative power generation: using Peltier coolers and the temperature gradients found in space to produce electrical power. The payload reached the Kármán line, flying on the same launch day as the rest of the course's payloads.
+{/* TODO(Khalil): you wrote "the team flew it as we all did on the same day". This page reads it as every course team's payload flying on the same launch day. Confirm, or say what you meant. */}
 
 <div class="placeholder" data-placeholder>
-  <p>The programme this payload flew with, whether it was a team, a course or a personal project, the size of the team and my part in it will go here. Until then, the steps below are worded as they are on my CV.</p>
+  <p>The course, the size of the team and which parts of the payload were mine alone will go here.</p>
 </div>
-{/* TODO(Khalil): team, course or personal project? Team size, your role, and who provided the launch. The page is tagged Team until you say. */}
+{/* TODO(Khalil): course number, team size, and which parts of the design were yours alone. */}
 
-The work had three parts.
+On the team, I worked through a predict, test, fly and compare loop.
 
-1. **Payload.** I designed and developed the suborbital payload around the Peltier coolers.
-2. **Ground test.** Before launch I ran vacuum-chamber tests with liquid-nitrogen cooling, to reproduce space thermal conditions and characterise the payload's power generation.
-3. **Flight comparison.** After the flight I correlated the vacuum-chamber results with the post-flight telemetry and overlaid the two, to check the initial predictions and to assess how the system performed under actual flight conditions.
+1. **Payload.** I worked on the design and development of the payload around the Peltier coolers.
+2. **Prediction.** I ran a CFD heat-transfer simulation of the payload to get an estimated reading for the regenerative power it would generate.
+3. **Ground test.** Before launch I ran vacuum-chamber tests with liquid-nitrogen cooling, to reproduce space thermal conditions and characterise the payload's power generation.
+4. **Flight comparison.** After the flight I overlaid the vacuum-chamber results and the simulation estimate on the post-flight telemetry, to check the initial predictions and to see how the system performed under actual flight conditions.
 
-This page is a first version. It states what is on my CV, and the sections below are placeholders until I add the detail.
+The comparison is the part that carries over to the rest of my work: the simulation estimate was checked against both ground-test and flight measurements.
 
-### Measured power
+### Simulation setup
 
 <div class="placeholder" data-placeholder>
-  <p>The power measured in the vacuum chamber and in flight will go here, with the temperature difference across the Peltier coolers in each case and how closely the two agreed.</p>
+  <p>The heat-transfer simulation setup will go here: the solver, the geometry, the boundary conditions and how the temperature field was turned into a power estimate.</p>
 </div>
-{/* TODO(Khalil): chamber and flight numbers with units, and the predicted values they were compared against. */}
+{/* TODO(Khalil): solver (e.g. which ANSYS module, if ANSYS), geometry, mesh, boundary conditions, and the step from temperature difference to power. */}
+
+### Predicted and measured power
+
+<div class="placeholder" data-placeholder>
+  <p>The simulated, vacuum-chamber and flight power will go here, with the temperature difference across the Peltier coolers in each case and how closely they agreed.</p>
+</div>
+{/* TODO(Khalil): predicted, chamber and flight numbers with units. */}
 
 ### The flight
 
 <div class="placeholder" data-placeholder>
-  <p>The details of the flight will go here: the vehicle, the launch date, the altitude reached and what the telemetry recorded.</p>
+  <p>The details of the flight will go here: the launch vehicle, the launch date, the altitude reached and what the telemetry recorded.</p>
 </div>
 {/* TODO(Khalil): vehicle, date, apogee, which channels were logged and at what rate. */}
 
 ### Photos and plots
 
 <div class="placeholder" data-placeholder>
-  <p>Photos of the payload and the vacuum-chamber setup, and the plot of chamber results overlaid on flight telemetry, will go here.</p>
+  <p>Photos of the payload and the vacuum-chamber setup, and the plot of the simulation and chamber results overlaid on flight telemetry, will go here.</p>
 </div>
 {/* TODO(Khalil): add photos and the overlay plot to assets-inbox/. */}
 

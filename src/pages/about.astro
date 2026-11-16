@@ -26,6 +26,12 @@ const timeline = [
     href: "/coursework/",
   },
   {
+    when: "Oct – Dec 2025",
+    title: "APPM 4350: heat diffusion in 3-D geometries",
+    body: "Series solutions of the heat equation for a slab, a cylinder and a sphere, in a three-person team.",
+    href: "/projects/heat-diffusion-3d/",
+  },
+  {
     when: "Aug 2025 – Apr 2026",
     title: "Team lead, NASA RASC-AL: Project REGENESIS",
     body: "Led a 16-member team on a lunar ISRU infrastructure concept.",
@@ -74,7 +80,7 @@ const timeline = [
   },
 ];
 
-// The first two entries have their own project pages.
+// RASC-AL, the CubeSat payload and APPM 4350 have their own project pages.
 const beyond: { title: string; when: string; body: string; href?: string }[] = [
   {
     title: "Team lead, NASA RASC-AL: Project REGENESIS",
@@ -86,7 +92,7 @@ const beyond: { title: string; when: string; body: string; href?: string }[] = [
     title: "Regenerative-power CubeSat payload",
     when: "Jan – May 2024",
     href: "/projects/regen-power-cubesat/",
-    body: "Designed a suborbital payload that reached the Kármán line to test power generation from Peltier devices and in-space temperature gradients. I ran vacuum-chamber tests with liquid-nitrogen cooling, then compared them with post-flight telemetry.",
+    body: "A course team's suborbital payload that reached the Kármán line to test power generation from Peltier devices and in-space temperature gradients. I estimated the power with a CFD heat-transfer simulation, ran vacuum-chamber tests with liquid-nitrogen cooling, then overlaid both on post-flight telemetry.",
   },
   {
     title: "High-power rocketry",
@@ -101,7 +107,8 @@ const beyond: { title: string; when: string; body: string; href?: string }[] = [
   {
     title: "APPM 4350: heat diffusion in 3-D geometries",
     when: "Oct – Dec 2025",
-    body: "Derived analytical heat-equation solutions with separation of variables and eigenfunction expansions, then compared them with numerical and experimental temperature measurements.",
+    href: "/projects/heat-diffusion-3d/",
+    body: "Derived analytical heat-equation solutions with separation of variables and eigenfunction expansions, and compared the slab case with a thermal simulation.",
   },
 ];
 

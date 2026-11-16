@@ -1,9 +1,9 @@
 ---
 title: "NASA RASC-AL: Project REGENESIS"
 slug: rasc-al-regenesis
-summary: A lunar in-situ resource utilisation (ISRU) infrastructure concept developed for NASA's 2025–2026 RASC-AL competition by a 16-member CU Boulder team that I led.
-hook: Leading a 16-member team on a lunar ISRU infrastructure concept for NASA's RASC-AL competition.
-tldr: I led a 16-member multidisciplinary CU Boulder team in NASA's 2025–2026 RASC-AL competition. We developed a lunar ISRU infrastructure concept, and I ran ANSYS simulations of launchpad durability under lander plume and landing loads.
+summary: A lunar in-situ resource utilisation (ISRU) concept for NASA's 2025–2026 RASC-AL competition, built on solar-sintered regolith bricks, a launch pad and a shelter, developed by a 16-member CU Boulder team that I led.
+hook: Leading a 16-member team on a lunar ISRU concept, designed from the research literature, with a structural check of a regolith launch pad under lander loads.
+tldr: I led a 16-member CU Boulder team in NASA's 2025–2026 RASC-AL competition. Our concept, REGENESIS, uses solar-sintered regolith bricks for a lunar launch pad and shelter. I ran ANSYS simulations of the pad under plume and landing loads.
 type: Team
 context: Competition
 course: NASA RASC-AL competition, 2025–2026
@@ -16,56 +16,118 @@ stack: [ANSYS]
 featured: false
 order: 7
 group: Team leadership and flight hardware
-contribution: "Team leadership on a lunar ISRU infrastructure concept. The part that carries over is the ANSYS simulation of launchpad durability under lander plume and landing loads."
+contribution: "Design worked from the research literature: finding, vetting and applying published studies to each design problem, plus an ANSYS structural check of a regolith launch pad under lander loads."
 tier: supporting
-heroImage: ../../assets/projects/rascal/placeholder.png
-heroAlt: Placeholder plate, not a project image. White card with a thin navy border and the words NASA RASC-AL, Project REGENESIS, image to come.
-thumbnail: ../../assets/projects/rascal/placeholder.png
-thumbnailAlt: Placeholder plate for Project REGENESIS. The project image is still to come.
+heroImage: ../../assets/projects/rascal/regenesis_concept.jpg
+heroAlt: Rendered concept scene on the lunar surface with Earth overhead. An arched shelter built from dark regolith bricks carries two small solar panels; a tall solar-panel communications tower stands to the right; a six-wheeled rover with robotic arms works beside a field of octagonal launch-pad pavers; a solar furnace with a gold concentrator dish sits at the lower left.
+thumbnail: ../../assets/projects/rascal/regenesis_concept.jpg
+thumbnailAlt: Concept render of the REGENESIS lunar site with a brick shelter, communications tower, rover and launch-pad pavers.
 metrics:
   - { value: "16", label: "members on the team I led" }
-tabs: [overview]
+  - { value: "3.59 × 10⁻⁷ m", label: "max pad deformation under the lander legs" }
+  - { value: "$259M", label: "total mission cost estimate (team report)" }
 links: {}
 status: complete
+tabs: [overview, technical, results, reflection]
 ---
-{/* TODO(Khalil): this page only restates the CV. There is no source material for REGENESIS on this machine. Fill in the four placeholder blocks below, replace the placeholder plate in src/assets/projects/rascal/ with a real image, and say whether the competition outcome or placing should be stated (it is deliberately left out). */}
+{/* TODO(Khalil): (1) Which sections of the final report did you write yourself? (2) Did you run the ANSYS launch-pad simulations yourself (the CV says "Performed ANSYS simulations"), and did you also run the human-structure stress simulation? (3) Should the competition outcome be stated? It is deliberately left out. (4) May the report or slides be linked publicly? The PDF carries names, so it is not published here. */}
+import concept from "../../assets/projects/rascal/regenesis_concept.jpg";
+import conops from "../../assets/projects/rascal/regenesis_conops.png";
+import padAssembly from "../../assets/projects/rascal/launchpad_assembly.png";
+import paver from "../../assets/projects/rascal/launchpad_paver.png";
 
 <TabPanel id="overview">
 
-Project REGENESIS was the University of Colorado Boulder entry in NASA's 2025–2026 RASC-AL competition. The team developed a concept for lunar in-situ resource utilisation (ISRU) infrastructure, working with aerospace faculty advisors.
+REGENESIS (Regolith Engineering for Ground Expansion, Network Establishment, and Sustainable Infrastructure Systems) was CU Boulder's entry to Theme 4 of NASA's 2025–2026 RASC-AL competition, *Lunar Technology Demonstrations Leveraging Common Infrastructure*. The aim was to show that in-situ resources can supply the infrastructure for a future lunar economy, addressing Moon to Mars objectives LI-4, LI-5 and LI-7.
 
-I was the team lead from August 2025 to April 2026. The team had 16 members from several engineering disciplines.
-
-My own technical work was simulation. I ran ANSYS simulations to assess how durable the launchpad would be under two kinds of loading: the plume of a lunar lander, and the landing loads.
-
-This page is a first version. It states what is on my CV, and the sections below are placeholders until I add the detail.
+<Figure src={concept} alt="Rendered concept scene on the lunar surface with Earth overhead: a brick shelter with two small solar panels, a tall solar-panel communications tower, a six-wheeled rover with robotic arms next to a field of octagonal launch-pad pavers, and a solar furnace with a gold concentrator dish at the lower left." source="the team's final report">
+**The REGENESIS site.** Team render.
+</Figure>
 
 ### The concept
 
+Three payloads land in succession near the rim of Shackleton Crater at the lunar south pole, and each one sets up the next:
+
+1. **Payload 1:** a rover, a solar furnace and a radio module. The furnace concentrates sunlight to sinter regolith into bricks at several heating and curing rates, and about forty bricks return to Earth for testing.
+2. **Payload 2:** the rest of a solar-powered communications and charging tower, linked to NASA's planned LunaNet relay network. A launch pad is then built from interlocking regolith pavers.
+3. **Payload 3:** lands on that pad and brings molds and an inflatable liner for a scaled regolith-brick shelter, instrumented to send structural and environmental data home.
+
+### My role
+
+I was team lead from August 2025 to April 2026 for a 16-member multidisciplinary team, working with aerospace faculty advisors. My own technical work was ANSYS simulation of how the launch pad holds up under lunar lander plume and landing loads. The concept, the report and its figures were team work.
+
+{/* TODO(Khalil): list the report sections you wrote and how the sub-teams were organised. */}
+
+### Working from the research literature
+
+REGENESIS is a proposal, so its design choices rest on published work rather than on our own tests. What I took most from it was working with research documents: getting familiar with them, vetting how far each one could be trusted, and applying it to the specific situation we were in. The report shows this in a few places:
+
+- **Motivating the pad.** *Dust transport and its effects due to landing spacecraft* set out the erosion problem the pad has to solve.
+- **Choosing the material.** Rocket-motor tests on regolith–polymer composite pads (*In-situ lunar launch and landing pad construction with regolith-thermoset polymer composite materials*) and measured conductivities of sintered regolith (*Vacuum sintered lunar regolith simulant: pore-forming and thermal conductivity*) were the basis for using pure regolith pavers without a binder.
+- **Weighting the sources.** Mass, power and cost margins were set by how well each number was backed: 0 % for a high-TRL datasheet, 20 % for high confidence, 40 % for medium and 70 % for low.
+- **Matching standards.** The communications design follows the *LunaNet Interoperability Specification (LNIS) v5*.
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+### Launch pad
+
+According to the cited study, lander exhaust can erode lunar soil up to 100 m deep and throw up dust. A paved pad keeps the plume off the surface. The report judges a pad on structural performance, flow penetration and heat propagation.
+
+**Paver design.** The pad uses a single interlocking paver shape, so one mold makes the whole pad. The design drawings show two offset octagonal layers, 0.15 m on a side and 0.05 m thick per layer. The interlock is meant to stop exhaust from getting between pavers and to keep them from moving.
+
+{/* TODO(Khalil): confirm the paver reading: is one paver the two offset octagons (red and green in the drawing), or are red and green two neighbouring pavers? */}
+
+**Material.** The cited composite pads use a binder with a thermal conductivity of about 0.29 and reached TRL 5 in rocket-motor tests. Pure sintered regolith is about 0.26, so the team expected similar heat propagation without the Earth-supplied binder. The pad was thickened for the hotter exhaust of larger landers.
+
+{/* TODO(Khalil): the report gives the conductivities (0.29, 0.26) without units. Confirm W/(m·K) before adding units. */}
+
+**Structural simulation.** The load case used the force output of a Blue Origin MK1 lander. The maximum pad deformation was 3.59 × 10⁻⁷ m under the lander legs and 1.63 × 10⁻⁷ m under the thruster load.
+
 <div class="placeholder" data-placeholder>
-  <p>A description of the REGENESIS concept in my own words will go here: what the infrastructure was for, its main elements, and how they fit together.</p>
+  <p>The simulation setup will go here: the ANSYS module, geometry and material model, mesh, boundary conditions, how the thruster load was applied, and the stress results.</p>
 </div>
-{/* TODO(Khalil): describe the concept in your own words. */}
+{/* TODO(Khalil): ANSYS module (Static Structural?), mesh, supports, how the MK1 thrust and leg loads were applied, material properties, stresses, and any mesh or hand-calculation check. */}
+
+### Budgets
+
+From the team's final report: a common mass of 882.3 kg, a common volume of 3.25 m³, a mean power draw of 1,400 W, and a total cost of $259M, of which $216.4M is launch. Margins on each subsystem put the total between $251.2M and $298.4M.
+
+</TabPanel>
+
+<TabPanel id="results">
+
+<Figure src={conops} alt="Flowchart of the three-payload mission. Payload 1, in orange, sets up communications and the solar furnace, makes regolith bricks at different heating and curing rates and returns them to Earth for testing. Payload 2, in blue, assembles the charging and communications tower and builds the launch pad. Payload 3, in red, lands on the pad and builds and inflates the human structure. A green box for communication with LunaNet links them, and a purple end-of-mission box lists the goals achieved." source="the team's final report" wide>
+**Concept of operations.** Each payload sets up the next, and the third lands on the pad the second one built.
+</Figure>
+
+<Figure src={padAssembly} alt="Isometric CAD view of the launch pad: rows of grey octagonal pavers interlocked edge to edge, with one loose two-layer paver beside the assembly showing its stepped shape." source="the team's final report">
+**Launch pad assembly.** One paver shape tiles the whole pad.
+</Figure>
+
+<Figure src={paver} maxWidth={560} alt="Two diagrams of one paver. Left, top view: a red octagon over an offset green octagon, both 0.15 m on a side. Right, side view: a red upper row of pavers offset from a green lower row, each layer 0.05 m thick." source="the team's final report">
+**Paver geometry.** Top and side views of the two offset layers.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+The structural case is the only pad analysis in the report. Flow penetration and heat propagation were argued from the literature, and the report says a CFD simulation and a thermal simulation would be needed to settle them. Paver stability was assumed from the interlock.
 
 ### Leading the team
 
 <div class="placeholder" data-placeholder>
-  <p>An account of what leading the team involved will go here: how the 16 members were organised, what I was responsible for, and what I would do differently.</p>
+  <p>What leading a 16-member team taught me will go here: how the work was split, how reviews and deadlines ran, and what I would do differently.</p>
 </div>
-{/* TODO(Khalil): sub-team structure, your responsibilities as lead, schedule and reviews, lessons. No teammate or advisor names unless you want them. */}
+{/* TODO(Khalil): your account of leading the team, in your own words. No teammate or advisor names. */}
 
-### Launchpad simulation
+### Learning to use research papers
 
 <div class="placeholder" data-placeholder>
-  <p>The simulation setup and results will go here: the launchpad geometry and material, how the plume and landing loads were modelled in ANSYS, and what the analysis showed.</p>
+  <p>What I learned about finding, vetting and applying research papers will go here: how sources were judged, where the literature did not fit our case, and how that changed the design.</p>
 </div>
-{/* TODO(Khalil): ANSYS module used, load cases, mesh and boundary conditions, key results with numbers, and how the results were checked. */}
-
-### Figures and report
-
-<div class="placeholder" data-placeholder>
-  <p>Figures from the simulations and the concept, and a link to the report or poster if it can be shared, will go here.</p>
-</div>
-{/* TODO(Khalil): add images to assets-inbox/ and say whether the paper, poster or presentation may be linked publicly. */}
+{/* TODO(Khalil): your own account of the literature work. */}
 
 </TabPanel>

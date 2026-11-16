@@ -1,0 +1,168 @@
+---
+title: "Heat Diffusion in 3-D Geometries: Slab, Cylinder and Sphere"
+slug: heat-diffusion-3d
+summary: A three-person course project that solved the 3-D heat equation by separation of variables for a slab, a cylinder and a sphere under Dirichlet (boiling) and Robin (sub-boiling) boundary conditions, compared the slab solutions with a thermal simulation, and attempted physical tests.
+hook: Six series solutions of the 3-D heat equation, from sines to Bessel functions and Legendre polynomials, with the slab set against a thermal simulation.
+tldr: With a three-person team I solved the 3-D heat equation by separation of variables for a slab, cylinder and sphere in boiling (Dirichlet) and sub-boiling (Robin) water. We compared the slab with a thermal simulation; our physical tests were inconclusive.
+type: Course
+course: APPM 4350 Fourier Series and Boundary Value Problems
+team: Three-person team
+role: Derived the sphere solution with Robin boundary conditions, made the Mathematica plots of the analytical solutions and ran the physical experiments
+dates: Oct – Dec 2025
+date: 2025-12-03
+tags: [CFD/Numerical, Experimental]
+stack: [Mathematica, SolidWorks thermal simulation, Thermocouples, LaTeX]
+featured: false
+order: 5
+group: Simulation and verification
+contribution: "Analytical PDE solutions (Sturm–Liouville, Bessel and Legendre eigenfunction expansions) for three geometries and two boundary conditions. The slab solutions are compared qualitatively with a thermal simulation, the physical tests are reported as inconclusive, and the disagreements are stated."
+tier: supporting
+heroImage: ../../assets/projects/heat-diffusion/boiling_compare.jpg
+heroAlt: Three panels. Left, a SolidWorks thermal simulation of a rectangular slab in boiling water, coloured by temperature in kelvin, hot across the top face and cooler along the lower edges. Centre and right, the analytical solution as square cross-sections, with a thin hot band at the boundary in the centre panel and a wider band reaching further in on the right.
+thumbnail: ../../assets/projects/heat-diffusion/slab_dirichlet_thumb.jpg
+thumbnailKeepInk: true
+thumbnailAlt: Square cross-section of a slab from the analytical heat-equation solution, hot red at the edges fading to a cool blue core.
+metrics:
+  - { value: "3", label: "geometries: rectangular slab, cylinder, sphere" }
+  - { value: "2", label: "boundary conditions: Dirichlet (boiling), Robin (sub-boiling)" }
+  - { value: "6", label: "series solutions, one per geometry and boundary condition" }
+links: {}
+status: complete
+tabs: [overview, technical, results, reflection]
+---
+{/* TODO(Khalil): the report attributes your parts as "heat equation in sphere (Robin BCs)", "Mathematica plots" and "physical experiments"; the simulated results are attributed to a teammate. Your CV says "Performed thermal simulations and experiments". Which wording is right for this page? The role line follows the report for now. */}
+{/* TODO(Khalil): the report's abstract says the comparison simulation was Ansys Fluent, but the introduction, section 3.2 and the screenshots are SolidWorks. This page says SolidWorks. Which tool was it (or were both used)? */}
+{/* TODO(Khalil): the report is not linked because its title page carries names. Do you want a version without the title page published here? You also mentioned a ~45-page LaTeX report; the PDF in assets-inbox/other/APPM4350.pdf is 21 pages. Is there a longer version? */}
+import boiling from "../../assets/projects/heat-diffusion/boiling_compare.jpg";
+import subboiling from "../../assets/projects/heat-diffusion/subboiling_compare.jpg";
+import roots from "../../assets/projects/heat-diffusion/sphere_robin_roots.png";
+
+<TabPanel id="overview">
+
+Drop a solid into a water bath and its surface heats first while its core lags behind. How fast the core catches up depends on the shape and on how the water hands heat to the surface. This project asked that question for a rectangular slab, a cylinder and a sphere in boiling and in sub-boiling water.
+
+The two baths give two boundary conditions. In boiling water at sea level, water above 100 °C leaves as vapour, so the surface is held at a fixed temperature: a **Dirichlet** condition. In sub-boiling water heat arrives by convection, and Newton's law of cooling becomes a **Robin** condition linking the surface temperature to its normal gradient.
+
+We solved all six cases analytically by separation of variables. The time part is the same exponential decay in every case; the spatial eigenfunctions depend on the geometry: sines for the slab, Bessel functions for the cylinder, and spherical Bessel functions with Legendre polynomials for the sphere. We then compared the analytical temperature fields for the slab with a thermal simulation and attempted physical tests with probes at the centre and surface of a block.
+
+My parts were the sphere with Robin boundary conditions, the Mathematica plots of the analytical solutions, and the physical experiments.
+
+<div class="placeholder" data-placeholder>
+  <p>Anything else I contributed beyond the report's attribution section will go here.</p>
+</div>
+
+<Figure src={boiling} alt="Three panels. Left, a SolidWorks thermal simulation of a rectangular slab in boiling water, coloured by temperature in kelvin, hot across the top face and cooler along the lower edges. Centre and right, the analytical Dirichlet solution as square cross-sections at two times, with a thin hot band at the boundary in the centre panel and a wider band reaching further in on the right." source="team final report, section 3.2" wide>
+**Hero result.** A slab in boiling water. (a) The team's thermal simulation of a nickel slab. (b) and (c) My Mathematica plots of the analytical Dirichlet solution at two times; by (c) the heat has reached further toward the core. From the team's final report.
+</Figure>
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+### The problem
+
+The heat equation in a region D, with a uniform initial temperature and the temperature scale shifted so the bath sits at zero:
+
+<Equation tex={String.raw`\frac{\partial T}{\partial t} = k\,\nabla^2 T \quad \text{in } D, \qquad T(\mathbf{r},0) = C`} />
+
+<Equation tex={String.raw`\underbrace{T = 0}_{\text{boiling (Dirichlet)}} \qquad\text{or}\qquad \underbrace{\alpha T + \beta\,\nabla T\cdot\hat{\mathbf{n}} = 0}_{\text{sub-boiling (Robin)}} \qquad \text{on } \partial D`} />
+
+Separating T = ψ(t)Φ(**r**) gives the same time factor for every geometry and a Helmholtz problem in space:
+
+<Equation tex={String.raw`\psi(t) = e^{-k\lambda t}, \qquad \nabla^2\Phi + \lambda\Phi = 0`} />
+
+Each spatial problem separates into one-dimensional Sturm–Liouville problems with orthogonal eigenfunctions, so the coefficients are projections of the initial condition onto them.
+
+### Slab
+
+With Dirichlet walls the eigenfunctions are sines, and a uniform initial temperature excites only odd modes:
+
+<Equation tex={String.raw`T = \sum_{n,m,p\ \text{odd}} \frac{64C}{nmp\,\pi^3}\,\sin\frac{n\pi x}{L}\,\sin\frac{m\pi y}{W}\,\sin\frac{p\pi z}{H}\;e^{-k\lambda_{nmp}t}`} />
+
+<Equation tex={String.raw`\lambda_{nmp} = \Big(\frac{n\pi}{L}\Big)^2 + \Big(\frac{m\pi}{W}\Big)^2 + \Big(\frac{p\pi}{H}\Big)^2`} />
+
+With Robin walls each direction has eigenfunctions X(x) = (β√λ/α) cos(x√λ) + sin(x√λ), and the eigenvalues are the roots of a transcendental equation, solved numerically:
+
+<Equation tex={String.raw`\tan\!\big(L\sqrt{\lambda_x}\big) = \frac{2\alpha\beta\sqrt{\lambda_x}}{\beta^2\lambda_x - \alpha^2}`} />
+
+### Cylinder
+
+The angular part gives cos mθ and sin mθ, the axial part repeats the slab result, and the radial part is Bessel's equation. A uniform initial temperature leaves only the m = 0 modes. For the Dirichlet case, with Z<sub>n0</sub> the n-th zero of J<sub>0</sub>:
+
+<Equation tex={String.raw`T = \sum_{n=1}^{\infty}\ \sum_{p\ \text{odd}} \frac{8C}{p\pi\,Z_{n0}\,J_1(Z_{n0})}\,\sin\frac{p\pi z}{L}\,J_0\!\Big(\frac{rZ_{n0}}{R}\Big)\,e^{-k\lambda_{np}t}`} />
+
+<Equation tex={String.raw`\lambda_{np} = \Big(\frac{Z_{n0}}{R}\Big)^2 + \Big(\frac{p\pi}{L}\Big)^2`} />
+
+With Robin walls the radial eigenvalues instead satisfy αR J<sub>0</sub>(x) + βx J<sub>0</sub>′(x) = 0.
+
+### Sphere
+
+The polar part gives associated Legendre functions P<sub>n</sub><sup>m</sup>(cos φ) and the radial part spherical Bessel functions ρ<sup>−1/2</sup>J<sub>n+1/2</sub>. A uniform initial temperature leaves only n = m = 0. For the Dirichlet case, with Z<sub>ℓ0</sub> the ℓ-th zero of J<sub>1/2</sub>:
+
+<Equation tex={String.raw`T = \sum_{\ell=1}^{\infty} \frac{2C\sqrt{R}}{Z_{\ell 0}\,J_{3/2}(Z_{\ell 0})}\;\frac{1}{\sqrt{\rho}}\,J_{1/2}\!\Big(\frac{\rho Z_{\ell 0}}{R}\Big)\,e^{-k(Z_{\ell 0}/R)^2 t}`} />
+
+For the Robin case, my part, the condition F′(R) + (α/β)F(R) = 0 on the radial function F = ρ<sup>−1/2</sup>J<sub>n+1/2</sub>(√λ ρ) gives, with μ = √λ R:
+
+<Equation tex={String.raw`\mu\,J'_{n+1/2}(\mu) + \Big(\frac{\alpha R}{\beta} - \frac12\Big)J_{n+1/2}(\mu) = 0`} />
+
+<Equation tex={String.raw`\lambda_{n\ell} = \Big(\frac{\mu_{n\ell}}{R}\Big)^2`} />
+<p class="text-sm text-muted">Corrected from the report, whose compact form has β/α where αR/β belongs; the result follows from the Robin condition αT + β∂T/∂n = 0 stated above.</p>
+{/* TODO(Khalil): the report writes this condition as mu J' + (beta/alpha - 1/2) J = 0, i.e. with beta/alpha in place of alpha/beta and without the factor R (its line before the compact form still has beta*R/alpha). The form above follows directly from the report's own Robin condition alpha*T + beta*dT/dn = 0. Please check which is right before this goes live; Figure 1 on the Results tab was plotted from the report's form. */}
+
+### Assumptions
+
+- Ideal sea-level conditions: boiling water is exactly 100 °C, so the Dirichlet surface temperature is fixed.
+- Newton's law of cooling, homogenised by setting the bath temperature to zero, gives the Robin condition.
+- Uniform initial temperature in the solid; constant properties.
+- Completeness of each eigenfunction set is taken for granted.
+
+The comparison simulation modelled a nickel slab in a simulated boiling and sub-boiling bath in SolidWorks.
+
+</TabPanel>
+
+<TabPanel id="results">
+
+<Figure src={roots} alt="Two curves plotted against mu from 0 to about 7.5. One falls steeply from a singularity at zero and then oscillates with small amplitude; the other rises from zero and oscillates with larger amplitude. They cross at several points, each crossing marking one eigenvalue root." source="team final report, Figure 1" maxWidth={760}>
+The two sides of the sphere's Robin eigenvalue condition as written in the report (β/α form). Each crossing is a root μ<sub>ℓ</sub>, and the eigenvalue is λ<sub>ℓ</sub> = (μ<sub>ℓ</sub>/R)². From the team's final report.
+</Figure>
+
+### Analytical against simulation
+
+In both baths the simulation heated the slab faster than the analytical solution. In the simulation, heat reaches well into the solid. In the analytical plots, much of the interior stays near its initial temperature, most clearly in the sub-boiling case, where only a corner of the cross-section has warmed.
+
+<Figure src={subboiling} alt="Three panels. Left, a SolidWorks thermal simulation of a slab in sub-boiling water, coloured by temperature in kelvin, warm green across most of the top face. Centre, an analytical x-y cross-section that is almost uniform except for warming in one corner. Right, an analytical x-z cross-section at t = 178.882 that is uniform apart from a small warm spot in one corner." source="team final report, section 3.2" wide>
+A slab in sub-boiling water. (a) The team's simulation. (b) Analytical solution, x–y cross-section. (c) Analytical solution, x–z cross-section. From the team's final report.
+</Figure>
+
+The report attributes the gap to the analytical boundary conditions, which account only for convection at the surface, while the simulation shows conduction carrying heat further in. It also notes that real water can exceed 100 °C or convect near the surface, which weakens the fixed-temperature Dirichlet assumption.
+
+<Callout tone="honest" title="This comparison is qualitative">
+The simulation and analytical plots use different colour scales, only the simulation states its units (kelvin), and the report does not list the material properties or heat-transfer coefficient used in each model. The figures compare patterns, not values.
+</Callout>
+
+### Physical experiments
+
+I ran small tests with wooden blocks and probes at the centre and surface. They were inconclusive: in boiling water the block and probes moved, and in a kitchen oven the temperature swung as the oven regulated itself and varied with the block's position. No measured temperature history is reported.
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+### Limitations
+
+- **The three-way comparison was not closed.** The analytical solutions are complete, but the experiments did not produce usable data, so the analytical and simulated results were never checked against measurement.
+- **Different inputs.** The analytical plots and the simulation do not share stated properties or units, so their disagreement cannot be split into a modelling difference and a parameter difference.
+
+### Next steps
+
+- Run the analytical solution and the simulation with the same material, dimensions and heat-transfer coefficient, and compare the core and surface temperature against time as curves, not colour maps.
+- Repeat the experiment with the block and probes clamped in place and a bath held at a controlled temperature.
+
+### Lessons
+
+<div class="placeholder" data-placeholder>
+  <p>What I took from this project will go here.</p>
+</div>
+{/* TODO(Khalil): your own lessons from this project, in your words. */}
+
+</TabPanel>

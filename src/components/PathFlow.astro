@@ -9,7 +9,8 @@ export interface PathFlowItem {
   /** One short sentence, shown under the title. */
   note?: string;
   href?: string;
-  kind: "course" | "personal" | "team" | "goal";
+  /** "current" marks the project under way now: full accent outline, wash and an "In progress" chip. */
+  kind: "course" | "personal" | "team" | "current" | "goal";
   todo?: boolean;
 }
 interface Props {
@@ -18,14 +19,23 @@ interface Props {
 }
 const { items, label } = Astro.props;
 const COLS = 3;
-const kindsUsed = (["course", "team", "personal", "goal"] as const).filter((k) => items.some((it) => it.kind === k));
-const kindName = { course: "Coursework", team: "Team project", personal: "Personal project", goal: "Goal" };
+const kindsUsed = (["course", "team", "personal", "current", "goal"] as const).filter((k) =>
+  items.some((it) => it.kind === k),
+);
+const kindName = {
+  course: "Coursework",
+  team: "Team project",
+  personal: "Personal project",
+  current: "Current project",
+  goal: "Goal",
+};
 ---
 
 <div class="pf">
   <ol class="pf-list" aria-label={label}>
     {items.map((it, i) => (
       <li class:list={["pf-step", `pf-${it.kind}`, { "pf-rowend": i % COLS === COLS - 1 }]}>
+        {it.kind === "current" && <p class="pf-chip">In progress</p>}
         <p class="pf-when">{it.when}</p>
         <p class="pf-title">
           {it.href ? <a href={it.href}>{it.title}</a> : it.title}
@@ -84,6 +94,23 @@ const kindName = { course: "Coursework", team: "Team project", personal: "Person
     border-top-color: var(--accent);
     background: var(--glow);
   }
+  .pf-current {
+    border: 2px solid var(--accent);
+    border-top-width: 3px;
+    background: var(--glow);
+  }
+  .pf-chip {
+    align-self: flex-start;
+    margin-bottom: 0.125rem;
+    padding: 0.0625rem 0.5rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
   .pf-goal {
     background: var(--accent);
     border-color: var(--accent);
@@ -96,7 +123,8 @@ const kindName = { course: "Coursework", team: "Team project", personal: "Person
     font-variant-numeric: tabular-nums;
     color: var(--text-faint);
   }
-  .pf-personal .pf-when {
+  .pf-personal .pf-when,
+  .pf-current .pf-when {
     color: var(--text-muted);
   }
   .pf-goal .pf-when {
@@ -241,6 +269,10 @@ const kindName = { course: "Coursework", team: "Team project", personal: "Person
   }
   .pf-swatch-personal {
     border-top-color: var(--accent);
+    background: var(--glow);
+  }
+  .pf-swatch-current {
+    border: 2px solid var(--accent);
     background: var(--glow);
   }
   .pf-swatch-goal {
