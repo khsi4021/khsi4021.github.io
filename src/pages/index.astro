@@ -16,7 +16,7 @@ const headshot = Object.values(shots)[0]?.default;
 
 // Dates come from the résumé (Oct 2026) and the project files. Newest first.
 const timeline = [
-  { when: "Fall 2027", title: "Graduate school (applying)", body: "MS/PhD in CFD and hypersonics.", todo: true },
+  { when: "Fall 2027", title: "Graduate school (applying)", body: "MS/PhD in CFD and hypersonics." },
   {
     when: "Oct 2026 – now",
     title: "SRL ablative-heating simulator",
@@ -138,7 +138,7 @@ const awards = [
 
 <BaseLayout>
   <!-- DRAFT: Home copy (Home and About are one page). TODO(Khalil): replace the placeholder blocks
-       (research direction, biography) with your own wording, and check the timeline dates. -->
+       (research direction, biography) with your own wording. -->
   <!-- TODO(Khalil): put your headshot in src/assets/headshot/headshot.jpg (or .png / .webp); it replaces the frame. -->
   <!-- TODO(Khalil): CubeSat team size is "six" from your note ("I believe"); confirm. -->
   <div class="wrap">
@@ -307,12 +307,7 @@ const awards = [
         <span class="n">7</span>Timeline
       </h2>
       <div>
-        <div class="placeholder max-w-[68ch]" data-placeholder>
-          <p>The dates and descriptions below were taken from my CV and are waiting for me to check each one.</p>
-        </div>
-        <div class="mt-4">
-          <Timeline items={timeline} />
-        </div>
+        <Timeline items={timeline} />
       </div>
     </section>
 

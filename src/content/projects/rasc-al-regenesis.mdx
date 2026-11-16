@@ -100,7 +100,29 @@ I also ran a preliminary ANSYS structural simulation of the shelter under its ow
 
 ### Budgets
 
-From the team's final report: a common mass of 882.3 kg, a common volume of 3.25 m³, a mean power draw of 1,400 W, and a total cost of $259M, of which $216.4M is launch. Margins on each subsystem put the total between $251.2M and $298.4M.
+The common mass and volume are the shared envelope for the three payloads, set by the upper estimate for the largest (payload 1). The range in the last row comes from the uncertainty margins applied to each subsystem.
+
+{/* remark-math reads a pair of dollar signs in text as inline math, so the cost labels are JS strings. */}
+<table class="max-w-[34rem]">
+  <thead>
+    <tr>
+      <th scope="col">Budget</th>
+      <th scope="col" class="text-right">Estimate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Common mass (kg)</td><td class="num text-right">882.3</td></tr>
+    <tr><td>Common volume (m³)</td><td class="num text-right">3.25</td></tr>
+    <tr><td>Mean power draw (W)</td><td class="num text-right">1,400</td></tr>
+    <tr><td>{"Launch cost ($M)"}</td><td class="num text-right">216.4</td></tr>
+    <tr><td>{"Operating cost ($M)"}</td><td class="num text-right">8.9</td></tr>
+    <tr><td>{"Infrastructure cost ($M)"}</td><td class="num text-right whitespace-nowrap">13.5–33.7</td></tr>
+    <tr><td>{"Total cost ($M)"}</td><td class="num text-right">259</td></tr>
+    <tr><td>{"Total with margins ($M)"}</td><td class="num text-right whitespace-nowrap">251.2–298.4</td></tr>
+  </tbody>
+</table>
+
+<p class="mt-1 font-mono text-xs text-faint">Source: the team's final report.</p>
 
 </TabPanel>
 

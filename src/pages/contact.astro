@@ -3,13 +3,13 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { site, hasEmail, hasLinkedIn } from "@/data/site";
 ---
 
-<BaseLayout title="Contact" description="Contact details for Khalil Sidani: email, GitHub and CV.">
+<BaseLayout title="Contact" description="Contact details for Khalil Sidani: email, phone, GitHub and CV.">
   <section class="wrap pt-10 md:pt-14">
     <h1 class="text-[clamp(1.75rem,4vw,2.375rem)]">Contact</h1>
-    <div class="placeholder mt-4 max-w-[60ch]">
-      <p>A short note on what I would like to be contacted about will go here.</p>
-    </div>
-    {/* TODO(Khalil): write the note above; set LinkedIn in src/data/site.ts (the row appears once it is set). */}
+    <p class="mt-4 max-w-[60ch] text-lg text-muted">
+      I prefer email, and I usually reply within one to two days. My phone number is below as well.
+    </p>
+    {/* TODO(Khalil): set LinkedIn in src/data/site.ts (the row appears once it is set). */}
     <dl class="contact-list mt-5 max-w-2xl">
       <div>
         <dt>Email</dt>
@@ -21,6 +21,12 @@ import { site, hasEmail, hasLinkedIn } from "@/data/site";
           ) : (
             <span class="text-muted">Address to be added</span>
           )}
+        </dd>
+      </div>
+      <div>
+        <dt>Phone</dt>
+        <dd>
+          <a href={`tel:${site.phone.tel}`}>{site.phone.display}</a>
         </dd>
       </div>
       {hasLinkedIn && (

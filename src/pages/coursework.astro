@@ -25,7 +25,37 @@ const sections = [
   { id: "flight-dynamics", title: "Flight dynamics and control" },
   { id: "wind-tunnel", title: "Wind-tunnel test" },
   { id: "asen-3802", title: "ASEN 3802 labs" },
-  { id: "more", title: "More courses" },
+  { id: "more", title: "More relevant courses" },
+];
+
+// Section 7: two groups of three. ASEN 3700 is the official code of the orbital mechanics course
+// (archived as courses/ASEN3200).
+type MoreCourse = { code: string; name: string; note?: string; link?: { href: string; label: string } };
+const moreGroups: { title: string; courses: MoreCourse[] }[] = [
+  {
+    title: "Aerospace core",
+    courses: [
+      { code: "ASEN 3711", name: "Aerodynamics" },
+      { code: "ASEN 3712", name: "Structures" },
+      { code: "ASEN 3713", name: "Thermodynamics & Heat Transfer" },
+    ],
+  },
+  {
+    title: "Dynamics, orbits and electronics",
+    courses: [
+      { code: "ASEN 3700", name: "Orbital Mechanics", note: "Homework sets." },
+      {
+        code: "ASEN 3728",
+        name: "Aircraft Dynamics",
+        link: { href: "#flight-dynamics", label: "Flight dynamics and control" },
+      },
+      {
+        code: "ASEN 3300",
+        name: "Aerospace Electronics & Communications",
+        note: "Circuits labs and Arduino sensor work.",
+      },
+    ],
+  },
 ];
 ---
 
@@ -330,50 +360,35 @@ const sections = [
 
     <section id="more" class="sec" aria-labelledby="more-label">
       <h2 id="more-label" class="sec-label">
-        <span class="n">7</span>More courses
+        <span class="n">7</span>More relevant courses
       </h2>
-      <ul class="cw-more">
-        <li>
-          <p class="font-medium">ATLS 5151 Flow Visualization (graduate)</p>
-          <p class="font-sans text-sm text-muted">
-            Marangoni flow in milk and dye, Chladni plates, a crème brûlée torch flame and a copper-coloured green
-            flame. See the <a href="/flow-vis/">gallery</a>.
-          </p>
-        </li>
-        <li>
-          <p class="font-medium">APPM 4350 Fourier Series and Boundary Value Problems</p>
-          <p class="font-sans text-sm text-muted">
-            Team project: the 3-D heat equation solved by separation of variables for a slab, cylinder and sphere,
-            compared with an ANSYS Fluent simulation. See{" "}
-            <a href="/projects/heat-diffusion-3d/">Heat diffusion in 3-D</a>.
-          </p>
-        </li>
-        <li>
-          <p class="font-medium">ASEN 1400 Gateway to Space</p>
-          <p class="font-sans text-sm text-muted">
-            Team project: a suborbital Peltier power-generation payload that reached the Kármán line. See the
-            <a href="/projects/regen-power-cubesat/">regenerative power CubeSat experiment</a>.
-          </p>
-        </li>
-        <li>
-          <p class="font-medium">ASEN 3711 / 3712 / 3713</p>
-          <p class="font-sans text-sm text-muted">Aerodynamics, structures, and thermodynamics &amp; heat transfer.</p>
-        </li>
-        <li>
-          <p class="font-medium">ASEN 3200 Orbital Mechanics</p>
-          <p class="font-sans text-sm text-muted">Orbital mechanics homework.</p>
-        </li>
-        <li>
-          <p class="font-medium">ASEN 3300 Aerospace Electronics</p>
-          <p class="font-sans text-sm text-muted">Circuits labs and Arduino sensor work.</p>
-        </li>
-        <li>
-          <p class="font-medium">APPM 2360 · ASEN 2012 · CSCI 1300</p>
-          <p class="font-sans text-sm text-muted">
-            Differential equations, experimental and computational methods, and C++ programming.
-          </p>
-        </li>
-      </ul>
+      <div class="cw-more">
+        {moreGroups.map((g) => (
+          <div>
+            <h3 class="cw-more-h">{g.title}</h3>
+            <ul>
+              {g.courses.map((c) => (
+                <li>
+                  <p class="font-medium">
+                    <span class="cw-code">{c.code}</span> {c.name}
+                  </p>
+                  {(c.note || c.link) && (
+                    <p class="font-sans text-sm text-muted">
+                      {c.note}
+                      {c.link && (
+                        <>
+                          {c.note && " "}
+                          See <a href={c.link.href}>{c.link.label}</a> above.
+                        </>
+                      )}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </section>
   </div>
   <Lightbox />
@@ -416,8 +431,34 @@ const sections = [
   .cw-grid .prose h3:first-child {
     margin-top: 0;
   }
+  /* Section 7: two groups of three, side by side from md up. */
   .cw-more {
-    border-top: 1px solid var(--border);
+    display: grid;
+    gap: 1.5rem 2.5rem;
+  }
+  @media (min-width: 768px) {
+    .cw-more {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .cw-more-h {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .cw-more li {
+    border-bottom: 1px solid var(--border);
+    padding-block: 0.6rem;
+  }
+  .cw-code {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-faint);
+    margin-right: 0.35rem;
+    white-space: nowrap;
   }
   .cw-more a {
     color: var(--flow);
@@ -427,17 +468,5 @@ const sections = [
   }
   .cw-more a:hover {
     text-decoration-thickness: 2px;
-  }
-  .cw-more > li {
-    display: grid;
-    gap: 0.15rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    padding-block: 0.75rem;
-  }
-  @media (min-width: 640px) {
-    .cw-more > li {
-      grid-template-columns: 17rem minmax(0, 1fr);
-      align-items: baseline;
-    }
   }
 </style>

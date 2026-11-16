@@ -8,6 +8,8 @@ export const site = {
   location: "Boulder, Colorado · from Bahrain",
   // TODO(Khalil): LinkedIn URL.
   email: "khsi4021@colorado.edu",
+  // Shown on the Contact page only.
+  phone: { display: "+1 (407) 718-0695", tel: "+14077180695" },
   linkedin: "TODO_LINKEDIN",
   github: "https://github.com/khsi4021",
   githubUser: "khsi4021",
