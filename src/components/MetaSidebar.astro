@@ -1,17 +1,39 @@
 ---
 // Project details as an unboxed definition list with hairline rules.
+import fs from "node:fs";
+import path from "node:path";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
   project: CollectionEntry<"projects">;
 }
 const d = Astro.props.project.data;
+
+// A report served from public/ as a PDF gets its file size in the label, read at build time.
+function pdfSize(href: string): string | undefined {
+  if (!href.startsWith("/") || !href.toLowerCase().endsWith(".pdf")) return undefined;
+  try {
+    const bytes = fs.statSync(path.join(process.cwd(), "public", decodeURI(href))).size;
+    return `${(bytes / 1e6).toFixed(1)} MB`;
+  } catch {
+    return undefined;
+  }
+}
+
+type Link = { href: string; label: string; pdf?: boolean };
+const report = d.links.report;
+const reportSize = report ? pdfSize(report) : undefined;
+const isPdf = !!report && report.toLowerCase().endsWith(".pdf");
 const links = [
   d.links.repo && { href: d.links.repo, label: "Repository" },
-  d.links.report && { href: d.links.report, label: "Report" },
+  report && {
+    href: report,
+    label: isPdf ? `Final report (PDF${reportSize ? `, ${reportSize}` : ""})` : "Report",
+    pdf: isPdf,
+  },
   d.links.video && { href: d.links.video, label: "Video" },
   d.links.demo && { href: d.links.demo, label: "Demo" },
-].filter(Boolean) as { href: string; label: string }[];
+].filter(Boolean) as Link[];
 ---
 
 <aside class="meta-sidebar" aria-label="Project details">
@@ -56,11 +78,23 @@ const links = [
       <div class="meta-row">
         <dt>Links</dt>
         <dd>
-          {links.map((l) => (
-            <a class="block" href={l.href}>
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) =>
+            l.pdf ? (
+              <span class="block">
+                <a href={l.href} type="application/pdf" target="_blank" rel="noopener">
+                  {l.label}
+                </a>
+                <span class="text-faint"> · </span>
+                <a href={l.href} download>
+                  Download
+                </a>
+              </span>
+            ) : (
+              <a class="block" href={l.href}>
+                {l.label}
+              </a>
+            ),
+          )}
         </dd>
       </div>
     )}

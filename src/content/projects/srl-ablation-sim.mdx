@@ -1,0 +1,185 @@
+---
+title: "SRL Ablative-Heating Simulator: Flight Heating and Charring Heat-Shield Response"
+slug: srl-ablation-sim
+summary: A MATLAB simulator for CU Boulder's Sounding Rocket Lab that predicts aerodynamic heating on a rocket's body and fins over a full flight and the in-depth response of a charring ablative heat shield, with documented verification, validation against NACA flight data, and a code-to-code benchmark.
+hook: Engineering heating correlations along the body and fins, coupled to a conservative finite-difference charring-ablator solver, checked against NACA flight data and an Ablation Workshop benchmark.
+tldr: "A MATLAB simulator for CU Boulder's Sounding Rocket Lab: heating along a rocket's body and fins over a full flight, coupled to finite-difference conduction in a charring heat shield. Checked against NACA free-flight cone data and an Ablation Workshop benchmark."
+type: Team
+context: CU Sounding Rocket Lab
+team: CU Boulder Sounding Rocket Lab, thermal-protection team
+role: Owner and developer
+dates: Oct 2026 – present
+date: 2026-11-16
+tags: [Hypersonics, CFD/Numerical, Aerodynamics]
+stack: [MATLAB, MATLAB Test, MATLAB buildtool]
+featured: true
+order: 1.5
+group: Hypersonics
+contribution: "Brings together the earlier pieces (PDE numerics, hypersonic heating methods and validation against the published literature) in one flight tool, and is the starting point for my graduate research."
+tier: flagship
+heroImage: ../../assets/projects/srl/tc1_fiat_overlay.png
+heroAlt: Two-panel code-to-code comparison for Ablation Workshop Test Case 1. Top, in-depth temperature against time from 0 to 60 seconds at depths of 1, 2, 4, 8, 16 and 50 millimetres below a surface held at 1644 K; the simulator's curves pass through the FIAT reference symbols at every depth, from about 1530 K at 1 mm to about 298 K, essentially unheated, at 50 mm. Bottom, pyrolysis-gas mass flux falling from about 0.028 to 0.005 kilograms per square metre per second, and the virgin and char front depths growing to about 15 and 2.7 millimetres, again on the reference symbols.
+thumbnail: ../../assets/projects/srl/tc1_thumb.png
+thumbnailAlt: In-depth temperatures of a charring ablator at six depths, simulator curves through the FIAT reference points.
+metrics:
+  - { value: "1.021", label: "median measured / predicted turbulent heating, NACA RM L56L10 (93 rows)" }
+  - { value: "0.985", label: "median skin-temperature rise ratio, flight replay (60 rows)" }
+  - { value: "0.864 %", label: "RMS temperature difference from FIAT, Ablation Workshop TC #1" }
+  - { value: "55 / 55", label: "verification tests passing at the last milestone gate" }
+links: {}
+status: in progress
+tabs: [overview, technical, results, reflection]
+---
+{/* TODO(Khalil): (1) Add links.repo if the lab is happy for the simulator code to be public; it is left out for now. (2) Confirm the role line and the methods note on the Reflection tab (AI coding assistants). (3) Vehicle-specific runs for the lab's rockets are deliberately not shown (possible export sensitivity of rocket performance data). */}
+import tc1 from "../../assets/projects/srl/tc1_fiat_overlay.png";
+import stanton from "../../assets/projects/srl/rml56l10_stanton.png";
+import replay from "../../assets/projects/srl/rml56l10_skin_replay.png";
+import mms from "../../assets/projects/srl/mms_spatial_order.png";
+
+<TabPanel id="overview">
+
+### The problem
+
+A fast sounding rocket heats its nose, body and fin leading edges while still in the dense lower atmosphere. The CU Boulder Sounding Rocket Lab protects them with ablative material, typically a phenolic composite that chars and releases gas as it heats. The lab's thermal-protection team needs to know how hot each surface gets, and how thick the ablator must be to keep the bond line below its adhesive limit.
+
+### What the simulator does
+
+It reads a rocket geometry from a config file (eight nose shapes, blunting, body tubes, transitions, fins, a multilayer wall per component) and a trajectory spreadsheet. At each time step it:
+
+1. finds the inviscid boundary-layer-edge state along the body and on the fins;
+2. computes convective heating with published engineering methods (laminar, transitional or turbulent; hot wall; gas blowing; re-radiation);
+3. solves transient finite-difference conduction through the wall at every station, with pyrolysis, gas flow and recession in a charring ablator.
+
+Outputs include heat maps, timelines, a 2-D temperature view of the rocket, an animation and a report, plus laminar / nominal / turbulent bounding runs and ablator sizing to a bond-line limit. It uses base MATLAB only, so every lab member can run it.
+
+<Figure src={tc1} alt="Simulator in-depth temperatures at 1, 2, 4, 8, 16 and 50 mm and pyrolysis-gas flux and front depths over 60 s, each passing through the FIAT reference symbols of Ablation Workshop Test Case 1." source="projects/srl-ablation-sim/reports/validation/A1/a1_overlay.png" wide>
+**Hero result (code-to-code).** Ablation Workshop Test Case #1: a 5 cm charring ablator whose surface is ramped to 1644 K in 0.1 s. Lines are my simulator; symbols are the reference code FIAT. All 55 temperature points, 22 front points and 8 gas-flux points (from 5 s on) are inside the acceptance tolerances.
+</Figure>
+
+### Status
+
+Milestones through the visualization and report suite have passed their review gates. The design workflow (bounding, sizing, design comparison, a GUI) is built, and I am now applying the simulator to the lab's sounding-rocket designs. Those vehicle results are not published here.
+
+</TabPanel>
+
+<TabPanel id="technical">
+
+### Edge state and heating
+
+The freestream is the U.S. Standard Atmosphere 1976. Normal-shock relations give the stagnation state, modified Newtonian theory the cap pressure, and a Taylor–Maccoll table the tangent-cone afterbody pressure. Heating uses a reference-temperature method with an enthalpy driving potential:
+
+<Equation tex={String.raw`q_w = \rho^* u_e\,C_H^*\,(h_{aw} - h_w), \qquad \frac{T^*}{T_e} = 1 + 0.032\,M_e^2 + 0.58\left(\frac{T_w}{T_e} - 1\right)`} />
+
+Turbulent flow uses c<sub>f</sub>\* = 0.0592 (Re<sub>x</sub>\*)<sup>−0.2</sup> with C<sub>H</sub>\* = ½ c<sub>f</sub>\* Pr\*<sup>−2/3</sup>. A Lees–Mangler running length carries the flat-plate results onto the axisymmetric body:
+
+<Equation tex={String.raw`x_\text{eff} = \frac{\int_0^{s}\rho_e\mu_e u_e r^2\,ds'}{\rho_e\mu_e u_e r^2}`} />
+
+On a sharp cone this gives x<sub>eff</sub> = s/3, the √3 Mangler factor, which is one of the required test limits. The stagnation point uses Fay–Riddell without dissociation:
+
+<Equation tex={String.raw`q_s = 0.76\,Pr_w^{-0.6}(\rho_e\mu_e)^{0.4}(\rho_w\mu_w)^{0.1}\sqrt{(du_e/dx)_s}\,(h_{0e} - h_w)`} />
+
+Fin leading edges are swept cylinders. Transition is a fully laminar or fully turbulent bound or, for nominal runs, a criterion (Quinn–Gong by default) with an intermittency blend. Ablator gas injection reduces heating by C<sub>H</sub>/C<sub>H0</sub> = φ/(e<sup>φ</sup> − 1), φ proportional to the injected mass flux.
+
+### In-depth charring response
+
+In surface-fixed coordinates, with recession rate ṡ and pyrolysis-gas mass flux G flowing toward the surface, the energy equation is the CMA form:
+
+<Equation tex={String.raw`\rho c_p\frac{\partial T}{\partial t} = \frac{1}{A}\frac{\partial}{\partial y}\!\left(Ak\frac{\partial T}{\partial y}\right) + (h_g - \bar h)\frac{\partial \rho}{\partial t} + G\,\frac{\partial h_g}{\partial y} + \dot s\,\rho c_p\frac{\partial T}{\partial y}`} />
+
+A(y) carries the wall curvature. The resin decomposes by multi-component Arrhenius kinetics (TACOT data for the benchmark material):
+
+<Equation tex={String.raw`\frac{\partial\rho_i}{\partial t} = -B_i\exp\!\left(-\frac{E_i}{\mathcal R T}\right)\rho_{v,i}\left(\frac{\rho_i-\rho_{c,i}}{\rho_{v,i}}\right)^{\psi_i}`} />
+
+Sources, cited by title: Anderson, *Hypersonic and High-Temperature Gas Dynamics*; Tauber, "A Review of High-Speed, Convective, Heat-Transfer Computation Methods" (NASA TP-2914); Quinn and Gong, NASA TP-2000-209034; Fay and Riddell, "Theory of Stagnation Point Heat Transfer in Dissociated Air"; Moyer and Rindal, NASA CR-1061 (the CMA in-depth formulation); and the Ablation Workshop test cases. Every equation in the code maps to a physics-spec ID. In the first pass all 82 items were checked against page images of their sources: 57 verified (11 of them after correction), 11 partly verified and 14 settled as recorded modelling decisions.
+
+### Numerics
+
+- **Grid.** Vertex-centred finite differences in conservative form, with a node on every layer interface and harmonic face conductances, so energy is conserved across jumps in k. Spacing grows geometrically from 20 µm at the surface (ratio ≤ 1.15, ≤ 80 nodes).
+- **Time stepping.** Backward Euler by default, L-stable for the stiff heating pulse and the T<sup>4</sup> radiation term; Crank–Nicolson for convergence studies. Adaptive Δt: accept if max ΔT ≤ 5 K, reaction-extent change ≤ 0.02 and Newton converges in ≤ 8 iterations, else halve.
+- **Coupling.** Newton–Raphson with an analytic Jacobian, the convective flux implicit, and an exact separable pyrolysis update inside each iterate. All stations form one sparse block-tridiagonal system; the ablator grid contracts with recession and remaps conservatively.
+- **Audits.** Discrete energy and mass audits close on every run, and no wall temperature on ascent may exceed the stagnation temperature.
+
+### Assumptions and scope
+
+Axisymmetric flow at zero angle of attack; calorically perfect inviscid relations; 1-D conduction per station; quasi-steady pyrolysis gas in local thermal equilibrium. Out of scope for version 1: chemistry, shock-layer radiation, angle of attack, shock and fin–body interactions, tumbling descent and thermal stress.
+
+</TabPanel>
+
+<TabPanel id="results">
+
+<Callout title="Three kinds of check">
+**Verification** asks whether the code solves its own equations (exact and manufactured solutions). **Code-to-code** compares against another code. **Validation** compares against measurements. Acceptance criteria for every case were written before the comparison was run, and nothing is tuned to the data.
+</Callout>
+
+### Verification: conduction and recession
+
+The conduction suite (34 tests, 304 gated checks, none failed) uses exact solutions (semi-infinite solid, convecting slab, steady composite wall) and manufactured solutions on planar, cylindrical and spherical walls. Observed orders: 2.0005–2.0006 in space; 0.993–0.994 in time for backward Euler, 1.971–1.976 for Crank–Nicolson. The worst energy-audit residual is 1.1e−13. A manufactured solution on a receding surface (method of "Numerical Modeling of Ablation Heat Transfer", Ewing, Laker and Walker) gives the expected first order, p = 1.001–1.012. At the last milestone gate, 55/55 verification tests and all 21 tests in the validation suite (flight-data and code-to-code cases) passed.
+
+<Figure src={mms} alt="Log-log plot of normalized error against maximum grid spacing for five steady manufactured-solution walls and four curved shells. Every line is parallel to the slope-2 reference, with observed orders of 2.000 to 2.001." source="projects/srl-ablation-sim/reports/vv/thermal/f14_vcond4_space.png" wide>
+**Verification.** Spatial convergence on planar, cylindrical and spherical walls. Every case shows second order.
+</Figure>
+
+### Validation: NACA RM L56L10 free-flight cone
+
+A thin-skinned copper cone with a 10° total angle was flown to Mach 3.6, with wall temperature and heating measured at 12 stations. I compare against its Table I (144 rows, transcribed twice blind with identical results):
+
+| Check | Rows | Result | Criterion |
+|---|---|---|---|
+| Turbulent heating, median q<sub>meas</sub>/q<sub>pred</sub> | 93 | **1.021** | 1/1.2 to 1.2 |
+| Turbulent rows within a factor 1.3 | 93 | 95.7 % | ≥ 80 % |
+| Laminar/transitional rows between laminar and turbulent predictions | 27 | 92.6 % | ≥ 90 % |
+| Skin-temperature replay, median ΔT<sub>pred</sub>/ΔT<sub>meas</sub> | 60 | **0.985** | 0.90–1.10 |
+| Replay rows within ±10 % | 60 | 98.3 % | ≥ 80 % |
+| Transition-affected replay rows bracketed | 60 | 100 % | ≥ 90 % |
+
+<Figure src={stanton} alt="Twelve panels, one per flight time from 2 to 14 seconds, of edge Stanton number against axial station. Measured turbulent points sit on or near the green turbulent prediction; the blue laminar prediction is far below; points the source flags as least accurate at 7 and 10 seconds are drawn open." source="projects/srl-ablation-sim/reports/validation/A3/a3_stanton.png" wide>
+**Validation.** Measured Stanton numbers against the laminar and turbulent predictions at the printed wall temperature. Open symbols are excluded rows.
+</Figure>
+
+<Figure src={replay} alt="Twelve panels of skin temperature against time at stations 12 to 88. At the six downstream stations the model curve follows the measured points from about 310 K to about 520 K. Near the tip, station 12 rises faster in flight than the model predicts." source="projects/srl-ablation-sim/reports/validation/A3_replay/a3r_tw.png" wide>
+**Validation.** The flight replayed through the coupled solver: predicted against measured skin temperature, with the fully laminar and fully turbulent bounds.
+</Figure>
+
+<Callout tone="honest" title="Where it does not agree">
+The rows the source labels laminar measure a median 2.24× laminar theory; they look transitional, so the laminar level is reported but not gated. At station 12, nearest the tip, the replayed rise is a median 0.59 of the measured one. In the heating-rate comparison, rows at 7 and 10 s are excluded because the source says its heating data at those times are least accurate; the skin-temperature replay keeps them.
+</Callout>
+
+### Code-to-code: Ablation Workshop Test Case #1
+
+The hero figure on the Overview tab. All 55 temperature points are within max(3 %, 25 K) of FIAT; the worst is +17.4 K at 1 mm and 1 s (61 % of its tolerance). The RMS difference is 6.6 K, or 0.864 % in the relative-error form of a published PATO–FIAT comparison. Both pyrolysis fronts are within 0.5 mm at all 22 points, and gas flux is within 10 % from 5 s on (worst +1.14 %). I used TACOT 3.0 where the test case cites version 1.5, a known input difference. Test Cases 2.1 and 2.2 (surface chemistry, recession) run but stay report-only until reference curves are available.
+
+</TabPanel>
+
+<TabPanel id="reflection">
+
+### Limitations
+
+- **Transition location** is the largest uncertainty (a factor of 3–5 in local heating), so results are a laminar / nominal / turbulent envelope and sizing assumes fully turbulent flow.
+- **Validation Mach range.** The flight case reaches Mach 3.6. Higher-Mach flight cases, such as the HIFiRE-1 ascent (Mach 3 to 5.8), are in the validation plan but not yet run.
+- **Material data.** Verified ablator data from the lab are still being collected. Placeholder properties are guarded and watermarked, so they cannot reach a design result.
+- **Below about Mach 3** the Newtonian stagnation velocity gradient is inaccurate (±30 %), though heating there is small.
+- **1-D and axisymmetric:** no lateral conduction and no angle of attack.
+
+### Next steps
+
+- Take in the lab's material data, wall stacks and bond-line limit.
+- Run the higher-Mach validation cases and a cork-phenolic sounding-rocket nose-cone flight case.
+- Add angle-of-attack heating, then quasi-2-D lateral conduction.
+- Run the planned code-to-code check against my [hypersonic boundary-layer solver](/projects/hypersonic-solver/) on its Mach-6 cylinder.
+
+### Toward graduate work
+
+The simulator rests on engineering correlations. Its largest uncertainties (transition, entropy-layer effects on blunted noses, fin–body interference) are where those correlations are weakest and where boundary-layer and CFD analysis can do better. Those are the questions I want to work on next. The [Research Interests](/research/) page says more.
+
+### Methods note
+
+The specifications, MATLAB code and tests were written with AI coding assistants (Claude Code and Codex) under my direction. The process is built to catch their mistakes: equations checked against source page images, tests written blind to the implementation, independent physics and code reviews on every task, and a gate at each milestone where I review the evidence and accept or reject the modelling decisions. No tolerance is loosened without a recorded decision.
+
+### What I learned
+
+{/* TODO(Khalil): your own lessons from this project, in your words. */}
+<div class="placeholder" data-placeholder>
+<p>My own notes on what this project taught me will go here.</p>
+</div>
+
+</TabPanel>

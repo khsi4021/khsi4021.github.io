@@ -14,7 +14,7 @@ export default defineConfig({
   trailingSlash: "ignore",
   compressHTML: true,
   build: { inlineStylesheets: "always" },
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap({ filter: (page) => !page.endsWith("/about/") })],
   markdown: {
     // Astro 7 defaults to the Sätteri processor; KaTeX needs the unified pipeline.
     processor: unified({

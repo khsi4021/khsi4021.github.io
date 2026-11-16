@@ -33,14 +33,14 @@ npm run format     # Prettier
 ```
 src/
   content/projects/   one .mdx per project (template: templates/project-template.mdx)
-  pages/              home, projects, coursework, research, flow-vis, about, cv, contact
-  components/         ProjectCard, ProjectGrid, ProjectRow, ProjectTabs, TabPanel, MetaSidebar, Readouts,
+  pages/              home (with the About content), projects, coursework, research, flow-vis, cv, contact; about forwards to home
+  components/         ProjectCard, ProjectGrid, ProjectTabs, TabPanel, MetaSidebar, Readouts,
                       Figure, Video, Equation, CodeSnippet, Callout, SkillsMatrix, Timeline,
                       EncounterViewer, PoleMap…
   assets/             figures (optimised at build time)
   snippets/           curated code excerpts imported with ?raw
   data/               site facts, skills, encounter and pole-map data
-public/               favicon, robots.txt, media/ (videos), cv/ (PDF)
+public/               favicon, robots.txt, media/ (videos), cv/ (PDF), reports/ (published team reports)
 scripts/              brand-asset and thumbnail generators (node scripts/<name>.mjs)
 design-explorations/  earlier static design mockups, kept for comparison (none is the current design)
 ```

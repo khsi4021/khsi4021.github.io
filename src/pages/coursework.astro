@@ -341,6 +341,21 @@ const sections = [
           </p>
         </li>
         <li>
+          <p class="font-medium">APPM 4350 Fourier Series and Boundary Value Problems</p>
+          <p class="font-sans text-sm text-muted">
+            Team project: the 3-D heat equation solved by separation of variables for a slab, cylinder and sphere,
+            compared with an ANSYS Fluent simulation. See{" "}
+            <a href="/projects/heat-diffusion-3d/">Heat diffusion in 3-D</a>.
+          </p>
+        </li>
+        <li>
+          <p class="font-medium">ASEN 1400 Gateway to Space</p>
+          <p class="font-sans text-sm text-muted">
+            Team project: a suborbital Peltier power-generation payload that reached the Kármán line. See the
+            <a href="/projects/regen-power-cubesat/">regenerative power CubeSat experiment</a>.
+          </p>
+        </li>
+        <li>
           <p class="font-medium">ASEN 3711 / 3712 / 3713</p>
           <p class="font-sans text-sm text-muted">Aerodynamics, structures, and thermodynamics &amp; heat transfer.</p>
         </li>
@@ -403,6 +418,15 @@ const sections = [
   }
   .cw-more {
     border-top: 1px solid var(--border);
+  }
+  .cw-more a {
+    color: var(--flow);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .cw-more a:hover {
+    text-decoration-thickness: 2px;
   }
   .cw-more > li {
     display: grid;

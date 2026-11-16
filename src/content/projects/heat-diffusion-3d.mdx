@@ -1,9 +1,9 @@
 ---
 title: "Heat Diffusion in 3-D Geometries: Slab, Cylinder and Sphere"
 slug: heat-diffusion-3d
-summary: A three-person course project that solved the 3-D heat equation by separation of variables for a slab, a cylinder and a sphere under Dirichlet (boiling) and Robin (sub-boiling) boundary conditions, compared the slab solutions with a thermal simulation, and attempted physical tests.
-hook: Six series solutions of the 3-D heat equation, from sines to Bessel functions and Legendre polynomials, with the slab set against a thermal simulation.
-tldr: With a three-person team I solved the 3-D heat equation by separation of variables for a slab, cylinder and sphere in boiling (Dirichlet) and sub-boiling (Robin) water. We compared the slab with a thermal simulation; our physical tests were inconclusive.
+summary: A three-person course project that solved the 3-D heat equation by separation of variables for a slab, a cylinder and a sphere under Dirichlet (boiling) and Robin (sub-boiling) boundary conditions, compared the slab solutions with an ANSYS Fluent simulation, and attempted physical tests.
+hook: Six series solutions of the 3-D heat equation, from sines to Bessel functions and Legendre polynomials, with the slab set against an ANSYS Fluent simulation.
+tldr: With a three-person team I solved the 3-D heat equation by separation of variables for a slab, cylinder and sphere in boiling (Dirichlet) and sub-boiling (Robin) water. We compared the slab with an ANSYS Fluent simulation; our physical tests were inconclusive.
 type: Course
 course: APPM 4350 Fourier Series and Boundary Value Problems
 team: Three-person team
@@ -11,14 +11,14 @@ role: Derived the sphere solution with Robin boundary conditions, made the Mathe
 dates: Oct – Dec 2025
 date: 2025-12-03
 tags: [CFD/Numerical, Experimental]
-stack: [Mathematica, SolidWorks thermal simulation, Thermocouples, LaTeX]
+stack: [Mathematica, ANSYS Fluent, Thermocouples, LaTeX]
 featured: false
 order: 5
 group: Simulation and verification
-contribution: "Analytical PDE solutions (Sturm–Liouville, Bessel and Legendre eigenfunction expansions) for three geometries and two boundary conditions. The slab solutions are compared qualitatively with a thermal simulation, the physical tests are reported as inconclusive, and the disagreements are stated."
+contribution: "Analytical PDE solutions (Sturm–Liouville, Bessel and Legendre eigenfunction expansions) for three geometries and two boundary conditions. The slab solutions are compared qualitatively with an ANSYS Fluent simulation, the physical tests are reported as inconclusive, and the disagreements are stated."
 tier: supporting
 heroImage: ../../assets/projects/heat-diffusion/boiling_compare.jpg
-heroAlt: Three panels. Left, a SolidWorks thermal simulation of a rectangular slab in boiling water, coloured by temperature in kelvin, hot across the top face and cooler along the lower edges. Centre and right, the analytical solution as square cross-sections, with a thin hot band at the boundary in the centre panel and a wider band reaching further in on the right.
+heroAlt: Three panels. Left, the team's thermal simulation of a rectangular slab in boiling water, coloured by temperature in kelvin, hot across the top face and cooler along the lower edges. Centre and right, the analytical solution as square cross-sections, with a thin hot band at the boundary in the centre panel and a wider band reaching further in on the right.
 thumbnail: ../../assets/projects/heat-diffusion/slab_dirichlet_thumb.jpg
 thumbnailKeepInk: true
 thumbnailAlt: Square cross-section of a slab from the analytical heat-equation solution, hot red at the edges fading to a cool blue core.
@@ -26,13 +26,11 @@ metrics:
   - { value: "3", label: "geometries: rectangular slab, cylinder, sphere" }
   - { value: "2", label: "boundary conditions: Dirichlet (boiling), Robin (sub-boiling)" }
   - { value: "6", label: "series solutions, one per geometry and boundary condition" }
-links: {}
+links: { report: "/reports/appm4350-heat-diffusion-3d.pdf" }
 status: complete
 tabs: [overview, technical, results, reflection]
 ---
 {/* TODO(Khalil): the report attributes your parts as "heat equation in sphere (Robin BCs)", "Mathematica plots" and "physical experiments"; the simulated results are attributed to a teammate. Your CV says "Performed thermal simulations and experiments". Which wording is right for this page? The role line follows the report for now. */}
-{/* TODO(Khalil): the report's abstract says the comparison simulation was Ansys Fluent, but the introduction, section 3.2 and the screenshots are SolidWorks. This page says SolidWorks. Which tool was it (or were both used)? */}
-{/* TODO(Khalil): the report is not linked because its title page carries names. Do you want a version without the title page published here? You also mentioned a ~45-page LaTeX report; the PDF in assets-inbox/other/APPM4350.pdf is 21 pages. Is there a longer version? */}
 import boiling from "../../assets/projects/heat-diffusion/boiling_compare.jpg";
 import subboiling from "../../assets/projects/heat-diffusion/subboiling_compare.jpg";
 import roots from "../../assets/projects/heat-diffusion/sphere_robin_roots.png";
@@ -43,15 +41,17 @@ Drop a solid into a water bath and its surface heats first while its core lags b
 
 The two baths give two boundary conditions. In boiling water at sea level, water above 100 °C leaves as vapour, so the surface is held at a fixed temperature: a **Dirichlet** condition. In sub-boiling water heat arrives by convection, and Newton's law of cooling becomes a **Robin** condition linking the surface temperature to its normal gradient.
 
-We solved all six cases analytically by separation of variables. The time part is the same exponential decay in every case; the spatial eigenfunctions depend on the geometry: sines for the slab, Bessel functions for the cylinder, and spherical Bessel functions with Legendre polynomials for the sphere. We then compared the analytical temperature fields for the slab with a thermal simulation and attempted physical tests with probes at the centre and surface of a block.
+We solved all six cases analytically by separation of variables. The time part is the same exponential decay in every case; the spatial eigenfunctions depend on the geometry: sines for the slab, Bessel functions for the cylinder, and spherical Bessel functions with Legendre polynomials for the sphere. We then compared the analytical temperature fields for the slab with an ANSYS Fluent simulation and attempted physical tests with probes at the centre and surface of a block.
 
 My parts were the sphere with Robin boundary conditions, the Mathematica plots of the analytical solutions, and the physical experiments.
+
+The full team report is available as a PDF: <a href="/reports/appm4350-heat-diffusion-3d.pdf" type="application/pdf" target="_blank" rel="noopener">final report (PDF, 0.9 MB)</a>.
 
 <div class="placeholder" data-placeholder>
   <p>Anything else I contributed beyond the report's attribution section will go here.</p>
 </div>
 
-<Figure src={boiling} alt="Three panels. Left, a SolidWorks thermal simulation of a rectangular slab in boiling water, coloured by temperature in kelvin, hot across the top face and cooler along the lower edges. Centre and right, the analytical Dirichlet solution as square cross-sections at two times, with a thin hot band at the boundary in the centre panel and a wider band reaching further in on the right." source="team final report, section 3.2" wide>
+<Figure src={boiling} alt="Three panels. Left, the team's thermal simulation of a rectangular slab in boiling water, coloured by temperature in kelvin, hot across the top face and cooler along the lower edges. Centre and right, the analytical Dirichlet solution as square cross-sections at two times, with a thin hot band at the boundary in the centre panel and a wider band reaching further in on the right." source="team final report, section 3.2" wide>
 **Hero result.** A slab in boiling water. (a) The team's thermal simulation of a nickel slab. (b) and (c) My Mathematica plots of the analytical Dirichlet solution at two times; by (c) the heat has reached further toward the core. From the team's final report.
 </Figure>
 
@@ -116,7 +116,7 @@ For the Robin case, my part, the condition F′(R) + (α/β)F(R) = 0 on the radi
 - Uniform initial temperature in the solid; constant properties.
 - Completeness of each eigenfunction set is taken for granted.
 
-The comparison simulation modelled a nickel slab in a simulated boiling and sub-boiling bath in SolidWorks.
+The comparison simulation modelled a nickel slab in a simulated boiling and sub-boiling bath in ANSYS Fluent.
 
 </TabPanel>
 
@@ -130,8 +130,8 @@ The two sides of the sphere's Robin eigenvalue condition as written in the repor
 
 In both baths the simulation heated the slab faster than the analytical solution. In the simulation, heat reaches well into the solid. In the analytical plots, much of the interior stays near its initial temperature, most clearly in the sub-boiling case, where only a corner of the cross-section has warmed.
 
-<Figure src={subboiling} alt="Three panels. Left, a SolidWorks thermal simulation of a slab in sub-boiling water, coloured by temperature in kelvin, warm green across most of the top face. Centre, an analytical x-y cross-section that is almost uniform except for warming in one corner. Right, an analytical x-z cross-section at t = 178.882 that is uniform apart from a small warm spot in one corner." source="team final report, section 3.2" wide>
-A slab in sub-boiling water. (a) The team's simulation. (b) Analytical solution, x–y cross-section. (c) Analytical solution, x–z cross-section. From the team's final report.
+<Figure src={subboiling} alt="Three panels. Left, the team's thermal simulation of a slab in sub-boiling water, coloured by temperature in kelvin, warm green across most of the top face. Centre, an analytical x-y cross-section that is almost uniform except for warming in one corner. Right, an analytical x-z cross-section at t = 178.882 that is uniform apart from a small warm spot in one corner." source="team final report, section 3.2" wide>
+A slab in sub-boiling water. (a) The team's thermal simulation. (b) Analytical solution, x–y cross-section. (c) Analytical solution, x–z cross-section. From the team's final report.
 </Figure>
 
 The report attributes the gap to the analytical boundary conditions, which account only for convection at the surface, while the simulation shows conduction carrying heat further in. It also notes that real water can exceed 100 °C or convect near the surface, which weakens the fixed-temperature Dirichlet assumption.
@@ -163,6 +163,7 @@ I ran small tests with wooden blocks and probes at the centre and surface. They 
 <div class="placeholder" data-placeholder>
   <p>What I took from this project will go here.</p>
 </div>
+{/* TODO(Khalil): the published report introduces the two simulation figures (section 3.2) as a SolidWorks thermal simulation; only its abstract names Ansys Fluent. Prose and stack say ANSYS Fluent as you asked; figure captions and alt text say "the team's thermal simulation" so they do not contradict the linked PDF. Confirm, or say which tool made those two figures. */}
 {/* TODO(Khalil): your own lessons from this project, in your words. */}
 
 </TabPanel>

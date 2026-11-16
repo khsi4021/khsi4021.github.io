@@ -1,39 +1,43 @@
 ---
 import { skillMatrix } from "@/data/skills";
+// Compact matrix: one block per group, each skill on one line followed by the
+// pages where it is shown. Groups flow into two columns from 768 px.
 ---
 
-<div class="overflow-x-auto">
-  <table class="table-tint w-full border-collapse border-t-2 border-accent text-left font-sans text-sm">
-    <caption class="sr-only">Skills by group, with links to the pages where each one is shown</caption>
-    <thead>
-      <tr class="border-b border-line-strong">
-        <th scope="col" class="px-3 py-1.5 font-semibold">
-          Group
-        </th>
-        <th scope="col" class="px-3 py-1.5 font-semibold">
-          Skill
-        </th>
-        <th scope="col" class="px-3 py-1.5 font-semibold">
-          Where it is shown
-        </th>
-      </tr>
-    </thead>
-    {skillMatrix.map((g) => (
-      <tbody class="border-b border-line-strong">
-        {g.skills.map((s, i) => (
-          <tr class="border-b border-line last:border-b-0">
-            {i === 0 && (
-              <th scope="rowgroup" rowspan={g.skills.length} class="px-3 py-1.5 align-top font-semibold text-accent">
-                {g.group}
-              </th>
-            )}
-            <td class="px-3 py-1.5 align-top">{s.name}</td>
-            <td class="px-3 py-1.5 align-top">
+<p class="font-sans text-sm text-muted">Each skill links to the pages where it is shown.</p>
+<dl class="skills mt-2 border-t-2 border-accent font-sans text-sm leading-snug">
+  {skillMatrix.map((g) => (
+    <div class="skills-group">
+      <dt class="font-semibold text-accent">{g.group}</dt>
+      <dd class="m-0">
+        <ul class="mt-1 list-none p-0">
+          {g.skills.map((s) => (
+            <li class="py-[0.1875rem]">
+              <span class="text-ink">{s.name}</span>
+              <span class="text-faint" aria-hidden="true">
+                {" "}
+                ·{" "}
+              </span>
+              <span class="sr-only">, shown in: </span>
               {s.where.map((w, j) => [j > 0 ? ", " : "", <a href={w.href}>{w.label}</a>])}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    ))}
-  </table>
-</div>
+            </li>
+          ))}
+        </ul>
+      </dd>
+    </div>
+  ))}
+</dl>
+
+<style>
+  .skills-group {
+    break-inside: avoid;
+    border-bottom: 1px solid var(--border);
+    padding-block: 0.5rem 0.4375rem;
+  }
+  @media (min-width: 768px) {
+    .skills {
+      columns: 2;
+      column-gap: 2rem;
+    }
+  }
+</style>

@@ -5,7 +5,7 @@ export type SkillGroup = { group: string; skills: Skill[] };
 
 const p = (slug: string, label: string) => ({ label, href: `/projects/${slug}/` });
 const c = (anchor: string, label: string) => ({ label, href: `/coursework/#${anchor}` });
-const beyond = (label: string) => ({ label, href: "/about/#beyond" });
+const beyond = (label: string) => ({ label, href: "/#beyond" });
 const cv = { label: "CV", href: "/cv/" };
 
 export const skillMatrix: SkillGroup[] = [
@@ -47,6 +47,7 @@ export const skillMatrix: SkillGroup[] = [
       },
       { name: "Orbit propagation (2-body + J2), STMs", where: [p("debrisolver", "DebriSolver")] },
       { name: "ANSYS", where: [p("rasc-al-regenesis", "NASA RASC-AL")] },
+      { name: "ANSYS Fluent", where: [p("heat-diffusion-3d", "APPM 4350 heat diffusion")] },
       { name: "OpenRocket", where: [beyond("High-power rocketry")] },
     ],
   },

@@ -15,10 +15,10 @@ dates: Spring 2027
 date: 2027-05-01 # used for sorting
 tags: [CFD/Numerical] # Hypersonics, CFD/Numerical, Aerodynamics, Flight Dynamics & Control, Orbital/SSA, Aircraft Design, Machine Learning, Space Systems, Experimental, Software
 stack: [Python, NumPy]
-featured: false # kept in the schema; no longer decides what the home page shows
-order: 20 # reading order on Home and Projects, lower = earlier: relevance to hypersonic CFD combined with complexity and recency
-group: Numerical methods # optional: heading on the home page. In use: Hypersonics, Simulation and verification, Numerical methods, Earlier coursework, Software fundamentals
-contribution: One sentence on what this project contributes toward hypersonic CFD. # optional; say so plainly if the link is loose
+featured: false # kept in the schema; not shown anywhere at present
+order: 20 # order on the Projects page and for Previous/Next links, lower = earlier (decimals such as 1.5 are fine): relevance to hypersonic CFD combined with complexity and recency
+group: Numerical methods # optional; kept in the schema, not shown anywhere at present
+contribution: One sentence on what this project contributes toward hypersonic CFD. # optional; kept in the schema, not shown anywhere at present
 tier: supporting # flagship | supporting | fundamentals
 heroImage: ../../assets/projects/<slug>/hero.png
 heroAlt: Describe what the figure shows (axes, trend, result), not just its title.
@@ -26,7 +26,7 @@ thumbnail: ../../assets/projects/<slug>/hero.png
 thumbnailAlt: Short description of the thumbnail.
 metrics:
   - { value: "1.2 %", label: "what the number means" }
-links: {} # { repo: "https://github.com/...", report: "/files/report.pdf" }
+links: {} # { repo: "https://github.com/...", report: "/reports/<file>.pdf" } (put report PDFs in public/reports/; the sidebar shows the size and a Download link)
 status: complete # complete | in progress | archived
 # tabs: [overview, technical, results, reflection, code] # omit tabs you don't need
 ---

@@ -5,19 +5,20 @@ import type { PathFlowItem } from "@/components/PathFlow.astro";
 
 // Steps toward graduate research in CFD for hypersonic flows, ordered by start date.
 // Each note is one or two short sentences on what the step adds, taken from the page it links to
-// (frontmatter metrics for the numbers), the CV, Khalil's own description of the step, or (SRL simulator,
-// which has no page) the simulator's docs. Do not add claims here that those sources do not make.
+// (frontmatter metrics for the numbers), the CV, or Khalil's own description of the step. Do not add claims
+// here that those sources do not make.
 // kind drives the block colour: course = neutral, team = accent rule, personal = accent wash,
 // current = accent outline and wash with an "In progress" chip, goal = accent fill.
 // TODO(Khalil): confirm the choice of steps. Sim6DOF and the capstone weight model are left out
 // to keep nine steps; swap one in if you would rather show it here.
-// TODO(Khalil): the SRL ablation simulator has no project page yet, so its block has no link. Its note
+// The SRL ablation simulator block links to its project page (/projects/srl-ablation-sim/). Its note
 // comes from the simulator's own requirements, physics spec, V&V plan and validation reports
-// (NACA RM L56L10 free-flight cone heating and skin-temperature replay both AGREE). Confirm you are happy
-// to name the Sounding Rocket Lab and its thermal-protection team on the site.
+// (NACA RM L56L10 free-flight cone heating and skin-temperature replay both AGREE). Khalil confirmed
+// that naming the Sounding Rocket Lab on the site is fine.
+// TODO(Khalil): read the new SRL project page and confirm its methods note on AI coding assistance.
 const path: PathFlowItem[] = [
   {
-    when: "Jan – May 2024 · Team course project",
+    when: "Jan – May 2024 · ASEN 1400 team project",
     title: "Regenerative-power CubeSat experiment",
     note: "Vacuum-chamber tests with liquid-nitrogen cooling and my CFD heat-transfer estimate of the generated power, both overlaid with post-flight telemetry.",
     href: "/projects/regen-power-cubesat/",
@@ -71,6 +72,7 @@ const path: PathFlowItem[] = [
     when: "Oct 2026 – present · CU Sounding Rocket Lab",
     title: "Ablative-heating simulator for sounding rockets",
     note: "Where the earlier steps come together: heating along slender bodies and fins over a full flight, coupled to finite-difference charring-ablator conduction. Equations from published references; heating validated against NACA free-flight cone data.",
+    href: "/projects/srl-ablation-sim/",
     kind: "current",
   },
   {

@@ -1,117 +1,201 @@
 ---
-import { getCollection } from "astro:content";
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import Figure from "@/components/Figure.astro";
-import Lightbox from "@/components/Lightbox.astro";
-import ProjectRow from "@/components/ProjectRow.astro";
+import SkillsMatrix from "@/components/SkillsMatrix.astro";
+import Timeline from "@/components/Timeline.astro";
 import { site, hasEmail, hasLinkedIn } from "@/data/site";
 
-const all = (await getCollection("projects")).map((p) => p.data).sort((a, b) => a.order - b.order);
-const bySlug = Object.fromEntries(all.map((d) => [d.slug, d]));
+// Headshot: drop src/assets/headshot/headshot.jpg (or .png / .webp) in place and
+// it replaces the placeholder frame. The glob keeps the build working while the
+// folder is empty. See HOW_TO_UPDATE.md.
+const shots = import.meta.glob<{ default: ImageMetadata }>("/src/assets/headshot/headshot.{jpg,jpeg,png,webp}", {
+  eager: true,
+});
+const headshot = Object.values(shots)[0]?.default;
 
-// The path: projects in frontmatter `order`, under their frontmatter `group`.
-const groups: { name: string; items: typeof all }[] = [];
-for (const d of all) {
-  const name = d.group ?? "Other work";
-  const last = groups.at(-1);
-  if (last && last.name === name) last.items.push(d);
-  else groups.push({ name, items: [d] });
-}
-
-// Selected results. Values are read from each project's frontmatter `metrics`
-// (matched by label), so they cannot drift from the project pages.
-const metric = (slug: string, label: string) => {
-  const m = bySlug[slug]?.metrics.find((x) => x.label.startsWith(label));
-  if (!m) throw new Error(`Home: metric "${label}" not found on project "${slug}"`);
-  return m.value;
-};
-const results = [
+// Dates come from the résumé (Oct 2026) and the project files. Newest first.
+const timeline = [
+  { when: "Fall 2027", title: "Graduate school (applying)", body: "MS/PhD in CFD and hypersonics.", todo: true },
   {
-    value: metric("hypersonic-solver", "vs Fay–Riddell"),
-    text: "Stagnation-line heating against the Fay–Riddell correlation.",
-    slug: "hypersonic-solver",
-    name: "Hypersonic solver",
-    tab: "technical",
-    type: "Personal",
+    when: "Oct 2026 – now",
+    title: "SRL ablative-heating simulator",
+    body: "A MATLAB flight-heating and charring heat-shield simulator for the CU Boulder Sounding Rocket Lab.",
+    href: "/projects/srl-ablation-sim/",
   },
   {
-    // Not a frontmatter metric: copied from the benchmark table on the
-    // hypersonic-solver Results tab (PANT-RT row, reference roughness height).
-    value: "15.30° / 10.06°",
-    text: "Predicted transition onset against the source paper's Table 3, at the reference roughness height. The gap is examined on the page and is not closed.",
-    slug: "hypersonic-solver",
-    name: "Hypersonic solver",
-    tab: "results",
-    type: "Personal",
+    when: "Fall 2026",
+    title: "Senior design, graduate hypersonics, Flow Vis",
+    body: "ASEN 4018, ASEN 5131, ATLS 5151. DebriSolver pipeline and report completed (Oct 2026).",
+    href: "/projects/sim6dof/",
   },
   {
-    value: metric("newtonian-aero", "sphere C_D"),
-    text: "Sphere drag coefficient against the exact Newtonian value of 1.",
-    slug: "newtonian-aero",
-    name: "Newtonian aerodynamics",
-    tab: "technical",
-    type: "Course",
+    when: "Aug 2026",
+    title: "Hypersonic boundary-layer solver",
+    body: "My first research-style project.",
+    href: "/projects/hypersonic-solver/",
   },
   {
-    value: metric("debrisolver", "max rel. error vs NASA CARA"),
-    text: "Maximum relative error in collision probability against NASA CARA, over 977 cases.",
-    slug: "debrisolver",
-    name: "DebriSolver",
-    tab: "results",
-    type: "Personal · Competition",
+    when: "Spring 2026",
+    title: "Scientific computing, aerodynamics labs",
+    body: "PDE solvers, the vortex panel method, lifting-line theory.",
+    href: "/coursework/",
   },
   {
-    value: metric("debrisolver", "propagated maneuvers"),
-    text: "Propagated avoidance maneuvers that meet the collision-probability target.",
-    slug: "debrisolver",
-    name: "DebriSolver",
-    tab: "results",
-    type: "Personal · Competition",
+    when: "Oct – Dec 2025",
+    title: "APPM 4350: heat diffusion in 3-D geometries",
+    body: "Series solutions of the heat equation for a slab, a cylinder and a sphere, in a three-person team.",
+    href: "/projects/heat-diffusion-3d/",
   },
   {
-    value: metric("sim6dof", "ω_n error vs analytic model"),
-    text: "Natural-frequency error against the analytic model, all five Boeing 747 modes.",
-    slug: "sim6dof",
-    name: "Sim6DOF",
-    tab: "results",
-    type: "Team (two people)",
+    when: "Aug 2025 – Apr 2026",
+    title: "Team lead, NASA RASC-AL: Project REGENESIS",
+    body: "Led a 16-member team on a lunar ISRU infrastructure concept.",
+    href: "/projects/rasc-al-regenesis/",
+  },
+  {
+    when: "Jun – Nov 2025",
+    title: "DebriSolver competition",
+    body: "A conjunction-risk response concept for orbital debris mitigation.",
+    href: "/projects/debrisolver/",
+  },
+  {
+    when: "Jan – May 2025",
+    title: "Project manager, ASEN 2804 glider team",
+    body: "A 9-member team, with a dual-design approach and MATLAB configuration studies.",
+    href: "#beyond",
+  },
+  {
+    when: "Fall 2024",
+    title: "Experimental & computational methods",
+    body: "First simulation projects: TCAS closest approach and a water-rocket trajectory.",
+    href: "/projects/bottle-rocket/",
+  },
+  {
+    when: "Jan 2024 – now",
+    title: "High-power rocketry",
+    body: "Tripoli Level 1 certified; building a fiberglass, dual-deploy rocket for Level 2.",
+    href: "#beyond",
+  },
+  {
+    when: "Jan – May 2024",
+    title: "ASEN 1400 Gateway to Space: regenerative-power CubeSat payload",
+    body: "A six-person team's suborbital payload that reached the Kármán line, testing power generation from in-space temperature gradients.",
+    href: "/projects/regen-power-cubesat/",
+  },
+  {
+    when: "Aug 2023",
+    title: "Start of the B.S. in Aerospace Engineering Sciences at CU Boulder",
+    body: "First programming projects in C++.",
+    href: "/projects/candy-land/",
+  },
+  {
+    when: "Jun – Aug 2023",
+    title: "Engineering intern, AGQ Labs (Bahrain)",
+    body: "GIS analysis in ArcGIS of agricultural land conditions for the NEOM region in Saudi Arabia.",
   },
 ];
 
-const hyper = bySlug["hypersonic-solver"];
+// RASC-AL, the CubeSat payload and APPM 4350 have their own project pages.
+const beyond: { title: string; when: string; body: string; href?: string }[] = [
+  {
+    title: "Team lead, NASA RASC-AL: Project REGENESIS",
+    when: "Aug 2025 – Apr 2026",
+    href: "/projects/rasc-al-regenesis/",
+    body: "Led a 16-member multidisciplinary team representing CU in NASA's 2025–26 RASC-AL competition, developing a lunar ISRU infrastructure concept with faculty advisors. I ran the ANSYS structural simulations of the launch pad, under lunar-lander plume and landing loads, and of the shelter.",
+  },
+  {
+    title: "ASEN 1400 Gateway to Space: regenerative-power CubeSat payload",
+    when: "Jan – May 2024",
+    href: "/projects/regen-power-cubesat/",
+    body: "A six-person course team's suborbital payload that reached the Kármán line to test power generation from Peltier devices and in-space temperature gradients. I estimated the power with a CFD heat-transfer simulation, ran vacuum-chamber tests with liquid-nitrogen cooling, then overlaid both on post-flight telemetry.",
+  },
+  {
+    title: "High-power rocketry",
+    when: "Jan 2024 – now",
+    body: "Used OpenRocket simulations and CAD structural models to reach Tripoli Rocketry Association Level 1 certification. I'm now building a fiberglass composite rocket with dual-deploy recovery for Level 2.",
+  },
+  {
+    title: "Project manager, ASEN 2804 glider design",
+    when: "Jan – May 2025",
+    body: "Elected project manager of a 9-member team. I introduced a dual-design approach (3D-printed and balsa airframes) and wrote MATLAB simulation code to compare glider configurations, then checked the results against wind-tunnel data.",
+  },
+  {
+    title: "APPM 4350: heat diffusion in 3-D geometries",
+    when: "Oct – Dec 2025",
+    href: "/projects/heat-diffusion-3d/",
+    body: "Derived analytical heat-equation solutions with separation of variables and eigenfunction expansions, and compared the slab case with an ANSYS Fluent simulation.",
+  },
+];
+
+const awards = [
+  "Tripoli Rocketry Association Level 1 high-power rocket certification",
+  "Saudi Aramco CDPNE competition (awarded scholarship)",
+  "UK Mathematics Challenge: Gold (2021), Silver (2020)",
+  "Custodian of the Two Holy Mosques Scholarship Program: full scholarship",
+];
 ---
 
 <BaseLayout>
-  <!-- DRAFT: Home copy. TODO(Khalil): replace the placeholder block in section 1 with your own wording,
-       and check the one-sentence `contribution` lines in each project's frontmatter. -->
+  <!-- DRAFT: Home copy (Home and About are one page). TODO(Khalil): replace the placeholder blocks
+       (research direction, biography) with your own wording, and check the timeline dates. -->
+  <!-- TODO(Khalil): put your headshot in src/assets/headshot/headshot.jpg (or .png / .webp); it replaces the frame. -->
+  <!-- TODO(Khalil): CubeSat team size is "six" from your note ("I believe"); confirm. -->
   <div class="wrap">
-    <header class="pt-10 pb-10">
-      <h1 class="text-[clamp(1.875rem,1.5rem+1.4vw,2.375rem)] leading-tight tracking-[-0.01em]">{site.name}</h1>
-      <p class="mt-3 max-w-[62ch] font-sans text-[0.9375rem] leading-relaxed text-muted">
-        {site.degreeWithDate}. {site.minors}.
-      </p>
-      <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-sans text-[0.9375rem]">
-        {hasEmail && (
+    <header class="home-head grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 pt-8 pb-8 sm:gap-x-10 sm:pt-10">
+      <div>
+        <h1 class="text-[clamp(1.875rem,1.5rem+1.4vw,2.375rem)] leading-tight tracking-[-0.01em]">{site.name}</h1>
+        <p class="mt-3 max-w-[62ch] font-sans text-[0.9375rem] leading-relaxed text-muted">
+          {site.degreeWithDate}. {site.minors}.
+        </p>
+        <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-sans text-[0.9375rem]">
+          {hasEmail && (
+            <li>
+              <a class="break-all" href={`mailto:${site.email}`}>
+                {site.email}
+              </a>
+            </li>
+          )}
           <li>
-            <a href={`mailto:${site.email}`}>{site.email}</a>
-          </li>
-        )}
-        <li>
-          <a href={site.github} rel="me">
-            GitHub
-          </a>
-        </li>
-        {hasLinkedIn && (
-          <li>
-            <a href={site.linkedin} rel="me">
-              LinkedIn
+            <a href={site.github} rel="me">
+              GitHub
             </a>
           </li>
+          {hasLinkedIn && (
+            <li>
+              <a href={site.linkedin} rel="me">
+                LinkedIn
+              </a>
+            </li>
+          )}
+          <li>
+            <a href="/cv/">Curriculum vitae</a>
+          </li>
+        </ul>
+      </div>
+
+      <figure class="headshot m-0">
+        {headshot ? (
+          <Image
+            src={headshot}
+            alt={`Portrait of ${site.name}`}
+            widths={[176, 288, 416]}
+            sizes="(min-width: 1024px) 12rem, (min-width: 640px) 9rem, 5.5rem"
+            loading="eager"
+            class="headshot-frame object-cover"
+          />
+        ) : (
+          <>
+            <div class="headshot-frame headshot-empty" role="img" aria-label="Headshot placeholder">
+              <svg viewBox="0 0 80 100" aria-hidden="true" focusable="false">
+                <circle cx="40" cy="38" r="16" />
+                <path d="M10 100c0-19 13.4-32 30-32s30 13 30 32z" />
+              </svg>
+            </div>
+            <figcaption class="mt-1.5 font-sans text-xs text-faint">Headshot to come</figcaption>
+          </>
         )}
-        <li>
-          <a href="/cv/">Curriculum vitae</a>
-        </li>
-      </ul>
+      </figure>
     </header>
 
     <section class="sec" aria-labelledby="sec-direction">
@@ -125,167 +209,155 @@ const hyper = bySlug["hypersonic-solver"];
             for Fall 2027. A paragraph in my own words on the research questions I want to work on will go here.
           </p>
         </div>
-        <p class="mt-4 font-sans text-[0.9375rem]">
+        <p class="mt-4 flex flex-wrap gap-x-6 gap-y-2 font-sans text-[0.9375rem]">
           <a href="/research/">Read the research page</a>
+          <a href="/projects/">Projects</a>
         </p>
       </div>
     </section>
 
-    <section class="sec" aria-labelledby="sec-path">
-      <h2 id="sec-path" class="sec-label">
-        <span class="n">2</span>The path
+    <section id="bio" class="sec scroll-mt-8" aria-labelledby="bio-h">
+      <h2 id="bio-h" class="sec-label">
+        <span class="n">2</span>Biography
       </h2>
-      <div>
-        <p class="max-w-[68ch]">
-          Hypersonics first, then the larger projects, then smaller coursework; not in date order. Outside hypersonics,
-          each line says what carries over.
-        </p>
-        {groups.map((g) => (
-          <div class="mt-5">
-            <h3 class="font-sans text-[0.9375rem] font-semibold tracking-normal">{g.name}</h3>
-            <ol class="path-list mt-2 list-none border-b border-line p-0">
-              {g.items.map((d) => (
-                <ProjectRow d={d} n={`2.${all.indexOf(d) + 1}`} />
-              ))}
-            </ol>
-            {g.name === "Numerical methods" && (
-              <p class="mt-3 font-sans text-[0.8125rem] text-muted">
-                See also the{" "}
-                <a href="/coursework/#asen-3802">
-                  vortex panel method and lifting-line theory lab (ASEN 3802, team lab)
-                </a>{" "}
-                under Coursework.
+      <div class="max-w-[68ch]">
+        <div class="placeholder" data-placeholder>
+          <p>A short biography in my own words will go here.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="education" class="sec scroll-mt-8" aria-labelledby="education-h">
+      <h2 id="education-h" class="sec-label">
+        <span class="n">3</span>Education
+      </h2>
+      <dl class="max-w-[68ch]">
+        <div class="grid gap-x-6 gap-y-0.5 border-b border-line pb-2 sm:grid-cols-[6rem_minmax(0,1fr)]">
+          <dt class="font-sans text-sm text-faint sm:pt-[0.2rem]">Degree</dt>
+          <dd>{site.degree}</dd>
+        </div>
+        <div class="grid gap-x-6 gap-y-0.5 border-b border-line py-2 sm:grid-cols-[6rem_minmax(0,1fr)]">
+          <dt class="font-sans text-sm text-faint sm:pt-[0.2rem]">Minors</dt>
+          <dd>{site.minors}</dd>
+        </div>
+        <div class="grid gap-x-6 gap-y-0.5 pt-2 sm:grid-cols-[6rem_minmax(0,1fr)]">
+          <dt class="font-sans text-sm text-faint sm:pt-[0.2rem]">GPA</dt>
+          <dd>
+            <span class="whitespace-nowrap">
+              Cumulative GPA <span class="tabular-nums">{site.gpa.cumulative}</span>
+            </span>
+            <span aria-hidden="true"> · </span>
+            <span class="sr-only">, </span>
+            <span class="whitespace-nowrap">
+              Major GPA <span class="tabular-nums">{site.gpa.major}</span>
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section id="beyond" class="sec scroll-mt-8" aria-labelledby="beyond-h">
+      <h2 id="beyond-h" class="sec-label">
+        <span class="n">4</span>Beyond the code: leadership and team projects
+      </h2>
+      <ul class="grid gap-x-8 border-t border-line md:grid-cols-2">
+        {beyond.map((b) => (
+          <li class="border-b border-line py-3">
+            <p class="font-sans text-sm text-accent tabular-nums">{b.when}</p>
+            <h3 class="mt-0.5 text-[1.0625rem]">{b.title}</h3>
+            <p class="mt-1 font-sans text-[0.9375rem] leading-normal text-muted">{b.body}</p>
+            {b.href && (
+              <p class="mt-1.5 font-sans text-[0.9375rem]">
+                <a href={b.href}>
+                  Project page<span class="sr-only">: {b.title}</span>
+                </a>
               </p>
             )}
-          </div>
+          </li>
         ))}
-        <p class="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-sans text-[0.9375rem]">
-          <a href="/projects/">All {all.length} projects</a>
-          <a href="/coursework/">Coursework highlights</a>
-        </p>
-      </div>
-    </section>
-
-    <section class="sec" aria-labelledby="sec-results">
-      <h2 id="sec-results" class="sec-label">
-        <span class="n">3</span>Selected results
-      </h2>
-      <div>
-        <p class="max-w-[68ch]">
-          Each number is taken from the project page it links to. Team and course work is marked as such.
-        </p>
-        <div class="results-scroll mt-5" role="region" aria-labelledby="sec-results" tabindex="0">
-          <table class="results">
-            <thead>
-              <tr>
-                <th scope="col">Result</th>
-                <th scope="col">Project</th>
-                <th scope="col">Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {results.map((r) => (
-                <tr>
-                  <td>
-                    <span class="val">{r.value}</span>
-                    <span class="what">{r.text}</span>
-                  </td>
-                  <td>
-                    <a href={`/projects/${r.slug}/#${r.tab}`}>
-                      {r.name}, {r.tab} tab
-                    </a>
-                  </td>
-                  <td>{r.type}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <Figure src={hyper.heroImage} alt={hyper.heroAlt} maxWidth={760}>
-          Laminar wall heat flux along a Mach-6 cylinder (top) and the roughness-transition parameter for three
-          roughness heights (bottom). Transition is predicted where each curve crosses the threshold of 434. From the
-          <a href="/projects/hypersonic-solver/">hypersonic heating and transition solver</a>.
-        </Figure>
-      </div>
-    </section>
-
-    <section class="sec" aria-labelledby="sec-term">
-      <h2 id="sec-term" class="sec-label">
-        <span class="n">4</span>Fall 2026
-      </h2>
-      <ul class="term list-none p-0 font-sans text-[0.9375rem]">
-        <li>
-          <a href="/coursework/#hypersonics">ASEN 5131 Hypersonic Aerodynamics</a> (graduate)
-        </li>
-        <li>
-          ASEN 4018 Senior Design: <a href="/projects/aircraft-design-toolbox/">capstone UAV sizing</a> and the
-          <a href="/projects/sim6dof/">Sim6DOF flight simulator</a>
-        </li>
-        <li>
-          <a href="/flow-vis/">ATLS 5151 Flow Visualization</a> (graduate)
-        </li>
       </ul>
     </section>
+
+    <section id="long-game" class="sec scroll-mt-8" aria-labelledby="long-h">
+      <h2 id="long-h" class="sec-label">
+        <span class="n">5</span>The long game
+      </h2>
+      <div class="max-w-[68ch]">
+        <p>
+          I want to found a company that builds commercial supersonic and hypersonic aircraft. That's a long way off.
+          The first step is learning to predict and design for the aerothermal environment properly, which is why my
+          research interests look the way they do.
+        </p>
+      </div>
+    </section>
+
+    <section id="awards" class="sec scroll-mt-8" aria-labelledby="awards-h">
+      <h2 id="awards-h" class="sec-label">
+        <span class="n">6</span>Awards
+      </h2>
+      <ul class="grid gap-x-8 border-t border-line font-sans text-[0.9375rem] md:grid-cols-2">
+        {awards.map((a) => (
+          <li class="border-b border-line py-1.5">{a}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="timeline" class="sec scroll-mt-8" aria-labelledby="timeline-h">
+      <h2 id="timeline-h" class="sec-label">
+        <span class="n">7</span>Timeline
+      </h2>
+      <div>
+        <div class="placeholder max-w-[68ch]" data-placeholder>
+          <p>The dates and descriptions below were taken from my CV and are waiting for me to check each one.</p>
+        </div>
+        <div class="mt-4">
+          <Timeline items={timeline} />
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="sec scroll-mt-8" aria-labelledby="skills-h">
+      <h2 id="skills-h" class="sec-label">
+        <span class="n">8</span>Skills matrix
+      </h2>
+      <div>
+        <SkillsMatrix />
+      </div>
+    </section>
   </div>
-  <Lightbox />
 </BaseLayout>
 
 <style>
-  /* Two projects per row on wide screens, to halve the length of the list. */
-  @media (min-width: 1024px) {
-    .path-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: 2rem;
+  /* Portrait 4:5. Beside the name on phones (small), on the right on wider screens. */
+  .headshot {
+    width: 5.5rem;
+  }
+  @media (min-width: 640px) {
+    .headshot {
+      width: 9rem;
     }
   }
-  .results-scroll {
-    overflow-x: auto;
+  @media (min-width: 1024px) {
+    .headshot {
+      width: 12rem;
+    }
   }
-  .results {
+  .headshot-frame {
+    display: block;
     width: 100%;
-    min-width: 34rem;
-    border-collapse: collapse;
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
+    aspect-ratio: 4 / 5;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
   }
-  .results th {
-    text-align: left;
-    font-size: var(--text-xs);
-    font-weight: 600;
-    color: var(--text-muted);
-    padding: 0 1rem 0.5rem 0;
-    border-bottom: 2px solid var(--accent);
+  .headshot-empty {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--glow);
   }
-  .results td {
-    vertical-align: top;
-    padding: 0.75rem 1rem 0.75rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .results th:last-child,
-  .results td:last-child {
-    padding-right: 0;
-  }
-  .results .val {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 0.9375rem;
-    font-variant-numeric: tabular-nums;
-    color: var(--text);
-  }
-  .results .what {
-    display: block;
-    margin-top: 0.2rem;
-    color: var(--text-muted);
-    max-width: 46ch;
-  }
-  .term li {
-    padding-block: 0.6rem;
-    border-top: 1px solid var(--border);
-  }
-  .term li:first-child {
-    border-top: 0;
-    padding-top: 0;
+  .headshot-empty svg {
+    width: 72%;
+    fill: var(--border-strong);
   }
 </style>

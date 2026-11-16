@@ -30,7 +30,6 @@ export const nav = [
   { href: "/projects/", label: "Projects" },
   { href: "/coursework/", label: "Coursework" },
   { href: "/flow-vis/", label: "Flow Visualization" },
-  { href: "/about/", label: "About" },
   { href: "/cv/", label: "CV" },
   { href: "/contact/", label: "Contact" },
 ];

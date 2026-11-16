@@ -3,7 +3,7 @@ title: "NASA RASC-AL: Project REGENESIS"
 slug: rasc-al-regenesis
 summary: A lunar in-situ resource utilisation (ISRU) concept for NASA's 2025–2026 RASC-AL competition, built on solar-sintered regolith bricks, a launch pad and a shelter, developed by a 16-member CU Boulder team that I led.
 hook: Leading a 16-member team on a lunar ISRU concept, designed from the research literature, with a structural check of a regolith launch pad under lander loads.
-tldr: I led a 16-member CU Boulder team in NASA's 2025–2026 RASC-AL competition. Our concept, REGENESIS, uses solar-sintered regolith bricks for a lunar launch pad and shelter. I ran ANSYS simulations of the pad under plume and landing loads.
+tldr: I led a 16-member CU Boulder team in NASA's 2025–2026 RASC-AL competition. Our concept, REGENESIS, uses solar-sintered regolith bricks for a lunar launch pad and shelter. I ran the ANSYS structural simulations of the launch pad and the shelter.
 type: Team
 context: Competition
 course: NASA RASC-AL competition, 2025–2026
@@ -16,7 +16,7 @@ stack: [ANSYS]
 featured: false
 order: 7
 group: Team leadership and flight hardware
-contribution: "Design worked from the research literature: finding, vetting and applying published studies to each design problem, plus an ANSYS structural check of a regolith launch pad under lander loads."
+contribution: "Design worked from the research literature: finding, vetting and applying published studies to each design problem, plus ANSYS structural checks of a regolith launch pad under lander loads and of the shelter."
 tier: supporting
 heroImage: ../../assets/projects/rascal/regenesis_concept.jpg
 heroAlt: Rendered concept scene on the lunar surface with Earth overhead. An arched shelter built from dark regolith bricks carries two small solar panels; a tall solar-panel communications tower stands to the right; a six-wheeled rover with robotic arms works beside a field of octagonal launch-pad pavers; a solar furnace with a gold concentrator dish sits at the lower left.
@@ -26,11 +26,11 @@ metrics:
   - { value: "16", label: "members on the team I led" }
   - { value: "3.59 × 10⁻⁷ m", label: "max pad deformation under the lander legs" }
   - { value: "$259M", label: "total mission cost estimate (team report)" }
-links: {}
+links: { report: "/reports/rasc-al-regenesis-final-report.pdf" }
 status: complete
 tabs: [overview, technical, results, reflection]
 ---
-{/* TODO(Khalil): (1) Which sections of the final report did you write yourself? (2) Did you run the ANSYS launch-pad simulations yourself (the CV says "Performed ANSYS simulations"), and did you also run the human-structure stress simulation? (3) Should the competition outcome be stated? It is deliberately left out. (4) May the report or slides be linked publicly? The PDF carries names, so it is not published here. */}
+{/* TODO(Khalil): (1) Which sections of the final report did you write yourself? (2) Should the competition outcome be stated? It is deliberately left out. */}
 import concept from "../../assets/projects/rascal/regenesis_concept.jpg";
 import conops from "../../assets/projects/rascal/regenesis_conops.png";
 import padAssembly from "../../assets/projects/rascal/launchpad_assembly.png";
@@ -54,7 +54,9 @@ Three payloads land in succession near the rim of Shackleton Crater at the lunar
 
 ### My role
 
-I was team lead from August 2025 to April 2026 for a 16-member multidisciplinary team, working with aerospace faculty advisors. My own technical work was ANSYS simulation of how the launch pad holds up under lunar lander plume and landing loads. The concept, the report and its figures were team work.
+I was team lead from August 2025 to April 2026 for a 16-member multidisciplinary team, working with aerospace faculty advisors. I ran the ANSYS simulations myself: the structural check of the launch pad under lunar lander plume and landing loads, and the preliminary structural check of the shelter. The concept, the report and its figures were team work.
+
+The full team report is available as a PDF: <a href="/reports/rasc-al-regenesis-final-report.pdf" type="application/pdf" target="_blank" rel="noopener">final report (PDF, 9.3 MB)</a>.
 
 {/* TODO(Khalil): list the report sections you wrote and how the sub-teams were organised. */}
 
@@ -83,12 +85,18 @@ According to the cited study, lander exhaust can erode lunar soil up to 100 m de
 
 {/* TODO(Khalil): the report gives the conductivities (0.29, 0.26) without units. Confirm W/(m·K) before adding units. */}
 
-**Structural simulation.** The load case used the force output of a Blue Origin MK1 lander. The maximum pad deformation was 3.59 × 10⁻⁷ m under the lander legs and 1.63 × 10⁻⁷ m under the thruster load.
+**Structural simulation.** I ran this check in ANSYS. The load case used the force output of a Blue Origin MK1 lander. The maximum pad deformation was 3.59 × 10⁻⁷ m under the lander legs and 1.63 × 10⁻⁷ m under the thruster load.
 
 <div class="placeholder" data-placeholder>
   <p>The simulation setup will go here: the ANSYS module, geometry and material model, mesh, boundary conditions, how the thruster load was applied, and the stress results.</p>
 </div>
 {/* TODO(Khalil): ANSYS module (Static Structural?), mesh, supports, how the MK1 thrust and leg loads were applied, material properties, stresses, and any mesh or hand-calculation check. */}
+
+### Shelter
+
+I also ran a preliminary ANSYS structural simulation of the shelter under its own weight and the internal membrane pressure. The maximum tensile and compressive stresses were 2.8 MPa and 1.5 MPa. The report's heat-transfer analysis found that radiation largely does not pass through the inflatable layer; it defers a formal thermal simulation to a second phase.
+
+{/* Khalil, round 5: "I did the ANSYS simulations myself", answering whether he ran both the launch-pad and the shelter runs. TODO(Khalil): say if the shelter run was in fact someone else's; the TL;DR and Home also name both. */}
 
 ### Budgets
 
