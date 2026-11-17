@@ -139,8 +139,8 @@ const awards = [
 ---
 
 <BaseLayout>
-  <!-- DRAFT: Home copy (Home and About are one page). TODO(Khalil): replace the placeholder blocks
-       (research direction, biography) with your own wording. -->
+  <!-- DRAFT: Home copy (Home and About are one page). Research direction is Khalil's chosen wording (round 10).
+       TODO(Khalil): replace the biography placeholder with your own wording. -->
   <!-- TODO(Khalil): put your headshot in src/assets/headshot/headshot.jpg (or .png / .webp); it replaces the frame. -->
   <!-- TODO(Khalil): CubeSat team size is "six" from your note ("I believe"); confirm. -->
   <div class="wrap">
@@ -205,12 +205,13 @@ const awards = [
         <span class="n">1</span>Research direction
       </h2>
       <div>
-        <div class="placeholder max-w-[68ch]">
-          <p>
-            My research interest is computational fluid dynamics for hypersonic flow. I am applying to MS/PhD programs
-            for Fall 2027. A paragraph in my own words on the research questions I want to work on will go here.
-          </p>
-        </div>
+        <p class="max-w-[68ch]">
+          I want to predict how hot hypersonic vehicles get, and know how far to trust that prediction. Heat shields are
+          sized from simulations that rely on wall models, and those models assume a turbulent boundary layer, yet a
+          vehicle's hottest region, its blunt nose, is laminar. I am applying to MS/PhD programs for Fall 2027 to build
+          wall models that better predict the transition point, and with it the heating, from the laminar nose to the
+          turbulent afterbody.
+        </p>
         <p class="mt-4 flex flex-wrap gap-x-6 gap-y-2 font-sans text-[0.9375rem]">
           <a href="/research/">Read the research page</a>
           <a href="/projects/">Projects</a>
