@@ -6,7 +6,7 @@ hook: Compressible similarity boundary layer, local-similarity marching and PANT
 tldr: Laminar heating and transition-onset solver for a Mach-6 blunt body. Matches Fay–Riddell to −1.45 %. I found and verified a pressure-work term missing from the printed energy equation, and I report the benchmark gap instead of tuning it away.
 type: Personal
 role: Sole developer (physics, numerics, tests, figures)
-dates: Aug 2026
+dates: Summer 2026
 date: 2026-08-10
 tags: [Hypersonics, CFD/Numerical, Aerodynamics]
 stack: [Python, NumPy, SciPy solve_bvp, Matplotlib, pytest]
@@ -19,11 +19,7 @@ heroImage: ../../assets/projects/hypersonic/heat_flux_transition.png
 heroAlt: Two-panel plot. Top, laminar wall heat flux along a Mach-6 cylinder from 0 to 45 degrees for two energy-equation forms, with transition onset lines for three roughness heights. Bottom, the PANT-RT parameter rising with angle and crossing the threshold of 434.
 thumbnail: ../../assets/projects/hypersonic/heat_flux_transition.png
 thumbnailAlt: Laminar wall heat flux and transition onset along a Mach-6 cylinder.
-metrics:
-  - { value: "−1.45 %", label: "vs Fay–Riddell at the stagnation line" }
-  - { value: "144", label: "pytest tests (~15 s)" }
-  - { value: "11.02° / 10.06°", label: "PANT-RT onset vs paper, at A_k" }
-  - { value: "< 1e−8", label: "Crocco–Busemann exactness error" }
+metrics: []
 links: {}
 status: complete
 ---

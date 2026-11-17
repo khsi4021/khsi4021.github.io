@@ -3,9 +3,11 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PathFlow from "@/components/PathFlow.astro";
 import type { PathFlowItem } from "@/components/PathFlow.astro";
 
-// Steps toward graduate research in CFD for hypersonic flows, ordered by start date.
+// Steps toward graduate research in CFD for hypersonic flows, ordered by start date, except the SRL
+// simulator (started July 2026), which stays last before the goal because it brings the earlier steps together.
+// Course and project dates use CU semesters; the SRL start date is Khalil's (Nov 2026).
 // Each note is one or two short sentences on what the step adds, taken from the page it links to
-// (frontmatter metrics for the numbers), the CV, or Khalil's own description of the step. Do not add claims
+// (its body text for the numbers), the CV, or Khalil's own description of the step. Do not add claims
 // here that those sources do not make.
 // kind drives the block colour: course = neutral, team = accent rule, personal = accent wash,
 // current = accent outline and wash with an "In progress" chip, goal = accent fill.
@@ -15,24 +17,23 @@ import type { PathFlowItem } from "@/components/PathFlow.astro";
 // comes from the simulator's own requirements, physics spec, V&V plan and validation reports
 // (NACA RM L56L10 free-flight cone heating and skin-temperature replay both AGREE). Khalil confirmed
 // that naming the Sounding Rocket Lab on the site is fine.
-// TODO(Khalil): read the new SRL project page and confirm its methods note on AI coding assistance.
 const path: PathFlowItem[] = [
   {
-    when: "Jan – May 2024 · ASEN 1400 team project",
+    when: "Spring 2024 · ASEN 1400 team project",
     title: "Regenerative-power CubeSat experiment",
     note: "Vacuum-chamber tests with liquid-nitrogen cooling and my CFD heat-transfer estimate of the generated power, both overlaid with post-flight telemetry.",
     href: "/projects/regen-power-cubesat/",
     kind: "team",
   },
   {
-    when: "2025 – Oct 2026 · Personal, competition",
+    when: "Fall 2025 · Personal, competition",
     title: "DebriSolver conjunction-risk pipeline",
     note: "Every stage validated against an independent reference. Collision probability matches NASA CARA to 8.9e−8.",
     href: "/projects/debrisolver/",
     kind: "personal",
   },
   {
-    when: "Aug 2025 – Apr 2026 · Team lead",
+    when: "Fall 2025 – Spring 2026 · Team lead",
     title: "NASA RASC-AL: Project REGENESIS",
     note: "Leading a 16-member team: finding and vetting research papers, NASA standards and datasheets, and applying them to each design problem we faced.",
     href: "/projects/rasc-al-regenesis/",
@@ -48,7 +49,7 @@ const path: PathFlowItem[] = [
     kind: "course",
   },
   {
-    when: "Aug 2026 · Personal",
+    when: "Summer 2026 · Personal",
     title: "Hypersonic boundary-layer and transition solver",
     note: "A compressible boundary-layer and roughness-transition solver. Stagnation heating matches Fay–Riddell to −1.45 %.",
     href: "/projects/hypersonic-solver/",
@@ -56,7 +57,7 @@ const path: PathFlowItem[] = [
   },
   {
     when: "Fall 2026 · ASEN 5131 (graduate)",
-    title: "Hypersonic aerodynamics",
+    title: "Introduction to Hypersonics",
     note: "My first numerical simulation of hypersonic entry heating: ballistic trajectories with Sutton–Graves stagnation heating, and a Newtonian panel solver checked against exact results.",
     href: "/coursework/#hypersonics",
     kind: "course",
@@ -69,7 +70,7 @@ const path: PathFlowItem[] = [
     kind: "course",
   },
   {
-    when: "Oct 2026 – present · CU Sounding Rocket Lab",
+    when: "July 2026 – present · CU Sounding Rocket Lab",
     title: "Ablative-heating simulator for sounding rockets",
     note: "Where the earlier steps come together: heating along slender bodies and fins over a full flight, coupled to finite-difference charring-ablator conduction. Equations from published references; heating validated against NACA free-flight cone data.",
     href: "/projects/srl-ablation-sim/",
@@ -78,8 +79,54 @@ const path: PathFlowItem[] = [
   {
     when: "Fall 2027 · Goal",
     title: "Graduate research in CFD for hypersonic flows",
-    note: "Applying to aerospace MS/PhD programs, with a focus on CFD and hypersonics, starting from the SRL simulator.",
+    note: "Wall models that predict heating from the laminar nose to the turbulent afterbody of a hypersonic vehicle, starting from my boundary-layer solver.",
     kind: "goal",
+  },
+];
+
+// DRAFT copy (Khalil's wording, Nov 2026) for the header statement and sections 1, 2 and 4.
+// Numbers are checked against the hypersonic-solver and srl-ablation-sim project pages; do not add
+// claims those pages and their sources do not make.
+const questions: { title: string; body: string }[] = [
+  {
+    title: "Can one wall model predict heating from the laminar nose to the turbulent afterbody?",
+    body: "Wall models in large-eddy simulation assume the boundary layer is already turbulent. The hottest part of a blunt vehicle, its nose, is laminar. I want a model with a laminar branch, a turbulent branch and a switch between them.",
+  },
+  {
+    title: "What does a turbulent wall model miss on a cold wall in a strong favorable pressure gradient?",
+    // Source: Iyer & Malik 2019, https://doi.org/10.1103/PhysRevFluids.4.074604 (Khalil chose this wording, round 10).
+    body: "Equilibrium wall models for wall-modeled LES can predict skin friction and wall heat flux to within about 5 % for adiabatic and strongly cooled walls, but only with the right near-wall scaling and exchange location. At intermediate wall temperatures the errors grow to roughly 10–20 % (Iyer & Malik, Phys. Rev. Fluids 4, 074604, 2019). I want to find which missing terms matter most for heat flux on a blunt forebody.",
+  },
+  {
+    title: "How should a simulation decide where the boundary layer turns turbulent?",
+    body: "Transition location is the largest uncertainty in my sounding-rocket heating predictions, worth a factor of 3 to 5 in local heating.",
+  },
+  {
+    title: "How does surface roughness change all of this?",
+    body: "Real heat shields are rough. My solver showed that the roughness-height definition alone moves predicted transition onset from 11.0° to 15.3° on a Mach 6 cylinder.",
+  },
+];
+
+const bring: { title: string; body: string; href: string }[] = [
+  {
+    title: "A compressible boundary-layer solver, ready to become a laminar wall model",
+    body: "It benchmarks against a 2026 DNS study of a Mach 6 cylinder, with stagnation heating within 1.45 % of Fay–Riddell and 144 verification tests.",
+    href: "/projects/hypersonic-solver/",
+  },
+  {
+    title: "A finding about pressure-gradient terms",
+    body: "The published energy equation omits a pressure-work term away from the stagnation line. Restoring it brings the 30° heat flux to 3.55, against about 3.6 in the DNS.",
+    href: "/projects/hypersonic-solver/",
+  },
+  {
+    title: "Validation against flight data and reference codes",
+    body: "My SRL heating simulator matches NACA free-flight cone heating (median ratio 1.02) and NASA's FIAT ablation code (0.86 % RMS).",
+    href: "/projects/srl-ablation-sim/",
+  },
+  {
+    title: "Graduate coursework and team leadership",
+    body: "ASEN 5131 Introduction to Hypersonics and ATLS 5151 Flow Visualization, and leading a 16-member NASA RASC-AL team.",
+    href: "/coursework/",
   },
 ];
 ---
@@ -88,16 +135,23 @@ const path: PathFlowItem[] = [
   title="Research interests"
   description="Research interests of Khalil Sidani: computational fluid dynamics for hypersonic flows, and the projects that lead toward it."
 >
-  <!-- TODO(Khalil): every block marked "placeholder" on this page is waiting for your own wording.
-       The h1 is also draft copy; keep it or replace it. -->
+  <!-- DRAFT: header statement and sections 1, 2 and 4 are Khalil's draft copy (Nov 2026); the h1 is also draft. -->
   <article class="wrap pt-10 md:pt-14">
     <header class="mb-10">
       <p class="eyebrow">Research interests</p>
       <h1 class="mt-2 max-w-[28ch] text-[clamp(1.75rem,4vw,2.375rem)]">
         Predicting heating and transition on hypersonic vehicles, and knowing how far to trust the prediction
       </h1>
-      <div class="placeholder mt-6 max-w-[60ch]" data-placeholder>
-        <p>A short statement of the research direction I want to pursue will go here.</p>
+      <div class="mt-6 max-w-[60ch] space-y-4 text-lg text-muted">
+        <p>
+          Hypersonic heat shields are designed from simulations that cannot afford to resolve the thin layer of air
+          against the surface, so they rely on wall models to supply the heat flux. Those models assume a turbulent
+          boundary layer, yet a vehicle's hottest region, its blunt nose, is laminar and in a strong pressure gradient.
+        </p>
+        <p>
+          I want to build and test wall models for wall-modeled large-eddy simulation that predict heating correctly
+          from the laminar nose, through transition, to the turbulent afterbody, and eventually over rough surfaces.
+        </p>
       </div>
     </header>
 
@@ -105,22 +159,32 @@ const path: PathFlowItem[] = [
       <h2 id="questions-h" class="sec-label">
         <span class="n">1</span>Questions that interest me
       </h2>
-      <div class="max-w-[68ch]">
-        <div class="placeholder" data-placeholder>
-          <p>A list of the research questions I want to work on will go here.</p>
-        </div>
-      </div>
+      <ul class="max-w-[68ch] border-t border-line">
+        {questions.map((q) => (
+          <li class="border-b border-line py-3">
+            <h3 class="text-[1.0625rem]">{q.title}</h3>
+            <p class="mt-1 font-sans text-[0.9375rem] leading-normal text-muted">{q.body}</p>
+          </li>
+        ))}
+      </ul>
     </section>
 
     <section class="sec" aria-labelledby="bring-h">
       <h2 id="bring-h" class="sec-label">
         <span class="n">2</span>What I bring
       </h2>
-      <div class="max-w-[68ch]">
-        <div class="placeholder" data-placeholder>
-          <p>A summary of the skills and results I bring to a research group will go here.</p>
-        </div>
-      </div>
+      <ul class="grid gap-x-8 border-t border-line md:grid-cols-2">
+        {bring.map((b) => (
+          <li class="border-b border-line py-3">
+            <h3 class="text-[1.0625rem]">
+              <a href={b.href} class="text-flow underline decoration-1 underline-offset-[3px] hover:decoration-2">
+                {b.title}
+              </a>
+            </h3>
+            <p class="mt-1 font-sans text-[0.9375rem] leading-normal text-muted">{b.body}</p>
+          </li>
+        ))}
+      </ul>
     </section>
 
     <section class="sec" aria-labelledby="path-h">
@@ -140,21 +204,12 @@ const path: PathFlowItem[] = [
         <span class="n">4</span>What I want to learn next
       </h2>
       <div class="max-w-[68ch]">
-        <div class="placeholder" data-placeholder>
-          <p>A paragraph on the methods and tools I want to learn next will go here.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="schools" class="sec scroll-mt-8" aria-labelledby="schools-h">
-      <h2 id="schools-h" class="sec-label">
-        <span class="n">5</span>Program and lab notes
-      </h2>
-      <div class="max-w-[68ch]">
-        <!-- TODO(Khalil): add per-school entries, or remove this section. -->
-        <div class="placeholder" data-placeholder>
-          <p>Notes on specific programs, labs and advisors will go here.</p>
-        </div>
+        <p>
+          The methods behind wall models: compressible turbulence theory, wall-modeled LES and how its errors are
+          measured against DNS, and running large simulations in parallel. Next I want to add the Mangler transformation
+          to my solver, so it handles spheres and capsules, and test it as a laminar wall model against fully resolved
+          solutions.
+        </p>
       </div>
     </section>
   </article>

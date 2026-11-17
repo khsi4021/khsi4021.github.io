@@ -8,7 +8,7 @@ type: Team
 context: CU Sounding Rocket Lab
 team: CU Boulder Sounding Rocket Lab, thermal-protection team
 role: Owner and developer
-dates: Oct 2026 – present
+dates: July 2026 – present
 date: 2026-11-16
 tags: [Hypersonics, CFD/Numerical, Aerodynamics]
 stack: [MATLAB, MATLAB Test, MATLAB buildtool]
@@ -17,21 +17,19 @@ order: 1.5
 group: Hypersonics
 contribution: "Brings together the earlier pieces (PDE numerics, hypersonic heating methods and validation against the published literature) in one flight tool, and is the starting point for my graduate research."
 tier: flagship
-heroImage: ../../assets/projects/srl/srl_validation_simple.png
-heroAlt: Scatter plot of predicted against measured heating in flight, in kilowatts per square metre, for 93 turbulent-flow sensor readings on a NACA test cone flown to Mach 3.6. The orange dots cluster along the diagonal line of perfect agreement, from slightly below zero to over 700 kW/m², and 89 of the 93 sit inside a shaded band marking agreement within a factor of 1.3. A side note gives the median measured-to-predicted ratio as 1.021.
-thumbnail: ../../assets/projects/srl/srl_validation_simple.png
-thumbnailAlt: Predicted against measured flight heating on a NACA test cone, with the dots clustered along the line of perfect agreement.
-metrics:
-  - { value: "1.021", label: "median measured / predicted turbulent heating, NACA RM L56L10 (93 rows)" }
-  - { value: "0.864 %", label: "RMS temperature difference from FIAT, Ablation Workshop TC #1" }
-  - { value: "55 / 55", label: "verification tests passing at the last milestone gate" }
+heroImage: ../../assets/projects/srl/srl_rocket_heat.png
+heroAlt: Peak temperature over the ascent on a synthetic example rocket, coloured from dark purple (350 K) to yellow (850 K). Top, the whole 4.5-metre vehicle with its walls drawn five times thick; the fins glow orange (fin face peak 760 K) and the body tube stays purple (peak 641 K). Bottom, a true-scale close-up of the nose tip, hottest along the outer surface (841 K at x = 0.10 m) and cooler through the wall; the first 13 mm of the tip is grey because it was not solved.
+thumbnail: ../../assets/projects/srl/srl_rocket_heat.png
+thumbnailAlt: Heat map of peak temperature on a synthetic example rocket, with the fins and nose surface hottest and the body tube cooler.
+metrics: []
 links: {}
 status: in progress
 tabs: [overview, technical, results, reflection]
 ---
-{/* TODO(Khalil): (1) Add links.repo if the lab is happy for the simulator code to be public; it is left out for now. (2) Confirm the role line and the methods note on the Reflection tab (AI coding assistants). (3) Vehicle-specific runs for the lab's rockets are deliberately not shown (possible export sensitivity of rocket performance data). */}
-import validation from "../../assets/projects/srl/srl_validation_simple.png";
-import flight from "../../assets/projects/srl/srl_flight_simple.png";
+{/* TODO(Khalil): (1) Add links.repo if the lab is happy for the simulator code to be public; it is left out for now. (2) Confirm the role line. (3) Vehicle-specific runs for the lab's rockets are deliberately not shown (possible export sensitivity of rocket performance data). */}
+import envelope from "../../assets/projects/srl/srl_envelope.png";
+import rocketHeat from "../../assets/projects/srl/srl_rocket_heat.png";
+import animPoster from "../../assets/projects/srl/srl_anim_poster.png";
 
 <TabPanel id="overview">
 
@@ -49,13 +47,9 @@ It reads a rocket geometry from a config file (eight nose shapes, blunting, body
 
 Outputs include heat maps, timelines, a 2-D temperature view of the rocket, an animation and a report (an example from a synthetic design is on the Results tab), plus laminar / nominal / turbulent bounding runs and ablator sizing to a bond-line limit. It uses base MATLAB only, so every lab member can run it.
 
-<Figure src={validation} alt="Scatter plot of predicted against measured heating in flight, in kilowatts per square metre, for 93 turbulent-flow sensor readings on a NACA test cone flown to Mach 3.6. The orange dots cluster along the diagonal line of perfect agreement, and 89 of the 93 sit inside a shaded band marking agreement within a factor of 1.3." source="projects/srl-ablation-sim/reports/validation/A3/a3_stanton_rows.csv">
-**Hero result (validation against flight data).** Predicted against measured heating for 93 turbulent-flow readings on a NACA cone flown to Mach 3.6 (NACA RM L56L10). Points on the line would be perfect predictions; the median measured-to-predicted ratio is 1.021 and 89 of 93 points fall within a factor of 1.3.
-</Figure>
-
 ### Status
 
-Milestones through the visualization and report suite have passed their review gates. The design workflow (bounding, sizing, design comparison, a GUI) is built, and I am now applying the simulator to the lab's sounding-rocket designs. Those vehicle results are not published here; the Results tab shows a full run on a synthetic example design instead.
+The design workflow (bounding, sizing, design comparison, a GUI) is built, and I am now applying the simulator to the lab's sounding-rocket designs. Those vehicle results are not published here; the Results tab shows a full run on a synthetic example design instead.
 
 </TabPanel>
 
@@ -89,13 +83,6 @@ A(y) carries the wall curvature. The resin decomposes by multi-component Arrheni
 
 Sources, cited by title: Anderson, *Hypersonic and High-Temperature Gas Dynamics*; Tauber, "A Review of High-Speed, Convective, Heat-Transfer Computation Methods" (NASA TP-2914); Quinn and Gong, NASA TP-2000-209034; Fay and Riddell, "Theory of Stagnation Point Heat Transfer in Dissociated Air"; Moyer and Rindal, NASA CR-1061 (the CMA in-depth formulation); and the Ablation Workshop test cases. Every equation in the code maps to a physics-spec ID. In the first pass all 82 items were checked against page images of their sources: 57 verified (11 of them after correction), 11 partly verified and 14 settled as recorded modelling decisions.
 
-### Numerics
-
-- **Grid.** Vertex-centred finite differences in conservative form, with a node on every layer interface and harmonic face conductances, so energy is conserved across jumps in k. Spacing grows geometrically from 20 µm at the surface (ratio ≤ 1.15, ≤ 80 nodes).
-- **Time stepping.** Backward Euler by default, L-stable for the stiff heating pulse and the T<sup>4</sup> radiation term; Crank–Nicolson for convergence studies. Adaptive Δt: accept if max ΔT ≤ 5 K, reaction-extent change ≤ 0.02 and Newton converges in ≤ 8 iterations, else halve.
-- **Coupling.** Newton–Raphson with an analytic Jacobian, the convective flux implicit, and an exact separable pyrolysis update inside each iterate. All stations form one sparse block-tridiagonal system; the ablator grid contracts with recession and remaps conservatively.
-- **Audits.** Discrete energy and mass audits close on every run, and no wall temperature on ascent may exceed the stagnation temperature.
-
 ### Assumptions and scope
 
 Axisymmetric flow at zero angle of attack; calorically perfect inviscid relations; 1-D conduction per station; quasi-steady pyrolysis gas in local thermal equilibrium. Out of scope for version 1: chemistry, shock-layer radiation, angle of attack, shock and fin–body interactions, tumbling descent and thermal stress.
@@ -114,21 +101,25 @@ I tested the simulator in three ways, and wrote down the pass criteria before ru
 | **Validation:** does it match real flight? | Heating measured on a NACA test cone flown to Mach 3.6 (NACA RM L56L10) | Median measured ÷ predicted heating of **1.021** over 93 readings |
 | **Code-to-code:** does it match an established tool? | NASA's FIAT ablation code on Ablation Workshop Test Case 1 | **0.864 %** RMS temperature difference; all 55 temperature points within tolerance |
 
-<Figure src={validation} alt="Scatter plot of predicted against measured heating in flight, in kilowatts per square metre, for 93 turbulent-flow sensor readings on a NACA test cone flown to Mach 3.6. The orange dots cluster along the diagonal line of perfect agreement, and 89 of the 93 sit inside a shaded band marking agreement within a factor of 1.3." source="projects/srl-ablation-sim/reports/validation/A3/a3_stanton_rows.csv">
-Each dot is one heating reading from the NACA flight; dots on the line would be perfect predictions, and 89 of 93 fall within a factor of 1.3.
-</Figure>
-
 ### Example flight (synthetic rocket)
 
 <Callout tone="honest" title="Not an SRL vehicle">
 This is an invented example rocket with a synthetic trajectory and placeholder materials, made to show what the tool produces. It is not a Sounding Rocket Lab design, and none of its numbers are design values.
 </Callout>
 
-<Figure src={flight} alt="Temperature against time after liftoff, 0 to 158 seconds, for a synthetic example rocket. The hottest outer surface (navy) rises from 300 K to a peak of 841.4 K at 17.1 seconds, at burnout, then falls quickly. The hottest bond line (green) peaks lower, at 666.9 K, a few seconds after burnout. From about 45 seconds the two curves run together and cool slowly to about 530 K." source="projects/srl-ablation-sim, run spaceshot_v0_charring (synthetic example)">
-Hottest outer surface and hottest bond line (the glue layer between the heat shield and the structure) over the synthetic flight, from liftoff to apogee at 158 s. The very tip of the nose is too sharp for the through-the-wall model, so it gets a simpler surface estimate and is not plotted.
+<Figure src={envelope} alt="Flight envelope of the synthetic rocket in two panels: altitude against Mach number on the left and altitude against velocity on the right, with the line coloured by dynamic pressure on a logarithmic scale from black (below 0.1 kPa) through purple and red to yellow (above 100 kPa). The solid ascent line is yellow near the ground and rises to Mach 5.09 and 1,501 m/s at burnout near 12.8 km, with markers for maximum dynamic pressure (336.7 kPa at Mach 4.63 and 11.07 km), maximum heating and burnout close together. It then bends back to lower Mach as it climbs, fading through orange, red and purple to black above about 60 km, and ends at apogee near 108 km and Mach 0.4. The dashed descent line follows the ascent down to about 35 km, separates to about Mach 4.3 near 20 km, and ends at an open circle at 6.5 km and Mach 3.4, where the trajectory data stop at 355.6 kPa." source="projects/srl-ablation-sim, run Synth_Rocket_V0_charring (synthetic example)" wide>
+Altitude against Mach number (left) and velocity (right) for the synthetic flight, with colour showing dynamic pressure q∞ on a log scale; the ascent is solid and the descent dashed. Max-Q is 336.7 kPa at 15.8 s (11.07 km, Mach 4.63), just before burnout; the open circle marks where the synthetic trajectory data end during descent (355.6 kPa at 305.5 s), not a true descent peak.
 </Figure>
 
-The outer surface peaks at 841.4 K at 17.1 s, right at burnout. The bond line peaks a few seconds later, at 666.9 K, because heat stored in the heat shield keeps soaking inward after the motor stops. That bond-line peak, not the surface peak, is what the simulator sizes the heat-shield thickness against.
+<Figure src={rocketHeat} alt="Peak temperature over the ascent on a synthetic example rocket, coloured from dark purple (350 K) to yellow (850 K). Top, the whole 4.5-metre vehicle with its walls drawn five times thick; the fins glow orange (fin face peak 760 K) and the body tube stays purple (peak 641 K). Bottom, a true-scale close-up of the nose tip, hottest along the outer surface (841 K at x = 0.10 m) and cooler through the wall; the first 13 mm of the tip is grey because it was not solved." source="projects/srl-ablation-sim, run Synth_Rocket_V0_charring (synthetic example)" wide>
+The hottest temperature each point of the wall reached during the ascent, using placeholder material properties. Top: the whole rocket (walls drawn 5× thick), where the fins (up to 760 K) and the nose run hottest and the body tube stays cooler (up to 641 K). Bottom: the nose at true scale, hottest at the outer surface (841 K at x = 0.10 m) and cooler through the wall; the first 13 mm of the tip (grey) was not solved.
+</Figure>
+
+<Video src="/media/srl-synthetic-flight.mp4" poster={animPoster} alt="Animation of the synthetic rocket from launch to apogee, one frame per second. On the left, the rocket with its walls drawn five times thick: the nose cone and fins turn from dark purple to orange as they heat up around burnout at 17 seconds, then slowly cool back to purple during the climb. On the right, a marker moves along plots of altitude and stagnation-point heat flux against time, with vertical lines for the Mach 1 crossings, maximum dynamic pressure, maximum heating, burnout and apogee." source="projects/srl-ablation-sim, run Synth_Rocket_V0_charring (synthetic example)">
+The synthetic flight from launch to apogee (0–158 s). Left: wall temperature, 295–841 K, with walls drawn 5× thick; right: altitude and stagnation-point heat flux, which peaks at 169.8 kW/m² at 16.7 s. The nose cone and fins carry most of the colour (the fins show the surface temperature of one representative fin), the thin body-tube wall shows only as a narrow line, and the grey nose tip has no solved wall temperature.
+</Video>
+
+Heating tracks dynamic pressure: the hottest solved surface point, on the nose, peaks at 841 K at 17.1 s, right at burnout, and the rocket then climbs into air too thin to heat it much. The bond line (the glue layer between the heat shield and the structure) peaks lower, at 666.9 K, a few seconds later, because heat stored in the heat shield keeps soaking inward after the motor stops. That bond-line peak, not the surface peak, is what the simulator sizes the heat-shield thickness against.
 
 ### Biggest uncertainty
 
@@ -141,14 +132,11 @@ Where the boundary layer turns from smooth (laminar) to turbulent flow changes l
 ### Limitations
 
 - **Transition location** is the largest uncertainty (a factor of 3–5 in local heating), so results are a laminar / nominal / turbulent envelope and sizing assumes fully turbulent flow.
-- **Validation Mach range.** The flight case reaches Mach 3.6. Higher-Mach flight cases, such as the HIFiRE-1 ascent (Mach 3 to 5.8), are in the validation plan but not yet run.
-- **Material data.** Verified ablator data from the lab are still being collected. Placeholder properties are guarded and watermarked, so they cannot reach a design result.
 - **Below about Mach 3** the Newtonian stagnation velocity gradient is inaccurate (±30 %), though heating there is small.
 - **1-D and axisymmetric:** no lateral conduction and no angle of attack.
 
 ### Next steps
 
-- Take in the lab's material data, wall stacks and bond-line limit.
 - Run the higher-Mach validation cases and a cork-phenolic sounding-rocket nose-cone flight case.
 - Add angle-of-attack heating, then quasi-2-D lateral conduction.
 - Run the planned code-to-code check against my [hypersonic boundary-layer solver](/projects/hypersonic-solver/) on its Mach-6 cylinder.
@@ -159,7 +147,7 @@ The simulator rests on engineering correlations. Its largest uncertainties (tran
 
 ### Methods note
 
-The specifications, MATLAB code and tests were written with AI coding assistants (Claude Code and Codex) under my direction. The process is built to catch their mistakes: equations checked against source page images, tests written blind to the implementation, independent physics and code reviews on every task, and a gate at each milestone where I review the evidence and accept or reject the modelling decisions. No tolerance is loosened without a recorded decision.
+Every equation is checked against its source, the tests are written independently of the code, and each milestone passes a review gate before the next one starts.
 
 ### What I learned
 

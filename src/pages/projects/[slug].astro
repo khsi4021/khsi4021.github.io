@@ -5,7 +5,6 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import ProjectTabs from "@/components/ProjectTabs.astro";
 import TabPanel from "@/components/TabPanel.astro";
 import MetaSidebar from "@/components/MetaSidebar.astro";
-import Readouts from "@/components/Readouts.astro";
 import Figure from "@/components/Figure.astro";
 import Equation from "@/components/Equation.astro";
 import CodeSnippet from "@/components/CodeSnippet.astro";
@@ -28,7 +27,7 @@ export async function getStaticPaths() {
 const { project, prev, next } = Astro.props;
 const d = project.data;
 const { Content } = await render(project);
-const components = { TabPanel, Figure, Equation, CodeSnippet, Callout, Video, EncounterViewer, PoleMap, Readouts };
+const components = { TabPanel, Figure, Equation, CodeSnippet, Callout, Video, EncounterViewer, PoleMap };
 ---
 
 <BaseLayout title={d.title} description={d.summary} ogImage={d.heroImage} ogAlt={d.heroAlt} type="article">
@@ -58,8 +57,6 @@ const components = { TabPanel, Figure, Equation, CodeSnippet, Callout, Video, En
         <p class="mt-2 text-[1.0625rem] leading-relaxed">{d.tldr}</p>
       </div>
     </header>
-
-    {d.metrics.length > 0 && <Readouts items={d.metrics} class="mt-6" />}
 
     <div class="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
       <div class="min-w-0">

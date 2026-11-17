@@ -14,11 +14,13 @@ const shots = import.meta.glob<{ default: ImageMetadata }>("/src/assets/headshot
 });
 const headshot = Object.values(shots)[0]?.default;
 
-// Dates come from the résumé (Oct 2026) and the project files. Newest first.
+// Dates come from the résumé (Oct 2026), the project files and Khalil (Nov 2026). Course and project
+// rows use CU semesters (Spring = Jan–May, Summer = Jun–Aug, Fall = Aug–Dec); the SRL simulator start,
+// the internship and rocketry keep month dates. Newest first.
 const timeline = [
   { when: "Fall 2027", title: "Graduate school (applying)", body: "MS/PhD in CFD and hypersonics." },
   {
-    when: "Oct 2026 – now",
+    when: "July 2026 – present",
     title: "SRL ablative-heating simulator",
     body: "A MATLAB flight-heating and charring heat-shield simulator for the CU Boulder Sounding Rocket Lab.",
     href: "/projects/srl-ablation-sim/",
@@ -26,11 +28,11 @@ const timeline = [
   {
     when: "Fall 2026",
     title: "Senior design, graduate hypersonics, Flow Vis",
-    body: "ASEN 4018, ASEN 5131, ATLS 5151. DebriSolver pipeline and report completed (Oct 2026).",
+    body: "ASEN 4018, ASEN 5131, ATLS 5151.",
     href: "/projects/sim6dof/",
   },
   {
-    when: "Aug 2026",
+    when: "Summer 2026",
     title: "Hypersonic boundary-layer solver",
     body: "My first research-style project.",
     href: "/projects/hypersonic-solver/",
@@ -42,25 +44,25 @@ const timeline = [
     href: "/coursework/",
   },
   {
-    when: "Oct – Dec 2025",
+    when: "Fall 2025",
     title: "APPM 4350: heat diffusion in 3-D geometries",
     body: "Series solutions of the heat equation for a slab, a cylinder and a sphere, in a three-person team.",
     href: "/projects/heat-diffusion-3d/",
   },
   {
-    when: "Aug 2025 – Apr 2026",
+    when: "Fall 2025 – Spring 2026",
     title: "Team lead, NASA RASC-AL: Project REGENESIS",
     body: "Led a 16-member team on a lunar ISRU infrastructure concept.",
     href: "/projects/rasc-al-regenesis/",
   },
   {
-    when: "Jun – Nov 2025",
+    when: "Fall 2025",
     title: "DebriSolver competition",
     body: "A conjunction-risk response concept for orbital debris mitigation.",
     href: "/projects/debrisolver/",
   },
   {
-    when: "Jan – May 2025",
+    when: "Spring 2025",
     title: "Project manager, ASEN 2804 glider team",
     body: "A 9-member team, with a dual-design approach and MATLAB configuration studies.",
     href: "#beyond",
@@ -78,13 +80,13 @@ const timeline = [
     href: "#beyond",
   },
   {
-    when: "Jan – May 2024",
+    when: "Spring 2024",
     title: "ASEN 1400 Gateway to Space: regenerative-power CubeSat payload",
     body: "A six-person team's suborbital payload that reached the Kármán line, testing power generation from in-space temperature gradients.",
     href: "/projects/regen-power-cubesat/",
   },
   {
-    when: "Aug 2023",
+    when: "Fall 2023",
     title: "Start of the B.S. in Aerospace Engineering Sciences at CU Boulder",
     body: "First programming projects in C++.",
     href: "/projects/candy-land/",
@@ -100,13 +102,13 @@ const timeline = [
 const beyond: { title: string; when: string; body: string; href?: string }[] = [
   {
     title: "Team lead, NASA RASC-AL: Project REGENESIS",
-    when: "Aug 2025 – Apr 2026",
+    when: "Fall 2025 – Spring 2026",
     href: "/projects/rasc-al-regenesis/",
     body: "Led a 16-member multidisciplinary team representing CU in NASA's 2025–26 RASC-AL competition, developing a lunar ISRU infrastructure concept with faculty advisors. I ran the ANSYS structural simulations of the launch pad, under lunar-lander plume and landing loads, and of the shelter.",
   },
   {
     title: "ASEN 1400 Gateway to Space: regenerative-power CubeSat payload",
-    when: "Jan – May 2024",
+    when: "Spring 2024",
     href: "/projects/regen-power-cubesat/",
     body: "A six-person course team's suborbital payload that reached the Kármán line to test power generation from Peltier devices and in-space temperature gradients. I estimated the power with a CFD heat-transfer simulation, ran vacuum-chamber tests with liquid-nitrogen cooling, then overlaid both on post-flight telemetry.",
   },
@@ -117,12 +119,12 @@ const beyond: { title: string; when: string; body: string; href?: string }[] = [
   },
   {
     title: "Project manager, ASEN 2804 glider design",
-    when: "Jan – May 2025",
+    when: "Spring 2025",
     body: "Elected project manager of a 9-member team. I introduced a dual-design approach (3D-printed and balsa airframes) and wrote MATLAB simulation code to compare glider configurations, then checked the results against wind-tunnel data.",
   },
   {
     title: "APPM 4350: heat diffusion in 3-D geometries",
-    when: "Oct – Dec 2025",
+    when: "Fall 2025",
     href: "/projects/heat-diffusion-3d/",
     body: "Derived analytical heat-equation solutions with separation of variables and eigenfunction expansions, and compared the slab case with an ANSYS Fluent simulation.",
   },
