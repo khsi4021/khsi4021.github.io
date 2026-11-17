@@ -1,9 +1,17 @@
 ---
-import { existsSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { site } from "@/data/site";
 // The CV goes in public/cv/Khalil-Sidani-CV.pdf (see HOW_TO_UPDATE.md).
-const hasCv = existsSync(new URL("../../public/cv/Khalil-Sidani-CV.pdf", import.meta.url));
+// Resolved from the project root: import.meta.url points into the build output during `astro build`.
+const cvFile = join(process.cwd(), "public", "cv", "Khalil-Sidani-CV.pdf");
+const hasCv = existsSync(cvFile);
+// A content hash in the URL, so browsers and the GitHub Pages cache fetch a replaced CV instead of the old copy.
+const cvHref = hasCv
+  ? `${site.cvPath}?v=${createHash("sha256").update(readFileSync(cvFile)).digest("hex").slice(0, 10)}`
+  : site.cvPath;
 ---
 
 <BaseLayout title="CV" description="Curriculum vitae of Khalil Sidani.">
@@ -11,20 +19,20 @@ const hasCv = existsSync(new URL("../../public/cv/Khalil-Sidani-CV.pdf", import.
     <div class="flex flex-wrap items-end justify-between gap-4 border-b-2 border-accent pb-4">
       <h1 class="text-[clamp(1.75rem,4vw,2.375rem)]">Curriculum vitae</h1>
       {hasCv && (
-        <a class="btn btn-primary" href={site.cvPath} download>
+        <a class="btn btn-primary" href={cvHref} download>
           Download CV (PDF)
         </a>
       )}
     </div>
     {hasCv ? (
       <object
-        data={site.cvPath}
+        data={cvHref}
         type="application/pdf"
         class="mt-5 h-[80vh] w-full rounded-[var(--radius-sm)] border border-line bg-paper"
         aria-label="Embedded CV (PDF)"
       >
         <p class="p-6">
-          Your browser can't display the PDF here. <a href={site.cvPath}>Download the CV</a>.
+          Your browser can't display the PDF here. <a href={cvHref}>Download the CV</a>.
         </p>
       </object>
     ) : (
