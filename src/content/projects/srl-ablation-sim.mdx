@@ -17,13 +17,12 @@ order: 1.5
 group: Hypersonics
 contribution: "Brings together the earlier pieces (PDE numerics, hypersonic heating methods and validation against the published literature) in one flight tool, and is the starting point for my graduate research."
 tier: flagship
-heroImage: ../../assets/projects/srl/tc1_fiat_overlay.png
-heroAlt: Two-panel code-to-code comparison for Ablation Workshop Test Case 1. Top, in-depth temperature against time from 0 to 60 seconds at depths of 1, 2, 4, 8, 16 and 50 millimetres below a surface held at 1644 K; the simulator's curves pass through the FIAT reference symbols at every depth, from about 1530 K at 1 mm to about 298 K, essentially unheated, at 50 mm. Bottom, pyrolysis-gas mass flux falling from about 0.028 to 0.005 kilograms per square metre per second, and the virgin and char front depths growing to about 15 and 2.7 millimetres, again on the reference symbols.
-thumbnail: ../../assets/projects/srl/tc1_thumb.png
-thumbnailAlt: In-depth temperatures of a charring ablator at six depths, simulator curves through the FIAT reference points.
+heroImage: ../../assets/projects/srl/srl_validation_simple.png
+heroAlt: Scatter plot of predicted against measured heating in flight, in kilowatts per square metre, for 93 turbulent-flow sensor readings on a NACA test cone flown to Mach 3.6. The orange dots cluster along the diagonal line of perfect agreement, from slightly below zero to over 700 kW/m², and 89 of the 93 sit inside a shaded band marking agreement within a factor of 1.3. A side note gives the median measured-to-predicted ratio as 1.021.
+thumbnail: ../../assets/projects/srl/srl_validation_simple.png
+thumbnailAlt: Predicted against measured flight heating on a NACA test cone, with the dots clustered along the line of perfect agreement.
 metrics:
   - { value: "1.021", label: "median measured / predicted turbulent heating, NACA RM L56L10 (93 rows)" }
-  - { value: "0.985", label: "median skin-temperature rise ratio, flight replay (60 rows)" }
   - { value: "0.864 %", label: "RMS temperature difference from FIAT, Ablation Workshop TC #1" }
   - { value: "55 / 55", label: "verification tests passing at the last milestone gate" }
 links: {}
@@ -31,14 +30,8 @@ status: in progress
 tabs: [overview, technical, results, reflection]
 ---
 {/* TODO(Khalil): (1) Add links.repo if the lab is happy for the simulator code to be public; it is left out for now. (2) Confirm the role line and the methods note on the Reflection tab (AI coding assistants). (3) Vehicle-specific runs for the lab's rockets are deliberately not shown (possible export sensitivity of rocket performance data). */}
-import tc1 from "../../assets/projects/srl/tc1_fiat_overlay.png";
-import stanton from "../../assets/projects/srl/rml56l10_stanton.png";
-import replay from "../../assets/projects/srl/rml56l10_skin_replay.png";
-import mms from "../../assets/projects/srl/mms_spatial_order.png";
-import synthPlanar from "../../assets/projects/srl/synth_planar_peak_T.png";
-import synthHeat from "../../assets/projects/srl/synth_heatflux_map.png";
-import synthNose from "../../assets/projects/srl/synth_nose_indepth.png";
-import synthTimeline from "../../assets/projects/srl/synth_timeline.png";
+import validation from "../../assets/projects/srl/srl_validation_simple.png";
+import flight from "../../assets/projects/srl/srl_flight_simple.png";
 
 <TabPanel id="overview">
 
@@ -54,10 +47,10 @@ It reads a rocket geometry from a config file (eight nose shapes, blunting, body
 2. computes convective heating with published engineering methods (laminar, transitional or turbulent; hot wall; gas blowing; re-radiation);
 3. solves transient finite-difference conduction through the wall at every station, with pyrolysis, gas flow and recession in a charring ablator.
 
-Outputs include heat maps, timelines, a 2-D temperature view of the rocket, an animation and a report (examples from a synthetic design are on the Results tab), plus laminar / nominal / turbulent bounding runs and ablator sizing to a bond-line limit. It uses base MATLAB only, so every lab member can run it.
+Outputs include heat maps, timelines, a 2-D temperature view of the rocket, an animation and a report (an example from a synthetic design is on the Results tab), plus laminar / nominal / turbulent bounding runs and ablator sizing to a bond-line limit. It uses base MATLAB only, so every lab member can run it.
 
-<Figure src={tc1} alt="Simulator in-depth temperatures at 1, 2, 4, 8, 16 and 50 mm and pyrolysis-gas flux and front depths over 60 s, each passing through the FIAT reference symbols of Ablation Workshop Test Case 1." source="projects/srl-ablation-sim/reports/validation/A1/a1_overlay.png" wide>
-**Hero result (code-to-code).** Ablation Workshop Test Case #1: a 5 cm charring ablator whose surface is ramped to 1644 K in 0.1 s and then held. Top: temperature against time at six depths below the surface. Bottom: the pyrolysis-gas mass flux leaving the surface and the depths of the virgin front (where decomposition starts) and the char front (where it is complete). Lines are my simulator and symbols are the reference code FIAT, so agreement means each line runs through its symbols. Shallow depths heat within seconds, while the 50 mm point stays near its initial temperature. All 55 temperature points, 22 front points and 8 gas-flux points (from 5 s on) are inside the acceptance tolerances.
+<Figure src={validation} alt="Scatter plot of predicted against measured heating in flight, in kilowatts per square metre, for 93 turbulent-flow sensor readings on a NACA test cone flown to Mach 3.6. The orange dots cluster along the diagonal line of perfect agreement, and 89 of the 93 sit inside a shaded band marking agreement within a factor of 1.3." source="projects/srl-ablation-sim/reports/validation/A3/a3_stanton_rows.csv">
+**Hero result (validation against flight data).** Predicted against measured heating for 93 turbulent-flow readings on a NACA cone flown to Mach 3.6 (NACA RM L56L10). Points on the line would be perfect predictions; the median measured-to-predicted ratio is 1.021 and 89 of 93 points fall within a factor of 1.3.
 </Figure>
 
 ### Status
@@ -111,76 +104,35 @@ Axisymmetric flow at zero angle of attack; calorically perfect inviscid relation
 
 <TabPanel id="results">
 
-### Demonstration on a synthetic design
+### How I know it works
+
+I tested the simulator in three ways, and wrote down the pass criteria before running each comparison, so nothing is tuned to the data.
+
+| Check | Compared against | Result |
+|---|---|---|
+| **Verification:** does the code solve its own equations correctly? | Manufactured solutions (test problems with a known exact answer) | The error shrinks at the expected second-order rate as the grid is refined (measured order 2.0005–2.0006) |
+| **Validation:** does it match real flight? | Heating measured on a NACA test cone flown to Mach 3.6 (NACA RM L56L10) | Median measured ÷ predicted heating of **1.021** over 93 readings |
+| **Code-to-code:** does it match an established tool? | NASA's FIAT ablation code on Ablation Workshop Test Case 1 | **0.864 %** RMS temperature difference; all 55 temperature points within tolerance |
+
+<Figure src={validation} alt="Scatter plot of predicted against measured heating in flight, in kilowatts per square metre, for 93 turbulent-flow sensor readings on a NACA test cone flown to Mach 3.6. The orange dots cluster along the diagonal line of perfect agreement, and 89 of the 93 sit inside a shaded band marking agreement within a factor of 1.3." source="projects/srl-ablation-sim/reports/validation/A3/a3_stanton_rows.csv">
+Each dot is one heating reading from the NACA flight; dots on the line would be perfect predictions, and 89 of 93 fall within a factor of 1.3.
+</Figure>
+
+### Example flight (synthetic rocket)
 
 <Callout tone="honest" title="Not an SRL vehicle">
-The figures in this section are **not the Sounding Rocket Lab's current designs**. They come from a synthetic example built to demonstrate the tool: an invented geometry, a synthetic trajectory and placeholder material data. The simulator stamps every such figure with red watermarks ("SYNTHETIC TRAJECTORY — NOT SRL DATA", "PLACEHOLDER MATERIAL DATA — NOT FOR DESIGN"), and none of the numbers below are design values.
+This is an invented example rocket with a synthetic trajectory and placeholder materials, made to show what the tool produces. It is not a Sounding Rocket Lab design, and none of its numbers are design values.
 </Callout>
 
-The example vehicle is an invented 8-inch (203 mm) rocket about 4.5 m long: a 0.80 m von Kármán nose with a 5 mm tip radius, a 3.6 m body tube, a short boattail and four swept fins. The nose and body carry carbon phenolic over a bond line and a carbon-fibre structure; the fins carry carbon phenolic over fibreglass. The synthetic flight burns for 17 s, reaches about Mach 5 and coasts to apogee at 158 s. This run has charring and recession switched on and covers the whole ascent, liftoff to apogee.
-
-Synthetic-case values from the run summary: max-Q is 336.7 kPa at 15.8 s (11.1 km, Mach 4.63). Stagnation-point heating peaks at 1.70 × 10<sup>5</sup> W/m² at 16.7 s (Mach 5.04), just after max-Q and shortly before burnout. The hottest solved nose station reaches a wall temperature of 841.4 K at 17.1 s. There is no recession and no burn-through, and the worst relative energy-audit residual is 7.3 × 10<sup>−10</sup>.
-
-<Figure src={synthPlanar} alt="Half-section of the synthetic rocket, 4.5 m long, drawn with the wall thickness exaggerated five times and coloured by each wall node's peak temperature over the flight, on a scale from about 400 to 790 K. The fins are orange, the nose wall shades from red at its outer surface to dark purple inside, and the long body tube stays dark purple. The first part of the nose tip is grey because it has no conduction result. Insets show the altitude history and the nose at true scale." source="projects/srl-ablation-sim, run spaceshot_v0_charring, figure F7" wide>
-**Full-body heating (synthetic design).** Each wall node is coloured by the highest temperature it reaches during the flight. x runs along the rocket from the nose tip and r is the radius. The wall is drawn five times thicker than it is so the layers show, and the lower-right inset is the nose at true scale. Read it as a map of where the heat ends up: the fins and the outer layer of the nose run hottest, and the long body tube stays much cooler. The grey tip is the excluded nose-tip region (see the nose close-up below), and the text box at lower left is the tool's own record of which cells are drawn and why. Synthetic design (not an SRL vehicle): example geometry, synthetic trajectory and placeholder material data, used to demonstrate the tool.
+<Figure src={flight} alt="Temperature against time after liftoff, 0 to 158 seconds, for a synthetic example rocket. The hottest outer surface (navy) rises from 300 K to a peak of 841.4 K at 17.1 seconds, at burnout, then falls quickly. The hottest bond line (green) peaks lower, at 666.9 K, a few seconds after burnout. From about 45 seconds the two curves run together and cool slowly to about 530 K." source="projects/srl-ablation-sim, run spaceshot_v0_charring (synthetic example)">
+Hottest outer surface and hottest bond line (the glue layer between the heat shield and the structure) over the synthetic flight, from liftoff to apogee at 158 s. The very tip of the nose is too sharp for the through-the-wall model, so it gets a simpler surface estimate and is not plotted.
 </Figure>
 
-<Figure src={synthHeat} alt="Two heat maps of convective heat flux on a log colour scale against flight time from 0 to 158 seconds. Top: body stations by arc length from the nose tip, 0 to 4.5 m. The flux is bright yellow near the nose around 15 to 17 seconds, stays orange along the body until about 25 seconds, then fades; after about 70 to 90 seconds the map turns grey. Bottom: fin stations, with the leading-edge strip at the bottom and the face cells above, showing the same pulse." source="projects/srl-ablation-sim, run spaceshot_v0_charring, figure F4" wide>
-**Where and when the heat goes in (synthetic design).** Convective heat flux into the wall, on a log colour scale, for every station against flight time. Top: the body, from the nose tip (s = 0) to the boattail (s ≈ 4.5 m). Bottom: the fins, with the leading-edge strip at the bottom and the face cells above it. Vertical lines mark Mach 1, max-Q, peak heating, burnout (BO) and apogee, and rows marked H get only a surface heating estimate. Heating is a short pulse during the 17 s burn and is strongest near the nose. It fades through the coast, and in the grey region no convective heat goes in, either because the hot wall is at or above the recovery temperature or because the flow is too slow for the heating model (below Mach 0.1). Synthetic design (not an SRL vehicle): example geometry, synthetic trajectory and placeholder material data, used to demonstrate the tool.
-</Figure>
+The outer surface peaks at 841.4 K at 17.1 s, right at burnout. The bond line peaks a few seconds later, at 666.9 K, because heat stored in the heat shield keeps soaking inward after the motor stops. That bond-line peak, not the surface peak, is what the simulator sizes the heat-shield thickness against.
 
-#### Close-ups on the nose
+### Biggest uncertainty
 
-<Figure src={synthNose} alt="Two maps of temperature through the nose wall against flight time, depth 0 to 8.3 mm on the vertical axis. Left, a station about 15 mm behind the tip: the surface turns orange near 17 seconds and the heat spreads down through the wall, which stays around 550 K through the coast. Right, a station about 10 cm behind the tip: the surface peak is brighter but brief, and the wall settles near 450 K. In both, green and blue curves start at the surface around 10 seconds and reach the back face by about 35 to 40 seconds." source="projects/srl-ablation-sim, run spaceshot_v0_charring, figure F6" wide>
-**Inside the nose wall (synthetic design).** Temperature through the wall against time at two nose stations: nose:17 (left), the first station behind the tip with a conduction result, about 15 mm from the tip, and nose:29 (right), about 10 cm back, where the hottest solved nose temperature occurs. Depth runs downward from the outer surface (0) to the back face (8.3 mm), and the dashed lines are the boundaries between the phenolic, the bond line and the structure. The green and blue curves are the 393 K and 400 K isotherms, the placeholder service limits of the bond line and the structure. They pass the bond line well after burnout, so the heat stored in the phenolic keeps soaking inward during the coast. The two panels have different colour scales. Synthetic design (not an SRL vehicle): example geometry, synthetic trajectory and placeholder material data, used to demonstrate the tool.
-</Figure>
-
-<Figure src={synthTimeline} alt="Eight time-history panels over 158 seconds. Left column: altitude rising to about 108 km with the max-Q point marked, Mach number peaking near 5 at burnout, dynamic pressure peaking near 340 kPa, and stagnation heat flux on a log axis peaking near 1.7e5 watts per square metre. Right column: convective heat flux at the nose tip, mid-body and fin leading edge; surface temperature maxima, with the nose-tip estimate peaking near 1230 K and the solved surfaces near 840 K; bond-line temperature rising above the placeholder limits late in the burn and peaking a few seconds after burnout; and zero recession." source="projects/srl-ablation-sim, run spaceshot_v0_charring, figure F3" wide>
-**Mission timeline, nose tip included (synthetic design).** Eight panels on one time axis. Left: altitude with max-Q marked, Mach number, dynamic pressure, and the stagnation-point heat flux at the nose tip (log axis). Right: heat flux at three key stations, the hottest surface temperatures, the hottest bond-line temperature and recession. Solid lines are stations solved with conduction; dash-dot lines are heating-only estimates. Panel (d) shows the stagnation heating rising with Mach number through the burn and peaking just after max-Q. Panel (f) shows the surfaces peaking at burnout and then cooling over the coast, while panel (g) shows the bond line peaking several seconds later. Synthetic design (not an SRL vehicle): example geometry, synthetic trajectory and placeholder material data, used to demonstrate the tool.
-</Figure>
-
-**Caveats on this run.** The nose wall in this example is 8.3 mm thick, more than the local nose radius over roughly the first 12 mm of the nose. A 1-D through-the-wall model cannot represent that region, so its 17 stations are excluded from conduction, as are the six fin leading-edge stations, whose wall model is still pending. Those stations get only a heating-only surface estimate, a radiative-equilibrium temperature, which peaks at 1229.9 K at the nose tip at 16.9 s. They have no in-depth or bond-line result, and the simulator refuses sizing and bond-line results for any component with an excluded station, rather than guessing. With the placeholder phenolic, the virgin front ends at most 0.12 mm below the surface and nothing recedes. The bond-line check is worst on a fin face, where the peak temperature (666.9 K) is 256.9 K above the placeholder 410 K limit, and the tool flags it. With placeholder properties this demonstrates the check; it is not a finding about a real heat shield.
-
-<Callout title="Three kinds of check">
-**Verification** asks whether the code solves its own equations (exact and manufactured solutions). **Code-to-code** compares against another code. **Validation** compares against measurements. Acceptance criteria for every case were written before the comparison was run, and nothing is tuned to the data.
-</Callout>
-
-### Verification: conduction and recession
-
-The conduction suite (34 tests, 304 gated checks, none failed) uses exact solutions (semi-infinite solid, convecting slab, steady composite wall) and manufactured solutions on planar, cylindrical and spherical walls. Observed orders: 2.0005–2.0006 in space; 0.993–0.994 in time for backward Euler, 1.971–1.976 for Crank–Nicolson. The worst energy-audit residual is 1.1e−13. A manufactured solution on a receding surface (method of "Numerical Modeling of Ablation Heat Transfer", Ewing, Laker and Walker) gives the expected first order, p = 1.001–1.012. At the last milestone gate, 55/55 verification tests and all 21 tests in the validation suite (flight-data and code-to-code cases) passed.
-
-<Figure src={mms} alt="Log-log plot of normalized error against maximum grid spacing for five steady manufactured-solution walls and four curved shells. Every line is parallel to the slope-2 reference, with observed orders of 2.000 to 2.001." source="projects/srl-ablation-sim/reports/vv/thermal/f14_vcond4_space.png" wide>
-**Verification.** Spatial convergence on planar, cylindrical and spherical walls. Each line is one test case (solid: manufactured solutions; dashed: curved shells): the grid spacing is on the horizontal axis and the normalized error against the exact solution on the vertical, both logarithmic. A second-order method cuts the error by four each time the spacing halves, so its line runs parallel to the slope-2 reference. Every case does, including the curved shells, which means the curvature terms are discretized as designed.
-</Figure>
-
-### Validation: NACA RM L56L10 free-flight cone
-
-A thin-skinned copper cone with a 10° total angle was flown to Mach 3.6, with wall temperature and heating measured at 12 stations. I compare against its Table I (144 rows, transcribed twice blind with identical results):
-
-| Check | Rows | Result | Criterion |
-|---|---|---|---|
-| Turbulent heating, median q<sub>meas</sub>/q<sub>pred</sub> | 93 | **1.021** | 1/1.2 to 1.2 |
-| Turbulent rows within a factor 1.3 | 93 | 95.7 % | ≥ 80 % |
-| Laminar/transitional rows between laminar and turbulent predictions | 27 | 92.6 % | ≥ 90 % |
-| Skin-temperature replay, median ΔT<sub>pred</sub>/ΔT<sub>meas</sub> | 60 | **0.985** | 0.90–1.10 |
-| Replay rows within ±10 % | 60 | 98.3 % | ≥ 80 % |
-| Transition-affected replay rows bracketed | 60 | 100 % | ≥ 90 % |
-
-<Figure src={stanton} alt="Twelve panels, one per flight time from 2 to 14 seconds, of edge Stanton number against axial station. Measured turbulent points sit on or near the green turbulent prediction; the blue laminar prediction is far below; points the source flags as least accurate at 7 and 10 seconds are drawn open." source="projects/srl-ablation-sim/reports/validation/A3/a3_stanton.png" wide>
-**Validation.** Each panel is one flight time, with its edge Mach number. The horizontal axis is the axial station along the cone in inches, and the vertical axis is the edge Stanton number, the measured heat flux made dimensionless. Symbols are the flight data (squares where the source labels the flow laminar, filled circles turbulent, open circles excluded rows); lines are my laminar prediction (blue) and turbulent predictions from the tip (orange dashed) and from the observed transition onset (green), all at the wall temperature printed in the source. Most measured points sit on the turbulent lines, which is the gated comparison (median ratio 1.021). Near the tip at some times the points fall between the laminar and turbulent lines, in the transition region; everywhere else the laminar line is far below the data.
-</Figure>
-
-<Figure src={replay} alt="Twelve panels of skin temperature against time at stations 12 to 88. At the six downstream stations the model curve follows the measured points from about 310 K to about 520 K. Near the tip, station 12 rises faster in flight than the model predicts." source="projects/srl-ablation-sim/reports/validation/A3_replay/a3r_tw.png" wide>
-**Validation.** The flight replayed through the coupled heating-and-conduction solver, starting from the measured skin temperature at 2 s. Each panel is one thermocouple station (12 to 88 inches from the tip) and shows skin temperature against time. Black symbols are measured; the green line is my prediction using the transition onset observed in flight; the blue dashed and red dotted lines are the fully laminar and fully turbulent bounds. Blue and orange shading mark when the source observed laminar and intermittent flow at that station. Downstream (bottom row) the prediction follows the data closely; at station 12, nearest the tip, it rises too slowly, which the next box discusses.
-</Figure>
-
-<Callout tone="honest" title="Where it does not agree">
-The rows the source labels laminar measure a median 2.24× laminar theory; they look transitional, so the laminar level is reported but not gated. At station 12, nearest the tip, the replayed rise is a median 0.59 of the measured one. In the heating-rate comparison, rows at 7 and 10 s are excluded because the source says its heating data at those times are least accurate; the skin-temperature replay keeps them.
-</Callout>
-
-### Code-to-code: Ablation Workshop Test Case #1
-
-The hero figure on the Overview tab. All 55 temperature points are within max(3 %, 25 K) of FIAT; the worst is +17.4 K at 1 mm and 1 s (61 % of its tolerance). The RMS difference is 6.6 K, or 0.864 % in the relative-error form of a published PATO–FIAT comparison. Both pyrolysis fronts are within 0.5 mm at all 22 points, and gas flux is within 10 % from 5 s on (worst +1.14 %). I used TACOT 3.0 where the test case cites version 1.5, a known input difference. Test Cases 2.1 and 2.2 (surface chemistry, recession) run but stay report-only until reference curves are available.
+Where the boundary layer turns from smooth (laminar) to turbulent flow changes local heating by a factor of 3–5. So the simulator reports a laminar / nominal / turbulent envelope and sizes the heat shield for fully turbulent flow, and better transition and near-wall heat-transfer models are what I want to study next. The known gaps sit in the same place: readings the NACA report labels laminar measure a median 2.24 times laminar theory (they look transitional), and at the sensor nearest the cone tip my predicted temperature rise is too slow (a median 0.60 of the measured rise).
 
 </TabPanel>
 
